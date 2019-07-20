@@ -1,14 +1,14 @@
-#FH (BETA-1.0)
-##配置环境
-1.首先用终端或者cmd进入工程的目录中（或者在编辑器的Terminal进入）
+# FH (BETA-1.0)
+## 配置环境
+1. 先用终端或者cmd进入工程的目录中（或者在编辑器的Terminal进入）
 
-2.npm install 或者 yarn install一下
+2. npm install 或者 yarn install一下
 
-3.完成后输入umi dev 或者 yarn start 启动项目 浏览器输入localhost:8000/welcome 即可
+3. 完成后输入umi dev 或者 yarn start 启动项目 浏览器输入localhost:8000/welcome 即可
 
-4.第二步只需要运行一次，运行过了以后，下次只需要直接走第三步
-##开发指南
-###目录说明
+4. 第二步只需要运行一次，运行过了以后，下次只需要直接走第三步
+## 开发指南
+### 目录说明
 主要区域为src文件夹
 
 页面在src/pages
@@ -25,7 +25,7 @@
 
 详细说明见https://umijs.org/zh/guide/app-structure.html#dist
 
-###路由
+### 路由
 由于是使用约定式的路由，在src/pages下的所有文件的创建都有约定，命名的方式将决定了路由
 
 详细规则见 https://umijs.org/zh/guide/router.html#%E7%BA%A6%E5%AE%9A%E5%BC%8F%E8%B7%AF%E7%94%B1
@@ -39,7 +39,7 @@
 
 路由的对应说明在help/routes.js下
 
-###页面 (如何入手)
+### 页面 (如何入手)
 
 以任务大厅为例子
 
