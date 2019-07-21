@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="05c492b2-0b6f-4024-9cdf-d8d754db59cf" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="05c492b2-0b6f-4024-9cdf-d8d754db59cf" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -14,7 +12,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.4506224">
+    <splitter split-orientation="horizontal" split-proportion="0.35149384">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="false">
@@ -169,9 +167,9 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="264" />
-    <option name="y" value="73" />
-    <option name="width" value="1557" />
+    <option name="x" value="26" />
+    <option name="y" value="74" />
+    <option name="width" value="1590" />
     <option name="height" value="843" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -297,12 +295,12 @@
       <option name="presentableId" value="Default" />
       <updated>1563606073874</updated>
       <workItem from="1563606075158" duration="12332000" />
-      <workItem from="1563625885526" duration="1597000" />
+      <workItem from="1563625885526" duration="2308000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13929000" />
+    <option name="totallyTimeSpent" value="14640000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -314,10 +312,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="264" y="73" width="1557" height="843" extended-state="0" />
+    <frame x="26" y="74" width="1590" height="843" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20671494" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20231959" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
