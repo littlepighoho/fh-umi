@@ -1,13 +1,26 @@
 import React from 'react';
 import router from 'umi/router';
 import './index.scss';
+import { connect } from 'dva';
 import WelcomeView from '../pages/welcome/index';
 import { Menu, Icon, Layout, Breadcrumb  } from 'antd';
+import withRouter from 'umi/withRouter';
+
+
 
 const { SubMenu }  = Menu;
 const { Header, Content, Footer, Sider} = Layout;
 
-class BasicLayout extends React.PureComponent {
+const mapStateToProps = (state) => {
+  const me = state.global.me;
+  return {
+    me,
+  };
+};
+
+@withRouter
+@connect(mapStateToProps)
+class BaseLayout extends React.PureComponent {
   state = {
 
   };
@@ -34,6 +47,12 @@ class BasicLayout extends React.PureComponent {
     const key = location.pathname.split("/")[1];
     return key;
   };
+  test = () => {
+    this.props.dispatch({
+      type: 'global/me',
+      payload: {}
+    })
+  }
   render() {
     const { location } = this.props;
     const key = location.pathname.split("/")[1];
@@ -46,6 +65,7 @@ class BasicLayout extends React.PureComponent {
           <div className="logo" style={{ marginLeft: '10px'}}>
             <h1 style={{color:"white", fontSize: "42px"}}>Fire</h1>
           </div>
+          {this.test()}
           <Menu
             theme="dark"
             mode="inline"
@@ -73,4 +93,4 @@ class BasicLayout extends React.PureComponent {
   }
 }
 
-export default BasicLayout;
+export default BaseLayout;
