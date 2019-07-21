@@ -32,9 +32,9 @@
 
 简单说明：
 
-比如src/welcome 下的index.jsx文件（名字为index）默认映射路由为/welcome
-如果是src/welcome 下有login.jsx文件 则这个文件映射路由为/welcome/login 
-（还有一种写法就是在src/welcome下创建login文件夹 
+比如src/pages/welcome 下的index.jsx文件（名字为index）默认映射路由为/welcome
+如果是src/pages/welcome 下有login.jsx文件 则这个文件映射路由为/welcome/login 
+（还有一种写法就是在src/pages/welcome下创建login文件夹 
 在文件夹里面创建index.jsx文件 这个文件也会自动映射路由为welcome/login）
 
 路由的对应说明在help/routes.js下
