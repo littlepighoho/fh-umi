@@ -1,6 +1,6 @@
 import fetch from 'dva/fetch';
 
-const BaseUrl = "http://api.fh.shoogoome.com";
+const BaseUrl = "https://api.fh.shoogoome.com";
 
 const checkStatus = (response) => {
   if(response.status >= 200 && response.status < 300) {
@@ -30,11 +30,11 @@ export default async function request(options) {
     body: JSON.stringify(options.data),
   };
   const response = await fetch(BaseUrl + options.url, Options);
-
+  console.log(response)
   checkStatus(response);
 
   const data = await response.json();
-
+  console.log(data)
   const ret = {
     data,
   };

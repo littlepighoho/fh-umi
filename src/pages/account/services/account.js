@@ -1,4 +1,4 @@
-import request from '../../../utils/request';
+import request from '../../../utils/request-axios';
 import API from '../../../utils/apis';
 export const login = (payload) => {
   return request({
@@ -8,6 +8,7 @@ export const login = (payload) => {
       username: payload.username,
       password: payload.password,
     }
+
   })
 };
 
