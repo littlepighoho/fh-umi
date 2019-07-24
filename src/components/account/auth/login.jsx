@@ -6,7 +6,7 @@ class Login extends React.PureComponent {
     doLogin: PropTypes.func.isRequired,
   };
   state = {
-    username: "",
+    username :"",
     password: "",
   };
   handleLogin = () => {
