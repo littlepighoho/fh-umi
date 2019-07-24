@@ -9,7 +9,6 @@ class RegisterView extends Component{
       <div className="register_view">
         <div className="register_pad">
           <Register/>
-          注册
         </div>
       </div>
     )
