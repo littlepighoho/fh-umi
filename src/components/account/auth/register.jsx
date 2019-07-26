@@ -1,12 +1,14 @@
 import React,{Component} from 'react';
 import {Row, Input, Tooltip, Icon, Form, Button } from 'antd';
 import  imgURL from '@/images/logo.png';
+import "@/pages/welcome/register/register.scss";
 class Register extends Component {
 
   state = {
     email: "",
     password: "",
   };
+
 
   render() {
     return (
@@ -15,9 +17,7 @@ class Register extends Component {
           <img
             style={{width:380}}
             src={imgURL} alt="" />
-          {/*<img src={require('images/logo.png')} />*/}
-          <Input
-            style={{width:400,left:80,top:60}}
+          <Input  className="input1"
             placeholder="Enter your email"
             prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
             suffix={
@@ -25,7 +25,10 @@ class Register extends Component {
                 <Icon type="info-circle" style={{ color: 'rgba(0,0,0,.45)' }} />
               </Tooltip>
             }
+
           />
+
+
         </Form.Item>
         <Form.Item>
           <Input.Password
