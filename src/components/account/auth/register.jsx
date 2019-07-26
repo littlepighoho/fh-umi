@@ -1,42 +1,65 @@
 import React,{Component} from 'react';
 import {Row, Input, Tooltip, Icon, Form, Button } from 'antd';
-import  imgURL from '@/images/logo.png';
-class Register extends Component {
+import  imgURL from '@/assets/img/logo.png';
+import PropTypes from 'prop-types';
+import './register.scss';
 
+class Register extends Component {
+  static propTypes = {
+    doRegister: PropTypes.func.isRequired,
+  };
   state = {
-    email: "",
+    username: "",
     password: "",
+  };
+
+  handleRegister = () => {
+    this.props.doRegister({
+      username: this.state.username,
+      password: this.state.password
+    })
+  }
+  handleInputChange = (keyName) => ({ target }) => {
+    this.setState({
+      [keyName]: target.value,
+    })
   };
 
   render() {
     return (
-      <Row>
-        <Form.Item>
+      <React.Fragment>
+        <Row>
           <img
-            style={{width:380}}
-            src={imgURL} alt="" />
-          {/*<img src={require('images/logo.png')} />*/}
-          <Input
-            style={{width:400,left:80,top:60}}
-            placeholder="Enter your email"
-            prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-            suffix={
-              <Tooltip title="输入您的邮箱">
-                <Icon type="info-circle" style={{ color: 'rgba(0,0,0,.45)' }} />
-              </Tooltip>
-            }
+            style={{ width:380 }}
+            src={imgURL} alt=""
           />
-        </Form.Item>
-        <Form.Item>
-          <Input.Password
-            style={{width:400,left:80,top:60}}
-            placeholder="input password" />
-        </Form.Item>
-        <Form.Item>
-          <Button style={{backgroundColor:'#FF4C18',color:'#FFFFFF',width:400,left:80,top:90}}>
-            加入</Button>
-        </Form.Item>
-      </Row>
+        </Row>
+        <Row>
+          <div className='register_input'>
+            <Form.Item>
+              <Input
+                placeholder="Enter your email"
+                onChange={this.handleInputChange('username')}
+                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                suffix={
+                  <Tooltip title="输入您的邮箱">
+                    <Icon type="info-circle" style={{ color: 'rgba(0,0,0,.45)' }} />
+                  </Tooltip>
+                }
+              />
+            </Form.Item>
+            <Form.Item>
+              <Input.Password
+                onChange={this.handleInputChange('password')}
+                placeholder="input password" />
+            </Form.Item>
+            <Form.Item>
+              <Button style={{backgroundColor:'#FF4C18',color:'#FFFFFF'}}>
+                加入</Button>
+            </Form.Item>
+          </div>
+        </Row>
+      </React.Fragment>
     )
   }
 }
