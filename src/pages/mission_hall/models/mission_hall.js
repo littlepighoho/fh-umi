@@ -1,6 +1,6 @@
 
 export default {
-  namespace: 'account',
+  namespace: 'mission_hall',
   state: {
     me: {},
   },
