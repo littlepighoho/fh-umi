@@ -30,9 +30,8 @@ export default async function request(options) {
     body: JSON.stringify(options.data),
   };
   const response = await fetch(BaseUrl + options.url, Options);
-  console.log(response)
+  console.log(response);
   checkStatus(response);
-
   const data = await response.json();
   console.log(data)
   const ret = {
