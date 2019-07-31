@@ -3,13 +3,28 @@ import "@/pages/index.scss";
 import  imgURL4 from '@/images/炸弹.png';
 import  imgURL5 from '@/images/灭火器.png';
 import Top from '@/components/account/auth/top';
+import router from 'umi/router';
+
 class firstView extends Component {
+  state = {};
+
+  handleNavChange = (item) => () => {
+    router.push(item.path)
+  }
+  navLeft = [{
+    key: 'mission_hall',
+    path: '/mission_hall',
+  }];
+  navRight =[{
+    key:'dashboard',
+    path: '/dashboard',
+
+  }];
   render() {
     return (
       <Fragment>
         {/*---------导航栏-----------*/}
          <Top />
-
         {/*--------欢迎字样 -------------*/}
         <div className="typeface">
           HELLO,
@@ -26,11 +41,17 @@ class firstView extends Component {
           what is your condition?
         </div>
         {/*----------功能区-------------*/}
+
           <div className="onfire">
             <img
               style={{ width: 100, height: 100 }}
-              src={imgURL4} alt=""/>
-            <a>ON FIRE</a>
+              src={imgURL4} alt=""
+            />
+              {this.navLeft.map((item) => {
+                return (
+                  <a onClick={this.handleNavChange(item)}>ON FIRE</a>
+                )
+            })}
           </div>
 
 
@@ -38,9 +59,12 @@ class firstView extends Component {
             <img
               style={{ width: 100, height: 100 }}
               src={imgURL5} alt=""/>
-            <a>PUT OUT</a>
+            {this.navRight.map((item) => {
+              return (
+                <a onClick={this.handleNavChange(item)}>PUT OFF</a>
+              )
+            })}
           </div>
-
       </Fragment>
 
     )

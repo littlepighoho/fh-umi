@@ -7,7 +7,6 @@ import { Menu, Icon, Layout, Breadcrumb  } from 'antd';
 import withRouter from 'umi/withRouter';
 
 
-
 const { SubMenu }  = Menu;
 const { Header, Content, Footer, Sider} = Layout;
 
@@ -41,6 +40,10 @@ class BaseLayout extends React.PureComponent {
     key: 'rank',
     path: '/rank',
     title: '排行榜'
+  },{
+    key:'manage',
+    path:'/manage',
+    title:'管理'
   }];
   renderSelectedKeys = () => {
     const { location } = this.props;
@@ -65,6 +68,7 @@ class BaseLayout extends React.PureComponent {
           <div className="logo" style={{ marginLeft: '10px'}}>
             <h1 style={{color:"white", fontSize: "42px"}}>Fire</h1>
           </div>
+
           {this.test()}
           <Menu
             theme="dark"

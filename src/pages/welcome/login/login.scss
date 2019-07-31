@@ -1,5 +1,5 @@
 .login_view {
-  background: #333333;
+  background: #666666;
   height: 100%;
   display:flex;
   flex-direction: row;
@@ -9,6 +9,21 @@
     display: flex;
     margin: 10px;
     padding: 10px;
-    border: 1px solid white;
+    width: 578px;
+    height: 500px;
+    background: #333333;
+  }
+
+  .input1{
+    width:400px;
+    left: 80px;
+    top:60px;
   }
 }
+
+a{
+  position: relative;
+  left: 240px;
+  top:100px;
+}
+
