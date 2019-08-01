@@ -1,12 +1,12 @@
 .account_date,
 .account_num,
 .account_accepted,
-.account_credit,
-.account_creditRecord
+.account_credit
 {
-  background:black;
+  background:#222222;
   margin:10px auto;
   padding:10px;
+  //margin-left-min:10px;
   width:1000px;
   border: none;
   flex-direction: row;
@@ -26,7 +26,7 @@ margin:8px;
 
 .ant-card-head-title{
   font-size:20px;
-  color:#FACD91;
+  color:#FF4C18;
 }
 
 //个人资料
@@ -96,10 +96,11 @@ margin:8px;
 
 //信用值情况
 .account_credit{
+  margin-top:60px;
   .account_creditRecord{
     width: 300px;
     float: left;
-background: #cee1fd;
+    background: #cee1fd;
     .ant-card-head-title{
       padding:10px;
       height:30px;
