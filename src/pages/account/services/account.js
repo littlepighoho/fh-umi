@@ -18,3 +18,15 @@ export const me = () => {
     method: 'get',
   })
 };
+
+export const register = (payload) => {
+  return request({
+    url:API.Account.register,
+    method:'post',
+    data:{
+      username:payload.username,
+      password:payload.password,
+      sex:payload.sex
+    }
+  })
+};

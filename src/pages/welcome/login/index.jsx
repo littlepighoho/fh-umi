@@ -2,6 +2,7 @@ import React from 'react';
 import Login from '../../../components/account/auth/login';
 import './login.scss'
 import { connect } from 'dva';
+
 const mapStateToProps = (state) => {
   console.log(state)
 };

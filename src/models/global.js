@@ -7,8 +7,13 @@ export default {
   },
   effects: {
     * login({payload} , { call, put }) {
-      console.log(payload)
+      console.log(payload);
       const data = yield call(accountService.login, payload);
+      console.log(data);
+    },
+    * register({payload} , { call, put }) {
+      console.log(payload);
+      const data = yield call(accountService.register, payload);
       console.log(data);
     },
     *me({payload}, { call, put }) {

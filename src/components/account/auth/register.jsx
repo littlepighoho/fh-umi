@@ -1,5 +1,5 @@
 import React from 'react';
-import {Row,Input,Tooltip,Icon,Form,Button} from 'antd';
+import {Row,Input,Tooltip,Icon,Form,Button,Radio} from 'antd';
 import PropTypes from 'prop-types';
 
 class Register extends React.PureComponent{
@@ -9,20 +9,33 @@ class Register extends React.PureComponent{
     state={
         username:"",
         password:"",
-        repassword:""
-    }
+        repassword:"",
+        sex:0
+    };
     handleRegister = () =>{
+      if(this.state.password === this.state.repassword){
         this.props.doRegister({
-            username:this.state.username,
-            password:this.state.password,
-            repassword:this.state.repassword
+          username:this.state.username,
+          password:this.state.password,
+          sex:this.state.sex
         })
-    }
+      }
+       else{
+        alert("两次密码输入不一致");
+      }
+    };
     handleInputChange = (keyName) => ({ target }) => {
         this.setState({
-            [keyName]: target.value,
-        })
-    }
+        [keyName]: target.value,
+        });
+    };
+
+    handleRadioChange = (e) => {
+      console.log('radio checked', e.target.value);
+      this.setState({
+        value: e.target.value,
+      });
+    };
     render(){
         return(
             <Row>
@@ -32,10 +45,10 @@ class Register extends React.PureComponent{
                         value={this.state.username}
                         placeholder="Enter your email"
                         onChange={this.handleInputChange('username')}
-                        prefix={<Icon type="user" style={{color:'rgba(0,0,.25'}}/>}
+                        prefix={<Icon type="user" style={{color:'rgba(0,0,.25)'}}/>}
                         suffix={
                             <Tooltip title="输入你的邮箱">
-                                <Icon tyoe="info-circle" style={{color:'rgba(0,0,.45)'}}/>
+                                <Icon type="info-circle" style={{color:'rgba(0,0,.45)'}}/>
                             </Tooltip>
                         }
                     />
@@ -51,8 +64,14 @@ class Register extends React.PureComponent{
                     <Input.Password
                     value={this.state.repassword}
                     onChange={this.handleInputChange('repassword')}
-                    placeholder="angin input password"
+                    placeholder="again input password"
                     />
+                </Form.Item>
+                <Form.Item>
+                  <Radio.Group onChange={this.handleRadioChange} value={this.state.value}>
+                    <Radio style={{color:'white'}} value={1}>男</Radio>
+                    <Radio style={{color:'white'}} value={2}>女</Radio>
+                  </Radio.Group>
                 </Form.Item>
                 <Form.Item>
                     <Button onClick={this.handleRegister} type="primary" className="register_button">Register</Button>

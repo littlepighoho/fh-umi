@@ -2,7 +2,7 @@ import React from 'react';
 import {Card,Icon,Avatar,Carousel,Descriptions} from  'antd';
 import "./index.scss";
 
-const {Meta} = Card;
+// const {Meta} = Card;
 
 export default class AccountView extends React.PureComponent{
   state = {

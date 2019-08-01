@@ -2,6 +2,7 @@ import React from 'react';
 import Register from '../../../components/account/auth/register';
 import './register.scss'
 import { connect } from 'dva';
+
 const mapStateToProps = (state) => {
   console.log(state)
 };
@@ -10,11 +11,11 @@ const mapStateToProps = (state) => {
 class RegisterView extends React.PureComponent{
   doRegister = (payload) => {
     this.props.dispatch({
-      type: 'global/register',
-      payload: {
-        username: payload.username,
-        password: payload.password,
-       repassword:payload.repassword
+        type: 'global/register',
+        payload: {
+          username: payload.username,
+          password: payload.password,
+          sex:payload.sex
       }
     })
   };
