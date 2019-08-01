@@ -2,8 +2,11 @@ import React from 'react';
 import Login from '../../../components/account/auth/login';
 import './login.scss'
 import { connect } from 'dva';
+import router from 'umi/router';
 const mapStateToProps = (state) => {
-  console.log(state)
+  return {
+    auth: state.global.auth,
+  }
 };
 
 @connect(mapStateToProps)
@@ -14,6 +17,10 @@ class LoginView extends React.PureComponent{
       payload: {
         username: payload.username,
         password: payload.password
+      }
+    }).then(() => {
+      if(this.props.auth.logined) {
+        router.push('')
       }
     })
   };

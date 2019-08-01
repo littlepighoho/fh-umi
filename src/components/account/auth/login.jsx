@@ -15,6 +15,7 @@ class Login extends React.PureComponent {
       password: this.state.password
     })
   }
+
   handleInputChange = (keyName) => ({ target }) => {
     this.setState({
       [keyName]: target.value,
