@@ -1,8 +1,8 @@
-import React from 'react';
+import React ,{Component} from 'react';
 import LoginView from './login/index';
 import RegisterView from '@/pages/welcome/register';
 import register from '@/components/account/auth/register';
-class WelcomeView extends React.PureComponent {
+class WelcomeView extends Component {
 
   render() {
     const { location } = this.props;
