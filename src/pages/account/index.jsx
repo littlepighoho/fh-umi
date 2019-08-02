@@ -6,33 +6,55 @@ import "./index.scss";
 
 export default class AccountView extends React.PureComponent{
   state = {
-    current: 'mail',
+    "username":"4@firehydrant.com",
+    "team":{
+      "role":0,
+      "nickname":"国服集结",
+      "create_time":1563979767.82811,
+      "id":2
+    },
+    "role":0,
+    "phone":"66666666",
+    "motto":"好好学习天天向上",
+    "avator":"http://demo.sc.chinaz.net/Files/DownLoad/moban/201907/moban3892/images/t1.jpg",
+    "nickname":"4@firehydrant.com",
+    "update_time":1563976794.03092,
+    "create_time":1563976794.0309,
+    "sex":1
   };
 
   render() {
-
     return (
       <div>
           {/*个人基础信息*/}
         <Card  className="account_date"
-
           cover={
-            <Avatar className="account_avatar" src="http://demo.sc.chinaz.net/Files/DownLoad/moban/201907/moban3892/images/t1.jpg" />
-          }
-               title="个人资料"
+            <Avatar className="account_avatar" src={this.state.avator} />
+          } title="个人资料"
         >
-          <Descriptions className="account_description">
-            <Descriptions.Item label="昵称">jing</Descriptions.Item>
-            <Descriptions.Item label="微信">12346</Descriptions.Item>
-            <Descriptions.Item label="出生年月日" >1999年1月1日</Descriptions.Item>
-            <Descriptions.Item label="等级">🌟🌟🌟</Descriptions.Item>
-            <Descriptions.Item label="接受任务数">30</Descriptions.Item>
-            <Descriptions.Item label="发布任务数">10</Descriptions.Item>
-            <Descriptions.Item label="自我介绍">
-              &nbsp;&nbsp;&nbsp;&nbsp;对待工作认真负责，善于沟通、协调有较强的组织能力与团队精神；活泼开朗、乐观上进、有爱心并善于施教并行；上进心强、勤于学习能不断提高自身的能力与综合素质。在未来的工作中，我将以充沛的精力，刻苦钻研的精神来努力工作，稳定地提高自己的工作能力，与企业同步发展。
+          <Descriptions className="account_description" column={4}>
+            <Descriptions.Item label="用户名" span={2}>{this.state.username} </Descriptions.Item>
+            <Descriptions.Item label="角色" span={2}>{this.state.role}</Descriptions.Item>
+            <Descriptions.Item label="昵称" >{this.state.nickname}</Descriptions.Item>
+            <Descriptions.Item label="性别">{this.state.sex}</Descriptions.Item>
+            <Descriptions.Item label="电话">{this.state.phone}</Descriptions.Item>
+            <Descriptions.Item label="创建时间">{this.state.create_time}</Descriptions.Item>
+            <Descriptions.Item label="一句话签名">
+              &nbsp;&nbsp;&nbsp;&nbsp;{this.state.motto}
             </Descriptions.Item>
           </Descriptions>
           <button  type="primary" className="account_button">修改个人信息</button>
+        </Card>
+          {/*团队信息*/}
+        <Card  className="account_team"
+                title="团队信息"
+        >
+          <Descriptions className="account_description">
+            <Descriptions.Item label="团队昵称">{this.state.team.nickname} </Descriptions.Item>
+            <Descriptions.Item label="角色">{this.state.team.role}</Descriptions.Item>
+            <Descriptions.Item label="创建时间">{this.state.team.create_time}</Descriptions.Item>
+            <Descriptions.Item label="id">{this.state.team.id}</Descriptions.Item>
+          </Descriptions>
         </Card>
 
         {/*发布任务数据分析*/}
