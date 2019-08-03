@@ -56,7 +56,7 @@ class BaseLayout extends React.PureComponent {
     key: 'rank',
     path: '/rank',
     title: '排行榜',
-    icon: 'crown',
+    icon: 'trophy',
   }];
   renderSelectedKeys = () => {
     const { location } = this.props;
