@@ -4,9 +4,11 @@ import  imgURL4 from '@/images/炸弹.png';
 import  imgURL5 from '@/images/灭火器.png';
 import Top from '@/components/account/auth/top';
 import router from 'umi/router';
+import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Radio, Checkbox, Button, AutoComplete, } from 'antd';
+class firstView extends React.PureComponent {
+  state = {
 
-class firstView extends Component {
-  state = {};
+  };
 
   handleNavChange = (item) => () => {
     router.push(item.path)
@@ -20,17 +22,24 @@ class firstView extends Component {
     path: '/dashboard',
 
   }];
+
+
+
+
   render() {
     return (
       <Fragment>
         {/*---------导航栏-----------*/}
          <Top />
+
+
+
         {/*--------欢迎字样 -------------*/}
         <div className="typeface">
           HELLO,
         </div>
         <br/>
-        <div class="typeface_color">
+        <div class="typeface_color" >
           FIRE HYDRANT USER1.
         </div>
         <br/>

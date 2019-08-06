@@ -1,0 +1,60 @@
+.inpu_wid{
+  width: 300px;
+}
+.card_word{
+  position: absolute;
+  top:60px;
+  left: -160px;
+  background-color: #262729;
+  border-color: #262729;
+  width: 470px;
+}
+
+:global {
+  ol {
+    list-style-type: demical;
+  }
+  ol li {
+    list-style-position: inside;
+  }
+  ul {
+    list-style-type: decimal;
+  }
+
+  ul li {
+    list-style-position: inside;
+  }
+}
+
+.card_word ul li{
+margin-top: 1px;
+}
+.check{
+  color: white;
+  position: absolute;
+  top:300px;
+  left:-90px;
+}
+.ant-form-item-control{
+  width: 200px;
+
+}
+
+ .ant-form-item-label > label{
+   color: white;
+ }
+
+.ant-input-number-input{
+  color: #222222;
+}
+
+.ant-form-item-control{
+width: 200px;
+}
+
+
+
+.number{
+  position: absolute;
+  left: -55px;
+}
