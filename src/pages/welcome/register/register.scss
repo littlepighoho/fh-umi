@@ -1,0 +1,30 @@
+.register_view {
+  background: #222222;
+  height: 100%;
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  .register_pad {
+    background: #333333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 100px;
+    box-shadow: 0 0 20px  5px #ad2102;
+    .fh-logo {
+      margin: 36px;
+      display: flex;
+      flex-direction: row;
+      font-size: 40px;
+      align-items: center;
+    }
+    form {
+      margin: 0 90px 0 60px ;
+      width: 400px;
+    }
+    label {
+      color: white !important
+    }
+  }
+}

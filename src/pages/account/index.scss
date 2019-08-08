@@ -1,0 +1,118 @@
+.account_date,
+.account_num,
+.account_accepted,
+.account_credit,
+.account_team
+{
+  background:#222222;
+  margin:20px auto;
+  padding:10px;
+  width:1000px;
+  border: none;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color:#eeeeee;
+}
+p{
+margin:8px;
+}
+.ant-descriptions-item-content {
+  color: #eeeeee;
+}
+.ant-descriptions-item-label{
+  color: #eeeeee;
+}
+
+.ant-card-head-title{
+  font-size:20px;
+  color:#FF4C18;
+}
+
+//个人资料
+.account_date,.account_team{
+  .account_avatar{
+    width: 50px;
+    height: 50px;
+    margin-left: 900px;
+    margin-top:-55px;
+  }
+
+  .account_description{
+    color:#eeeeee;
+    font-size:10px;
+    //margin-top:20px;
+  }
+
+  .account_button{
+    margin-right:10px;
+    width:150px;
+    height:30px;
+    background: #ad2102;
+    border:none;
+    border-radius: 5%;
+    float: right;
+  }
+}
+
+//接受任务和发布任务数据分析
+.account_num{
+    //margin-top:60px;
+    .account_accepted{
+      width:400px;
+      padding:10px;
+      margin-bottom:30px;
+      margin-left:40px;
+       background: #cee1fd;
+      float:left;
+      box-shadow: #51515a 10px 0px 30px;
+        //接受任务内部卡片
+      .ant-card-head-title{
+        padding:10px;
+        height:30px;
+        font-size:15px;
+        color:#FF4C18;
+      }
+      .ant-card-head{
+        border-bottom-color: black;
+      }
+      .ant-card-body {
+        color: black;
+      }
+      //走马灯
+      .account_numContent{
+        .account_numContent.ant-carousel .slick-dots-bottom {
+          bottom: -20px;
+          margin:10px;
+        }
+        .ant-carousel .slick-slide {
+          text-align: center;
+          height: 10px;
+          line-height: 160px;
+          overflow: hidden;
+        }
+      }
+  }
+}
+
+//信用值情况
+.account_credit{
+  .account_creditRecord{
+    width: 300px;
+    float: left;
+    background: #cee1fd;
+    .ant-card-head-title{
+      padding:10px;
+      height:30px;
+      font-size:15px;
+      color:#FF4C18;
+    }
+    .ant-card-head{
+      border-bottom-color: black;
+    }
+    .ant-card-body {
+      color: black;
+    }
+  }
+}
+
