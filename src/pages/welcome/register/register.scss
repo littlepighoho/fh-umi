@@ -1,29 +1,30 @@
 .register_view {
+  background: #222222;
+  height: 100%;
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  .register_pad {
     background: #333333;
-    height: 100%;
-    display:flex;
-    flex-direction: row;
-    justify-content: center;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    .register_pad {
+    border-radius: 100px;
+    box-shadow: 0 0 20px  5px #ad2102;
+    .fh-logo {
+      margin: 36px;
       display: flex;
-      margin: 10px;
-      padding: 50px;
-      padding-left:70px;
-      padding-right:70px;
-      background: black;
-      .register_head{
-        text-align: center;
-        color:white;
-        display: block;
-        padding-bottom:10px;
-        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-        font-size: 40px;
-        }
-        .register_button{
-            background: #FF4C18;
-            width: 100%;
-            margin:0 auto;
-        }
+      flex-direction: row;
+      font-size: 40px;
+      align-items: center;
+    }
+    form {
+      margin: 0 90px 0 60px ;
+      width: 400px;
+    }
+    label {
+      color: white !important
     }
   }
+}

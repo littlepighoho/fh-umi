@@ -7,3 +7,6 @@ html, body, #root {
 body {
   margin: 0;
 }
+.ant-message-notice-content{
+  background: #262729;
+}

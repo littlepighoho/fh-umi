@@ -1,84 +1,154 @@
 import React from 'react';
-import {Row,Input,Tooltip,Icon,Form,Button,Radio} from 'antd';
+import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Radio, Button } from 'antd';
 import PropTypes from 'prop-types';
 
+
 class Register extends React.PureComponent{
-    static propTypes ={
-        doRegister:PropTypes.func.isRequired,
-    };
-    state={
-        username:"",
-        password:"",
-        repassword:"",
-        sex:0
-    };
-    handleRegister = () =>{
-      if(this.state.password === this.state.repassword){
-        this.props.doRegister({
-          username:this.state.username,
-          password:this.state.password,
-          sex:this.state.sex
-        })
+  static propTypes ={
+    doRegister:PropTypes.func.isRequired,
+  };
+  state={
+    confirmDirty: false,
+  };
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        console.log(values);
+        this.props.doRegister(values)
       }
-       else{
-        alert("两次密码输入不一致");
-      }
+    });
+  };
+  handleConfirmBlur = e => {
+    const { value } = e.target;
+    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
+  };
+
+  compareToFirstPassword = (rule, value, callback) => {
+    const { form } = this.props;
+    if (value && value !== form.getFieldValue('password')) {
+      callback('密码不一致！');
+    } else {
+      callback();
+    }
+  };
+
+  validateToNextPassword = (rule, value, callback) => {
+    const { form } = this.props;
+    if (value && this.state.confirmDirty) {
+      form.validateFields(['confirm'], { force: true });
+    }
+    callback();
+  };
+
+
+  render(){
+    const { getFieldDecorator } = this.props.form;
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 8 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+      },
     };
-    handleInputChange = (keyName) => ({ target }) => {
-        this.setState({
-        [keyName]: target.value,
-        });
+    const tailFormItemLayout = {
+      wrapperCol: {
+        xs: {
+          span: 24,
+          offset: 0,
+        },
+        sm: {
+          span: 16,
+          offset: 8,
+        },
+      },
     };
 
-    handleRadioChange = (e) => {
-      console.log('radio checked', e.target.value);
-      this.setState({
-        value: e.target.value,
-      });
-    };
-    render(){
-        return(
-            <Row>
-                <h1 className="register_head">FireHydrant</h1>
-                <Form.Item>
-                    <Input
-                        value={this.state.username}
-                        placeholder="Enter your email"
-                        onChange={this.handleInputChange('username')}
-                        prefix={<Icon type="user" style={{color:'rgba(0,0,.25)'}}/>}
-                        suffix={
-                            <Tooltip title="输入你的邮箱">
-                                <Icon type="info-circle" style={{color:'rgba(0,0,.45)'}}/>
-                            </Tooltip>
-                        }
-                    />
-                </Form.Item>
-                <Form.Item>
-                    <Input.Password
-                    value={this.state.password}
-                    onChange={this.handleInputChange('password')}
-                    placeholder="input password"
-                    />
-                </Form.Item>
-                <Form.Item>
-                    <Input.Password
-                    value={this.state.repassword}
-                    onChange={this.handleInputChange('repassword')}
-                    placeholder="again input password"
-                    />
-                </Form.Item>
-                <Form.Item>
-                  <Radio.Group onChange={this.handleRadioChange} value={this.state.value}>
-                    <Radio style={{color:'white'}} value={1}>男</Radio>
-                    <Radio style={{color:'white'}} value={2}>女</Radio>
-                  </Radio.Group>
-                </Form.Item>
-                <Form.Item>
-                    <Button onClick={this.handleRegister} type="primary" className="register_button">Register</Button>
-                </Form.Item>
-            </Row>
-        )
-    }
+    return(
+      <Form {...formItemLayout} onSubmit={this.handleSubmit}>
+        <Form.Item label="邮箱">
+          {getFieldDecorator('email', {
+            rules: [
+              {
+                type: 'email',
+                message: '您输入的不是一个合法的邮箱',
+              },
+              {
+                required: true,
+                message: '请输入您的邮箱',
+              },
+            ],
+          })(<Input />)}
+        </Form.Item>
+        <Form.Item label="密码" hasFeedback>
+          {getFieldDecorator('password', {
+            rules: [
+              {
+                required: true,
+                message: '请输入您的密码',
+              },
+              {
+                validator: this.validateToNextPassword,
+              },
+            ],
+          })(<Input.Password />)}
+        </Form.Item>
+        <Form.Item label="确认密码" hasFeedback>
+          {getFieldDecorator('confirm', {
+            rules: [
+              {
+                required: true,
+                message: '请确认您的密码',
+              },
+              {
+                validator: this.compareToFirstPassword,
+              },
+            ],
+          })(<Input.Password onBlur={this.handleConfirmBlur} />)}
+        </Form.Item>
+        <Form.Item
+          label={
+            <span>
+              昵称&nbsp;
+              <Tooltip title="这是您的昵称">
+                <Icon type="question-circle-o" />
+              </Tooltip>
+            </span>
+          }
+        >
+          {getFieldDecorator('nickname', {
+            rules: [{ required: true, message: '请输入您的昵称', whitespace: true }],
+          })(<Input />)}
+        </Form.Item>
+        <Form.Item label="性别">
+          {getFieldDecorator('sex', {
+            rules: [{ required: true, message: '请选择您的性别', whitespace: true }],
+          })(<Radio.Group>
+            <Radio value="0">小姐姐</Radio>
+            <Radio value="1">小哥哥</Radio>
+          </Radio.Group>)}
+        </Form.Item>
+        {/*<Form.Item {...tailFormItemLayout}>*/}
+        {/*  {getFieldDecorator('agreement', {*/}
+        {/*    valuePropName: 'checked',*/}
+        {/*  })(*/}
+        {/*    <Checkbox>*/}
+        {/*      I have read the <a href="">agreement</a>*/}
+        {/*    </Checkbox>,*/}
+        {/*  )}*/}
+        {/*</Form.Item>*/}
+        <Form.Item {...tailFormItemLayout}>
+          <Button type="primary" htmlType="submit">
+            Register
+          </Button>
+        </Form.Item>
+      </Form>
+    )
+  }
 }
 
-export default  Register;
+const RegisterForm = Form.create({name: 'register'})(Register)
+export default RegisterForm;

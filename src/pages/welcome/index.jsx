@@ -1,6 +1,7 @@
 import React from 'react';
 import LoginView from './login/index';
-import RegisterView from './register/index';
+import RegisterView from '@/pages/welcome/register';
+
 
 class WelcomeView extends React.PureComponent {
 
