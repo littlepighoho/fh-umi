@@ -1,34 +1,6 @@
-.team_fist{
-  position: absolute;
-  top: 200px;
-  left: 600px;
-  font-size: 30px;
-  color: white;
-}
 
-.team_fist li{
-  margin-left: auto;
-  margin-top: 90px;
-  color: white;
-  font-size: 20px;
-  float: left;
-
-}
-.card{
-  width: 500px;
-  position: absolute;
-  left:-90px;
-  top:80px;
-  background-color: #222222;
-  height: 250px;
-}
-.card_word{
-  color: white;
-  font-size: 20px;
-  float: left;
-}
 .steps-content {
-  margin-top: 100px;
+  margin-top: 50px;
   border: 1px dashed #262729;
   border-radius: 6px;
   background-color: #262729;
@@ -48,9 +20,6 @@
 .step{
   all-space-treatment: 30px;
   width: 930px;
-  position: absolute;
-  left: 260px;
-  top:90px;
-
+  margin-left: 210px;
 }
 

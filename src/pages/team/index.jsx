@@ -1,8 +1,8 @@
 import React,{Component,Fragment} from 'react';
 import './team.scss';
-import  '../../components/create_team/step1'
+
 import { Steps, Button, message,Card,Descriptions} from 'antd';
-import Step1 from '@/components/create_team/step1';
+import Step1 from "@/components/create_team/step1"
 import Step2 from '@/components/create_team/step2';
 import Step3 from '@/components/create_team/step3';
 const { Step } = Steps;
@@ -39,22 +39,48 @@ function getStepContent(id) {
 }
 
 class teamView extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      current: 0,
-    };
+  static propTypes={
+
+  };
+  static  defaultProps={
+
   }
 
-  next() {
+
+  state={
+    current:0,
+  };
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     current: 0,
+  //   };
+  // }
+
+
+  next = () => {
     const current = this.state.current + 1;
     this.setState({ current });
   }
 
-  prev() {
+  prev = () => {
     const current = this.state.current - 1;
     this.setState({ current });
   }
+
+  handleChangeStep=(keyName)=>()=>{
+    if(keyName==='next'){
+      this.setState({
+        current:this.state.current+1,
+      })
+    }else{
+      this.setState({
+        current:this.state.current-1,
+      })
+    }
+
+  };
+
 
 
   render() {
@@ -70,29 +96,24 @@ class teamView extends React.Component {
           ))}
         </Steps>
 
-
-
-
         <div className="steps-content">
           {getStepContent(current)}
         </div>
-
-
         <div className="steps-action">
           {current < steps.length - 1 && (
-            <Button type="primary" onClick={() => this.next()}>
+            <Button type="primary" htmlType="submit" onClick={this.handleChangeStep('next')}>
               下一步
             </Button>
           )}
 
           {current === steps.length - 1 && (
-            <Button type="primary" onClick={() => message.success('队伍创建成功!')}>
+            <Button type="primary" htmlType="submit" onClick={() => message.success('队伍创建成功!')}>
               创建队伍！
             </Button>
           )}
 
           {current > 0 && (
-            <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
+            <Button style={{ marginLeft: 8 }} htmlType="submit" onClick={this.handleChangeStep('prev')}>
               上一步
             </Button>
           )}

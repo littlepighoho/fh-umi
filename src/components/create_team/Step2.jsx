@@ -73,13 +73,12 @@ class Step2 extends Component {
 
         <FormItem>
 
-          {/*<a className="login-form-forgot" href="" >Forgot password</a>*/}
+
           {/*<Button type="primary" htmlType="submit" className="login-form-button">*/}
           {/*  点击确认然后进行下一步*/}
           {/*</Button>*/}
 
         </FormItem>
-
       </Form>
 
     )
