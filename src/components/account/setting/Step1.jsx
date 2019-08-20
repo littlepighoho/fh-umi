@@ -67,7 +67,7 @@ class Step1View extends React.Component {
               {
                 this.state.show_btn ?
                   <Button size='small' type='secondary' circle = { true } onClick = { this.getCode.bind(this) }>获取验证码</Button>
-                  : <Button className='disbtn' disabled = { true } size='small' type='secondary' circle = { true }> { this.state.code_ts }</Button>
+                  : <Button  disabled = { true } size='small' type='secondary' circle = { true }> { this.state.code_ts }</Button>
               }
             </div>
           </Form.Item>

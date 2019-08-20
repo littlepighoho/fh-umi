@@ -5,6 +5,7 @@ import { ContentLayout } from '@/layouts/contentLayout';
 import Step1 from '@/components/account/setting/Step1';
 import Step2 from '@/components/account/setting/Step2';
 import Step3 from '@/components/account/setting/Step3';
+import AvatarChange from '@/components/account/setting/avatorChange';
 import { Input } from 'antd';
 import router from 'umi/router';
 import { connect } from 'react-redux';
@@ -171,6 +172,7 @@ render() {
   return (
     <ContentLayout dogetMessage={this.doGetMessage}>
 
+
         {/*个人基础信息*/}
         <Card  className="account_changeDate" title="修改个人信息">
           <Form className="account_description" {...formItemLayout} >
@@ -196,15 +198,24 @@ render() {
               </Radio.Group>)}
             </Form.Item>
 
+            <Form.Item label="角色">
+              {getFieldDecorator('role')(
+                <Radio.Group defaultValue={this.state.role}  value={this.state.role} >
+                  <Radio value="0">普通用户</Radio>
+                  <Radio value="1">管理员</Radio>
+                </Radio.Group>)}
+            </Form.Item>
+
             <Form.Item label="生日">
               {getFieldDecorator('date-picker')(<DatePicker />)}
             </Form.Item>
 
             <Form.Item label="一句话签名">
               {getFieldDecorator('motto')(
-                <Input placeholder={this.state.motto}  value={this.state.motto}allowClear/>)}
+                <Input placeholder={this.state.motto}  value={this.state.motto} allowClear/>)}
             </Form.Item>
           </Form>
+          <AvatarChange className={"data_avatar"}/>
           <button  type="primary" className="account_button"
                    onClick={this.handleChangeMessage}>确认修改</button>
         </Card>

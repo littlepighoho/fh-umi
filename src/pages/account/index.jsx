@@ -7,7 +7,7 @@ import router from 'umi/router';
 
 const mapStateToProps = (state) => {
   return {
-    auth:state.account.auth,
+    auth: state.account.auth,
   };
 };
 
@@ -60,6 +60,9 @@ class AccountView extends React.PureComponent{
       }
     })
   };
+  handleChangeAvatar = () => {
+    this.props.history.push('/account/setting');
+  };
 
   handleChange = () =>{
     this.props.history.push('/account/setting')
@@ -72,7 +75,7 @@ class AccountView extends React.PureComponent{
           {/*个人基础信息*/}
         <Card  className="account_date"
           cover={
-            <Avatar className="account_avatar" src={this.state.avator} />
+            <Avatar className="account_avatar" src={this.state.avator} title="更改"onClick={this.handleChangeAvatar}/>
           } title="个人资料"
         >
           <Descriptions className="account_description" column={4}>
