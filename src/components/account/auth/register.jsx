@@ -20,6 +20,7 @@ class Register extends React.PureComponent{
       }
     });
   };
+  //确认密码
   handleConfirmBlur = e => {
     const { value } = e.target;
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
@@ -96,6 +97,7 @@ class Register extends React.PureComponent{
               },
             ],
           })(<Input.Password />)}
+
         </Form.Item>
         <Form.Item label="确认密码" hasFeedback>
           {getFieldDecorator('confirm', {

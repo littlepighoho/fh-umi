@@ -9,9 +9,13 @@ const Account = {
 }
 
 
+const Teams = {
+  create:'/teams',
+}
 
 
 
 export default {
   Account,
+  Teams,
 }

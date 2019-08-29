@@ -1,25 +1,46 @@
-
-.steps-content {
-  margin-top: 50px;
-  border: 1px dashed #262729;
-  border-radius: 6px;
-  background-color: #262729;
-  min-height: 200px;
-  text-align: center;
-  padding-top: 80px;
-  width: 700px;
-  height: 400px;
-  margin-left: 300px;
-}
-.steps-action {
-  margin-top: 30px;
-  margin-left: 570px;
+.text{
+  color: #222222;
 }
 
 
-.step{
-  all-space-treatment: 30px;
-  width: 930px;
-  margin-left: 210px;
+
+.editable-cell {
+  position: relative;
 }
 
+.editable-cell-value-wrap {
+  padding: 5px 12px;
+  cursor: pointer;
+}
+
+.editable-row:hover .editable-cell-value-wrap {
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 4px 11px;
+}
+
+.ant-table-column-title{
+  color: black;
+}
+.ant-table-header-column{
+  color: white;
+}
+.ant-table-column-has-actions ant-table-column-has-filters{
+  width: 2px;
+
+}
+
+.ant-table-thead > tr > th, .ant-table-tbody > tr > td {
+  padding: 16px 6px;
+}
+//.ant-table-wrapper{
+//  width: 1000px;
+//}
+
+.ant-spin-nested-loading{
+  width: 1000px;
+  margin-left: 10px;
+}
+.ant-pagination ant-table-pagination{
+  padding-left: 20px;
+}

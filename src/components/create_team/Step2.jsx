@@ -1,25 +1,29 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input,InputNumber,Card, Button, Checkbox, Upload } from 'antd';
+import { Form, Input, Button, Select, message , Radio} from 'antd';
 import "./step.scss";
+import PropTypes from 'prop-types';
+import router from 'umi/router';
 const FormItem = Form.Item;
 
-
-
 class Step2 extends Component {
+  state = {
+    visible: true,
+  };
 
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        window.location.href = '/team';
       }
     });
-  }
-
+  };
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    const { Option } = Select;
     const formItemLayout = {
       labelCol: {
         xs: { span: 30 },
@@ -30,11 +34,25 @@ class Step2 extends Component {
         sm: { span: 16 },
       },
     };
-
-
     function onChange(value) {
-      console.log('changed', value);
+      console.log(`selected ${value}`);
     }
+    function onBlur() {
+      console.log('blur');
+    }
+    function onFocus() {
+      console.log('focus');
+    }
+    function onSearch(val) {
+      console.log('search:', val);
+    }
+
+    function handleChange(value) {
+      console.log(`Selected: ${value}`);
+    }
+
+
+
 
     return (
 
@@ -51,38 +69,65 @@ class Step2 extends Component {
           )}
         </FormItem>
 
-        <FormItem label="简介">
-          {getFieldDecorator('一句话简介', {
-            rules: [{ required: true, message: '你确定不好好介绍你们的队伍嘛' }],
+        <FormItem label="口号">
+          {getFieldDecorator('输入你们的口号', {
+            rules: [{ required: true, message: '请输入你们的口号' }],
           })(
-            <Input   className="inpu_wid"  placeholder="简介" />
+            <Input   className="inpu_wid"  placeholder="口号" />
           )}
         </FormItem>
 
-        <FormItem label="人数">
-          {getFieldDecorator('人数', {
-            rules: [{ required: true, message: '请确认你们的队伍人数' }],
-          })(
-            <InputNumber  className="number" min={1} max={10} defaultValue={3} onChange={onChange}
-                         placeholder="队伍人数"
-            />
+      <FormItem label="状态" >
+        {getFieldDecorator('设置队伍状态', {
+          rules: [{ required: true ,message:'请设置队伍的状态'}],
+        })(
+          <Select
+            showSearch
+            style={{ width: 200 }}
+            placeholder="选择队伍的状态"
+            optionFilterProp="children"
+            onChange={onChange}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            onSearch={onSearch}
+            filterOption={(input, option) =>
+              option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+          >
+            <Option value="publish">公开</Option>
+            <Option value="private"
+                    // onClick={() => this.setState({ visible: !this.state.visible })}
+            >私人</Option>
 
-          )}
-        </FormItem>
+          </Select>
+
+        )}
+
+      </FormItem>
+
+
+      <Form.Item label="加入密码" className="inp">
+        {getFieldDecorator('私人队伍密码', {
+          rules: [{ required: false }],
+        })(
+          <Input.Password
+            // onClose={() => this.setState({ visible: false })}
+            placeholder="输入密码"/>
+        )}
+
+      </Form.Item>
 
 
         <FormItem>
-
-
-          {/*<Button type="primary" htmlType="submit" className="login-form-button">*/}
-          {/*  点击确认然后进行下一步*/}
-          {/*</Button>*/}
-
+          <Button type="primary" htmlType="submit"
+                   // onClick={() => message.success('队伍创建成功!')}
+                  className="login-form-button"
+          >
+              创建队伍
+          </Button>
         </FormItem>
       </Form>
-
     )
   }
 }
-
 export default Step2 = Form.create()(Step2);

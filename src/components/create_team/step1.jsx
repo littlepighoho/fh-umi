@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card,Checkbox,List, Typography } from 'antd';
+import { Checkbox,List} from 'antd';
 import "./step.scss";
 const data = [
   '1、任何人都可以创建队伍',
@@ -19,7 +19,6 @@ class Step1 extends React.Component {
 
     return (
       <div>
-
         <h3 className="team_fist">请阅读创建队伍需知</h3>
         <List
           size="small"

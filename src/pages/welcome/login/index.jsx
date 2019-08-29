@@ -8,8 +8,8 @@ const mapStateToProps = (state) => {
     auth: state.global.auth,
   }
 };
-@connect(mapStateToProps)
-class LoginView extends React.PureComponent{
+  @connect(mapStateToProps)
+  class LoginView extends React.PureComponent{
 
   doLogin = (payload) => {
     this.props.dispatch({

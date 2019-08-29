@@ -69,5 +69,28 @@ width: 200px;
 .ant-list-split .ant-list-item{
   border:none;
 }
-
-
+//
+//.ant-form-item-control{
+//  width: 100px;
+//}
+.ant-input{
+  width: 200px;
+}
+.ant-form-item .ant-switch{
+  margin-left: 3px;
+}
+Input:disabled{
+  border: 1px solid #DDD;
+  background-color: #F5F5F5;
+  color:#ACA899;opacity: 1;
+}
+.ant-select-selection-selected-value{
+  color: #262729;
+}
+.input{
+  display: none;
+}
+.login-form-button{
+  margin-top: 40px;
+  margin-left: 260px;
+}
