@@ -64,8 +64,8 @@ class BaseLayout extends React.PureComponent {
     title: '账户',
     icon: 'dashboard'
   }, {
-    key: 'collection',
-    path: '/practise/collection',
+    key: 'course',
+    path: '/practise/course',
     title: '课程',
     icon: 'fire'
   }, {

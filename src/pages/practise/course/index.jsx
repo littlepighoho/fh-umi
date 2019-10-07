@@ -1,7 +1,7 @@
 import React from 'react';
 import  {Row, Col } from 'antd'
 
-class CollectionView extends React.PureComponent {
+class CourseView extends React.PureComponent {
 
   DEMO = [{
     title: 'hei',
@@ -20,4 +20,4 @@ class CollectionView extends React.PureComponent {
   }
 }
 
-export default CollectionView;
+export default CourseView;
