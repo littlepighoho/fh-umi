@@ -42,21 +42,52 @@ class BaseLayout extends React.PureComponent {
     router.push(item.path)
   };
 
+  // navItems = [{
+  //   key: 'account',
+  //   path: '/account',
+  //   title: '仪表盘',
+  //   icon: 'dashboard'
+  // }, {
+  //   key: 'mission_hall',
+  //   path: '/mission_hall',
+  //   title: '任务大厅',
+  //   icon: 'fire'
+  // }, {
+  //   key: 'rank',
+  //   path: '/rank',
+  //   title: '排行榜',
+  //   icon: 'trophy',
+  // }];
   navItems = [{
     key: 'account',
-    path: '/account',
-    title: '仪表盘',
+    path: '/practise/account',
+    title: '账户',
     icon: 'dashboard'
   }, {
-    key: 'mission_hall',
-    path: '/mission_hall',
-    title: '任务大厅',
+    key: 'course',
+    path: '/practise/course',
+    title: '课程',
     icon: 'fire'
   }, {
-    key: 'rank',
-    path: '/rank',
-    title: '排行榜',
-    icon: 'crown',
+    key: 'school',
+    path: '/practise/school',
+    title: '学校',
+    icon: 'dashboard',
+  } , {
+    key:'班级',
+    path: '/practise/class',
+    title: '班级',
+    icon: 'dashboard',
+  }, {
+    key: 'attendance',
+    path: '/practise/attendance',
+    title: '考勤',
+    icon: 'dashboard',
+  }, {
+    key:'evaluate',
+    path: '/practise/evaluate',
+    title: '评价',
+    icon: 'dashboard',
   }];
   renderSelectedKeys = () => {
     const { location } = this.props;
