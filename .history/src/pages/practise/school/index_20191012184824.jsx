@@ -65,13 +65,13 @@ class Client extends React.Component {
     };
 
     this.columns = [
-      // {
-      //     title:'选择',
-      //     key:'check',
-      //     render:(text,record) =>(
-      //         <Checkbox></Checkbox>
-      //     )
-      // },
+      {
+          title:'选择',
+          key:'check',
+          render:(text,record) =>{
+              <Checkbox></Checkbox>
+          }
+      },
       {
         title: "学校编号",
         key: "schoolId",

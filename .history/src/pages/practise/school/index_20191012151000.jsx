@@ -5,7 +5,7 @@ import style from "./index.less";
 // import data from "./data.js";
 //网上源代码
 
-import {Modal,Card,Checkbox,
+import {Modal,Card,
   Table,
   Icon,
   Input,
@@ -14,7 +14,6 @@ import {Modal,Card,Checkbox,
   notification,
   Form
 } from "antd";
-// import CheckBox from "rc-checkbox";
 
 const sty = style;
 const FormItem = Form.Item;
@@ -65,17 +64,10 @@ class Client extends React.Component {
     };
 
     this.columns = [
-      // {
-      //     title:'选择',
-      //     key:'check',
-      //     render:(text,record) =>(
-      //         <Checkbox></Checkbox>
-      //     )
-      // },
       {
         title: "学校编号",
         key: "schoolId",
-        width: "15%",
+        width: "10%",
         renderDom: (form, record) => {
           return record.type !== "view" ? (
             <FormItem style={{ margin: 0 }}>
@@ -164,7 +156,7 @@ class Client extends React.Component {
       },
       {
         title: "负责人",
-        width: "10%",
+        // width: "10%",
         key: "schoolPerson",
         renderDom: (form, record) => {
           return record.type !== "view" ? (
@@ -186,6 +178,7 @@ class Client extends React.Component {
       },
       {
         title: "操作",
+        width:"20%",
         renderDom: (form, record) => (
           <span>
             {record.type === "new" && (
@@ -230,7 +223,7 @@ class Client extends React.Component {
                   删除
                 </a>
                 <Divider type="vertical" />
-                  <a href="/practise/school/student" >
+                <a href="javascript:;" >
                   查看
                 </a>
               </span>
@@ -454,6 +447,7 @@ class Client extends React.Component {
           selectedKeys,
           selectedRowKeys,
         })
+        return "1";
       },
     };
 
@@ -461,9 +455,9 @@ class Client extends React.Component {
       <div className="school_message">
         <Card title="学校管理" className="school_card">
           <Button
-          type="primary"
-            style={{ marginBottom: "10px"}}
+          style={{margin:'10px',float:'right'}}
             disabled={isRowOpen}
+            type="primary"
             onClick={this.addRow}
           >
             + 添加

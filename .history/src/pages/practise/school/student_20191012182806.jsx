@@ -5,7 +5,7 @@ import style from "./index.less";
 // import data from "./data.js";
 //网上源代码
 
-import {Modal,Card,Checkbox,
+import {Modal,Card,
   Table,
   Icon,
   Input,
@@ -14,7 +14,6 @@ import {Modal,Card,Checkbox,
   notification,
   Form
 } from "antd";
-// import CheckBox from "rc-checkbox";
 
 const sty = style;
 const FormItem = Form.Item;
@@ -65,127 +64,121 @@ class Client extends React.Component {
     };
 
     this.columns = [
-      // {
-      //     title:'选择',
-      //     key:'check',
-      //     render:(text,record) =>(
-      //         <Checkbox></Checkbox>
-      //     )
-      // },
       {
-        title: "学校编号",
-        key: "schoolId",
-        width: "15%",
+        title: "学生编号",
+        key: "studentId",
+        width: "10%",
         renderDom: (form, record) => {
           return record.type !== "view" ? (
             <FormItem style={{ margin: 0 }}>
-              {form.getFieldDecorator("schoolId", {
+              {form.getFieldDecorator("studentId", {
                 rules: [
                   {
                     required: true,
-                    message: "学校编号不能为空！"
+                    message: "学生编号不能为空！"
                   }
                 ],
-                initialValue: record.schoolId
+                initialValue: record.studentId
               })(<Input />)}
             </FormItem>
           ) : (
-            record.schoolId
+            record.studentId
           );
         },
-        ...this.getColumnSearchProps('schoolId'),
+        ...this.getColumnSearchProps('studentId'),
       },
       {
-        title: "学校名称",
-        width: "20%",
-        key: "schoolName",
+        title: "学生名称",
+        width: "25%",
+        key: "studentName",
         renderDom: (form, record) => {
           return record.type !== "view" ? (
             <FormItem style={{ margin: 0 }}>
-              {form.getFieldDecorator("schoolName", {
+              {form.getFieldDecorator("studentName", {
                 rules: [
                   {
                     required: true,
-                    message: "学校名称不能为空！"
+                    message: "学生名称不能为空！"
                   }
                 ],
-                initialValue: record.schoolName
+                initialValue: record.studentName
               })(<Input />)}
             </FormItem>
           ) : (
-            record.schoolName
+            record.studentName
           );
         },
-        ...this.getColumnSearchProps('schoolName'),
+        ...this.getColumnSearchProps('studentName'),
       },
       {
         title: "联系方式",
         width: "15%",
-        key: "schoolPhone",
+        key: "studentPhone",
         renderDom: (form, record) => {
           return record.type !== "view" ? (
             <FormItem style={{ margin: 0 }}>
-              {form.getFieldDecorator("schoolPhone", {
+              {form.getFieldDecorator("studentPhone", {
                 rules: [
                   {
                     required: true,
                     message: "联系方式不能为空！"
                   }
                 ],
-                initialValue: record.schoolPhone
+                initialValue: record.studentPhone
               })(<Input />)}
             </FormItem>
           ) : (
-            record.schoolPhone
+            record.studentPhone
           );
         }
       },
       {
-        title: "学校地址",
+        title: "学生班级",
         width: "20%",
-        key: "schoolAddress",
+        key: "studentClass",
         renderDom: (form, record) => {
           return record.type !== "view" ? (
             <FormItem style={{ margin: 0 }}>
-              {form.getFieldDecorator("schoolAddress", {
+              {form.getFieldDecorator("studentClass", {
                 rules: [
                   {
                     required: true,
-                    message: "学校地址能为空！"
+                    message: "班级"
                   }
                 ],
-                initialValue: record.schoolAddress
+                initialValue: record.studentClass
               })(<Input />)}
             </FormItem>
           ) : (
-            record.schoolAddress
+            record.studentClass
           );
         }
       },
       {
-        title: "负责人",
+        title: "班主任",
         width: "10%",
-        key: "schoolPerson",
+        key: "studentPerson",
         renderDom: (form, record) => {
           return record.type !== "view" ? (
             <FormItem style={{ margin: 0 }}>
-              {form.getFieldDecorator("schoolPerson", {
+              {form.getFieldDecorator("studentPerson", {
                 rules: [
                   {
                     required: true,
-                    message: "负责人不能为空！"
+                    message: "班主任不能为空！"
                   }
                 ],
-                initialValue: record.schoolPerson
+                initialValue: record.studentPerson
               })(<Input />)}
             </FormItem>
           ) : (
-            record.schoolPerson
+            record.studentPerson
           );
         }
       },
       {
         title: "操作",
+        // width:"20%",
         renderDom: (form, record) => (
           <span>
             {record.type === "new" && (
@@ -229,10 +222,10 @@ class Client extends React.Component {
                 <a href="javascript:;" onClick={e => this.delete(record)}>
                   删除
                 </a>
-                <Divider type="vertical" />
-                  <a href="/practise/school/student" >
+                {/* <Divider type="vertical" />ss */}
+                {/* <a href="javascript:;" onClick={() =>  this.props.history.push('/student.jsx')}>
                   查看
-                </a>
+                </a> */}
               </span>
             )}
           </span>
@@ -244,19 +237,19 @@ class Client extends React.Component {
   componentDidMount() {
     const data =[
       {
-        schoolId: "11222222",
-        schoolName: "apple",
-        schoolPerson: "001",
-        schoolPhone:'11111',
-        schoolAddress:"122",
+        studentId: "11222222",
+        studentName: "apple",
+        studentPerson: "001",
+        studentPhone:'11111',
+        studentClass:"122",
         id: 2905258602579968
       },
       {
-        schoolId: "112222",
-        schoolName: "apple",
-        schoolPerson: "001",
-        schoolPhone:'11111',
-        schoolAddress:"122",
+        studentId: "112222",
+        studentName: "apple",
+        studentPerson: "001",
+        studentPhone:'11111',
+        studentClass:"122",
         id: 2904806276614144
       }
     ]
@@ -281,11 +274,11 @@ class Client extends React.Component {
   addRow = () => {
     let { data } = this.state;
     let newRecord = {
-      schoolId: "",
-      schoolName:"",
-      schoolPerson: "",
-      schoolAddress:"",
-      schoolPhone:"",
+      studentId: "",
+      studentName:"",
+      studentPerson: "",
+      studentClass:"",
+      studentPhone:"",
       type: "new",
     };
 
@@ -370,7 +363,9 @@ class Client extends React.Component {
     });
     this.updateDataSource(newData, true);
   }
-
+  // onpen(record){
+    
+  // }
   onRowClick = (record,index) =>{
     let seltctKey = [index];
     Modal.info({
@@ -448,25 +443,24 @@ class Client extends React.Component {
         })
       };
     });
-    const rowSelection = {
-      onChange:(selectedRowKeys,selectedKeys) => {
-        this.setState({
-          selectedKeys,
-          selectedRowKeys,
-        })
-      },
-    };
+
 
     return (
       <div className="school_message">
-        <Card title="学校管理" className="school_card">
+        <Card title="学生信息" className="school_card">
           <Button
-          type="primary"
-            style={{ marginBottom: "10px"}}
+          style={{margin:'10px'}}
             disabled={isRowOpen}
+            type="primary"
             onClick={this.addRow}
           >
             + 添加
+          </Button>
+          <Button
+          style={{margin:'10px',float:'right'}}
+            type="primary"
+          >
+            返回
           </Button>
           <Table
             components={components}

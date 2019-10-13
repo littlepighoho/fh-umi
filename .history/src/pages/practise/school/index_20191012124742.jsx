@@ -1,11 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import style from "./index.less";
-// import "antd/dist/antd.css";
-// import data from "./data.js";
-//网上源代码
 
-import {Modal,Card,Checkbox,
+import {Modal,
   Table,
   Icon,
   Input,
@@ -14,7 +11,6 @@ import {Modal,Card,Checkbox,
   notification,
   Form
 } from "antd";
-// import CheckBox from "rc-checkbox";
 
 const sty = style;
 const FormItem = Form.Item;
@@ -65,17 +61,9 @@ class Client extends React.Component {
     };
 
     this.columns = [
-      // {
-      //     title:'选择',
-      //     key:'check',
-      //     render:(text,record) =>(
-      //         <Checkbox></Checkbox>
-      //     )
-      // },
       {
         title: "学校编号",
         key: "schoolId",
-        width: "15%",
         renderDom: (form, record) => {
           return record.type !== "view" ? (
             <FormItem style={{ margin: 0 }}>
@@ -97,7 +85,7 @@ class Client extends React.Component {
       },
       {
         title: "学校名称",
-        width: "20%",
+        width: "25%",
         key: "schoolName",
         renderDom: (form, record) => {
           return record.type !== "view" ? (
@@ -228,10 +216,6 @@ class Client extends React.Component {
                 <Divider type="vertical" />
                 <a href="javascript:;" onClick={e => this.delete(record)}>
                   删除
-                </a>
-                <Divider type="vertical" />
-                  <a href="/practise/school/student" >
-                  查看
                 </a>
               </span>
             )}
@@ -454,15 +438,15 @@ class Client extends React.Component {
           selectedKeys,
           selectedRowKeys,
         })
+        return "1";
       },
     };
 
     return (
-      <div className="school_message">
-        <Card title="学校管理" className="school_card">
+      <div className={sty.client}>
+        <div className={sty.clientWrap}>
           <Button
-          type="primary"
-            style={{ marginBottom: "10px"}}
+            style={{ marginBottom: "10px" }}
             disabled={isRowOpen}
             onClick={this.addRow}
           >
@@ -479,7 +463,7 @@ class Client extends React.Component {
             // rowSelection = {rowSelection}
             rowClassName="editable-row"
           />
-        </Card>
+        </div>
       </div>
     );
   }

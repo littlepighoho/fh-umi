@@ -41,7 +41,7 @@ class EditableCell extends React.Component {
         <EditableContext.Consumer>
           {form => {
             this.form = form;
-            return renderDom(form, record);
+            // return renderDom(form, record);
           }}
         </EditableContext.Consumer>
       </td>

@@ -5,7 +5,7 @@ import style from "./index.less";
 // import data from "./data.js";
 //网上源代码
 
-import {Modal,Card,Checkbox,
+import {Modal,Card,
   Table,
   Icon,
   Input,
@@ -14,7 +14,6 @@ import {Modal,Card,Checkbox,
   notification,
   Form
 } from "antd";
-// import CheckBox from "rc-checkbox";
 
 const sty = style;
 const FormItem = Form.Item;
@@ -65,13 +64,6 @@ class Client extends React.Component {
     };
 
     this.columns = [
-      // {
-      //     title:'选择',
-      //     key:'check',
-      //     render:(text,record) =>(
-      //         <Checkbox></Checkbox>
-      //     )
-      // },
       {
         title: "学校编号",
         key: "schoolId",
@@ -454,6 +446,7 @@ class Client extends React.Component {
           selectedKeys,
           selectedRowKeys,
         })
+        return "1";
       },
     };
 
