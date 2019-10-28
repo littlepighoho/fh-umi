@@ -8,6 +8,14 @@ export default {
   theme: {
     "primary-color": "#ad2102",
   },
+  urlLoaderExcludes: [/.svg$/],
+  chainWebpack(config) {
+    config.module
+      .rule('svg-with-file')
+      .test(/.svg$/)
+      .use('svg-with-file-loader')
+      .loader('file-loader');
+  },
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html
     ['umi-plugin-react', {
@@ -16,7 +24,7 @@ export default {
       dynamicImport: false,
       title: 'fh-umi',
       dll: false,
-      
+
       routes: {
         exclude: [
           /models\//,

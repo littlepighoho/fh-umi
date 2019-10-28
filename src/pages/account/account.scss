@@ -1,0 +1,61 @@
+.dashboard_view {
+  width: 100%;
+  .dashboard_content {
+    margin: 0 auto;
+    width: 1000px;
+    display: flex;
+    flex-direction: column;
+    .dashboard_item {
+      background: #1d1d1f;
+      border-radius: 4px;
+      padding: 16px 8px;
+    }
+    .dashboard_item:nth-child(n+1) {
+      margin-top: 8px;
+    }
+    .dashboard_account{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      .avatar {
+        margin:0 8px;
+      }
+      .profile {
+        margin: 0 16px;
+        .profile_title {
+          margin-bottom: 8px;
+          margin-right: 20px;
+          display: flex;
+          flex-direction: row;
+
+          .name {
+            flex: 1 1 auto;
+            font-size: 28px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+          }
+          .statics {
+            flex: 0 1 auto;
+            display: flex;
+            flex-direction: row;
+            .ant-statistic-content{
+              margin: 0 8px;
+            }
+          }
+        }
+        .ant-descriptions-title, span{
+          color: white !important;
+        }
+        .ant-descriptions-title {
+          font-size: 26px;
+        }
+        .ant-descriptions-item-label {
+          color: #b0b0b0 !important;
+          letter-spacing: 1px;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
