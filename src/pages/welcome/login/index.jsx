@@ -10,7 +10,15 @@ const mapStateToProps = (state) => {
 };
   @connect(mapStateToProps)
   class LoginView extends React.PureComponent{
-
+  // register = (payload) => {
+  //     this.props.dispatch({
+  //       type: 'global/register',
+  //       payload: {
+  //         username: superpassword
+  //         nisdsid
+  //       }
+  //     })
+  // }
   doLogin = (payload) => {
     this.props.dispatch({
       type: 'global/login',

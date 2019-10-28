@@ -30,7 +30,8 @@ export const checkLogin = () => {
     url: API.Account.login,
     method: 'get',
   })
-}
+};
+
 export const register = (payload) => {
   console.log(payload)
   return request({

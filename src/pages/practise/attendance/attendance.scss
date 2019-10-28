@@ -3,10 +3,13 @@ td.ant-table-column-has-actions.ant-table-column-has-filters{
   color: #222222;
 }
 
-.card{
+
+.card {
   width: 1070px;
-  height: 600px;
+  height: 550px;
   margin-left: 30px;
+  margin-top: 20px;
+  background-color: white;
 }
 
 .card2{
@@ -43,12 +46,12 @@ td.ant-table-column-has-actions.ant-table-column-has-filters{
   color: #222222;
 }
 
-//
-//.btn{
-//  width: 210px;
-//  margin-left: 1120px;
-//  top:-570px;
-//}
+
+.btn{
+  width: 210px;
+  margin-left: 1120px;
+  top:-570px;
+}
 
 /*分页*/
 .ant-pagination-prev, .ant-pagination-next, .ant-pagination-jump-prev, .ant-pagination-jump-next{
@@ -66,6 +69,25 @@ a{
   margin-top: -100px;
   left: -1px;
 }
-
-
-
+.select{
+  margin-left: 30px;
+}
+.add{
+  margin-left: 30px;
+}
+td{
+  color: #222222;
+}
+.ant-popover-message-title{
+  color: #222222;
+}
+.editable-cell-value-wrap {
+  color: #222222;
+}
+.ant-table table{
+  text-align: center;
+  padding: 1px;
+}
+.ant-table-thead > tr > th {
+  text-align: center;
+}

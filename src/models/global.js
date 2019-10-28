@@ -7,6 +7,7 @@ export default {
   namespace: 'global',
   state: {
     me: null,
+    list: [],
     auth: {
       logined: false,
       fetched: false,
@@ -77,8 +78,12 @@ export default {
     },
     * register({ payload }, { call, put }) {
       try {
-        const result = yield call(accountService.register, payload);
+       const result = yield call(accountService.register, payload);
         const { data } = result;
+        yield put({
+          type: 'saveList',
+          payload: data,
+        })
         if (data) {
           message.success('注册成功')
         }
@@ -93,6 +98,12 @@ export default {
     },
     saveMe(state, { payload }) {
       return { ...state, me: payload, auth: { logined: true, fetched: true }}
+    },
+    saveList(state, { payload }) {
+      return {
+        ...state,
+        list: payload.data,
+      }
     }
   },
 }
