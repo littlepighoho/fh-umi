@@ -11,14 +11,14 @@ const { confirm } = Modal;
 
 
 const mapStateTopProps = (state, props) => {
-  console.log("state",state.studentusers.pagination);
+  console.log("state",state);
 
   const schoolId = props.match.params.sid;
   const data =get(state.studentusers,"entities",[]);
   return {
     data,
     schoolId,
-    pagination:state.studentusers.pagination,
+    // pagination:state.studentusers.pagination,
   }
 
 }
@@ -60,6 +60,15 @@ class StudentView extends React.PureComponent {
     schoolId:0,
     hasFetchData: false,
   };
+  // componentDidMount() {
+  //   this.props.dispatch({
+  //     type: 'studentusers/fetchStudentEntities',
+  //     payload: {
+  //       schoolId: 10,
+  //     }
+  //   })
+  // }
+
   static getDerivedStateFromProps = (nextProps, prevState) => {
     if(!prevState.hasFetchData) {
       nextProps.dispatch({
@@ -367,11 +376,11 @@ class StudentView extends React.PureComponent {
             columns={columns}
             rowSelection = {rowSelection}
             dataSource={this.renderData()}
-            pagination= {{
-              current:get(this.props.pagination, 'page', 0),
-              total:get(this.props.pagination, 'total', 0),
-              pageSize:get(this.props.pagination, 'limit', 0),
-            }}
+            // pagination= {{
+            //   current:get(this.props.pagination, 'page', 0),
+            //   total:get(this.props.pagination, 'total', 0),
+            //   pageSize:get(this.props.pagination, 'limit', 0),
+            // }}
           >
           </Table>
         </Card>
