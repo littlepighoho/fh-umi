@@ -1,0 +1,13 @@
+.ant-table-thead > tr > th {
+  background: none;
+}
+
+.course-view {
+  margin: 16px;
+  .course-action-bar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+  }
+}
