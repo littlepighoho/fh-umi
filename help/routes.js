@@ -19,6 +19,9 @@ const routesHelp = {
   "pages/mission_hall/index.jsx": "xx/mission_hall",  //任务大厅
 
   //account
-  "pages/account/index.jsx": "xx/account"
+  "pages/account/index.jsx": "xx/account",
+
+  //attendance
+  "pages/practise/attendance/index.jsx":"xx/attendance",  //考勤
 
 };

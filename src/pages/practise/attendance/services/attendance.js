@@ -11,7 +11,6 @@ export const getAttendanceList = (payload) => {
     url: API.Attendance.getAttendanceList,
     method: 'get',
     payload:{
-      ids:payload.ids,
     }
   })
 };
@@ -22,5 +21,8 @@ export  const getAttendance = (payload) => {
   return request({
     url:API.Attendance.getAttendance,
     method: 'post',
+    payload:{
+      ids:payload.ids,
+    }
   })
 };
