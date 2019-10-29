@@ -1,8 +1,8 @@
 import React from 'react';
 import './createTeam.scss';
 import { Steps, Button} from 'antd';
-import Step1 from "@/components/create_team/step1"
-import Step2 from '@/components/create_team/step2';
+import Step1 from "@/components/create_team/Step1"
+import Step2 from '@/components/create_team/Step2';
 import { connect } from 'dva';
 import router from 'umi/router';
 // import router from 'umi/router';
