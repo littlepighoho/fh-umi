@@ -249,9 +249,7 @@ class SchoolView extends React.PureComponent {
     clearFilters();
     this.setState({ searchText: '' });
     };
-    onPageChange = () =>{
 
-    }
   renderData = () => {
     // console.log("pan",this.props.pagination);
     return this.props.data.map((item) => {
@@ -344,11 +342,10 @@ class SchoolView extends React.PureComponent {
             rowSelection = {rowSelection}
             dataSource={this.renderData()}
             pagination= {{
-              current:get(this.props.pagination, 'page', 0),
+              // current:get(this.props.pagination, 'page', 0),
               total:get(this.props.pagination, 'total', 0),
               pageSize: get(this.props.pagination, 'limit', 0),
               showQuickJumper:true,
-              // onChange:{onPageChange() },
             } }
           >
           </Table>

@@ -348,7 +348,7 @@ class SchoolView extends React.PureComponent {
               total:get(this.props.pagination, 'total', 0),
               pageSize: get(this.props.pagination, 'limit', 0),
               showQuickJumper:true,
-              // onChange:{onPageChange() },
+              onChange:{onPageChange() },
             } }
           >
           </Table>
