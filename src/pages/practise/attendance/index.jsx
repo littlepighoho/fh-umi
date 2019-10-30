@@ -1,6 +1,6 @@
 import React from 'react';
 import './attendance.scss';
-import { Table, Input, Button, Icon, Card, message,Popconfirm,Select,Form ,Modal} from 'antd';
+import { Table, Input, Button, Icon, Card, message,Popconfirm,Form} from 'antd';
 // import { connect } from 'react-redux';
 import router from 'umi/router';
 import {get} from "lodash-es";
@@ -91,12 +91,14 @@ class EditableCell extends React.Component {
     );
   }
 }
-const mapStateToProps = (state,prop) => {
+
+const mapStateToProps = (state,props) => {
   // const  data = get(s)
-  const data=get(state.attendance,"entites",[]);
-  console.log("data",data);
+  const data=get(state.attendance,"entities",[]);
+  console.log("iiiiiiiiii",data);
   return{
     data,
+    pagination:state.attendance.pagination,
   }
 };
 
@@ -114,13 +116,15 @@ class AttendanceView extends React.PureComponent {
   //接口
   componentDidMount() {
       this.props.dispatch({
-
           type: 'attendance/getAttendanceList',
           payload: {
-             // schoolId: 1,
-             // courseId: 1,
+             schoolId: 26,
+             courseId: 2,
+             arrangements:2,
+
           }
         })
+
   }
 
   // attendance = (payload) => {
@@ -415,7 +419,7 @@ class AttendanceView extends React.PureComponent {
     return this.props.data.map((item) => {
       return{
         student_number:item.student.id,
-        realname:item.realname,
+        realname:item.student.realname,
         leaver:item.leaver,
         late:item.late,
         absent:item.absent,

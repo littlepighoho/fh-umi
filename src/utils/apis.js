@@ -12,7 +12,8 @@ const Teams = {
 
 const Attendance = {
   getAttendanceList: '/practice/schools/26/courses/2/arrangements/2/attendance/list',
-  getAttendance:'/practice/schools/26/courses/2/arrangements/2/attendance/_mget'
+  getAttendance:'/practice/schools/26/courses/2/arrangements/2/attendance/:atid',
+  getList:'/practice/schools/26/courses/2/arrangements/2/attendance/_mget',
 };
 
 
