@@ -4,8 +4,10 @@ import pathToRegexp from 'path-to-regexp';
 import { Spin } from 'antd';
 
 export const setStudent = (payload) =>{
+    // console.log("setStudent",payload);
+    const pattern = pathToRegexp.compile(API.Student.setStudent)
     return request({
-        url:API.Student.setStudent,
+        url:pattern({ sid: payload.data.schoolId}),
         method:'post',
         data:{
             realname:payload.data.realname,
@@ -18,7 +20,7 @@ export const setStudent = (payload) =>{
 export const editStudent = (payload) => {
     const pattern = pathToRegexp.compile(API.Student.editStudent)
     return  request({
-        url:pattern({stid:payload.studentId}),
+        url:pattern({stid:payload.studentId,sid: payload.schoolId}),
         method: 'put',
         data:{
             realname:payload.realname,
@@ -49,7 +51,7 @@ export const deleteStudent = (payload) => {
 };
 
 export const getList = (payload) => {
-    console.log("service getList",payload.schoolId);
+    // console.log("service getList",payload.schoolId);
     const pattern = pathToRegexp.compile(API.Student.getList)
     return  request({
         url: pattern({ sid: payload.schoolId }),
@@ -62,7 +64,7 @@ export const getList = (payload) => {
 };
 
 export const fetchStudentEntities = (payload) => {
-    console.log("service fet",payload);
+    // console.log("service fet",payload);
     const pattern = pathToRegexp.compile(API.Student.mgetList)
     return request ({
         url: pattern({ sid: payload.schoolId }),

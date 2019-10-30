@@ -11,7 +11,6 @@ const { confirm } = Modal;
 
 
 const mapStateTopProps = (state, props) => {
-  console.log("state",state.studentusers.pagination);
 
   const schoolId = props.match.params.sid;
   const data =get(state.studentusers,"entities",[]);
@@ -60,22 +59,29 @@ class StudentView extends React.PureComponent {
     schoolId:0,
     hasFetchData: false,
   };
-  static getDerivedStateFromProps = (nextProps, prevState) => {
-    if(!prevState.hasFetchData) {
-      nextProps.dispatch({
-        type: 'studentusers/getList',
+  componentDidMount(){
+  this.props.dispatch({
+    type: 'studentusers/getList',
         payload: {
-          schoolId: 10,
+          schoolId: this.props.schoolId,
         }
       })
-      return {
-        ...prevState,
-        hasFetchData: true,
-      }
-    }
   }
+  // static getDerivedStateFromProps = (nextProps, prevState) => {
+  //   if(!prevState.hasFetchData) {
+  //     nextProps.dispatch({
+  //       type: 'studentusers/getList',
+  //       payload: {
+  //         schoolId: 10,
+  //       }
+  //     })
+  //     return {
+  //       ...prevState,
+  //       hasFetchData: true,
+  //     }
+  //   }
+  // }
     handleDelete = (key) => {
-        console.log(key)
      Modal.confirm({
       title:'删除提示',
       content: `您确定要删除这些数据吗？`,
@@ -85,13 +91,13 @@ class StudentView extends React.PureComponent {
           type: 'studentusers/deleteStudent',
           payload: {
             studentId: key,
+            schoolId: this.props.schoolId,
           }
         }).then(() => {
-          message.success('删除成功');
           this.props.dispatch({
             type: 'studentusers/getList',
             payload: {
-              schoolId: 10,
+              schoolId: this.props.schoolId,
             }
           })
         })
@@ -104,6 +110,7 @@ class StudentView extends React.PureComponent {
     showDrawer = () => {
     this.setState({
         visible: true,
+        selectedKeys:[],
     });
     };
     //drawer里面的关闭按钮
@@ -111,6 +118,7 @@ class StudentView extends React.PureComponent {
     this.setState({
         visible: false,
         visible1: false,
+        selectedKeys:[],
     });
     };
 
@@ -125,6 +133,7 @@ class StudentView extends React.PureComponent {
               code:values.code,
               realname:values.realname,
               phone:values.phone,
+              schoolId: this.props.schoolId,
             }
           }
         }).then(() => {
@@ -132,7 +141,7 @@ class StudentView extends React.PureComponent {
           this.props.dispatch({
             type: 'studentusers/getList',
             payload: {
-              schoolId: 10,
+              schoolId: this.props.schoolId,
             }
           })
         })
@@ -141,7 +150,6 @@ class StudentView extends React.PureComponent {
             visible: false,
         });
       }
-      this.getDerivedStateFromProps();
       this.props.form.resetFields();
       }
   )
@@ -149,15 +157,15 @@ class StudentView extends React.PureComponent {
 
     handleEdit =(key) =>{
         const { selectedKeys } = this.state;
-        console.log(selectedKeys)
+        // console.log(selectedKeys)
         if(selectedKeys != '') {
             if(selectedKeys.length > 1 ){
                 message.error('只能选择一个学生编辑');
                 return;
             }
-            console.log("%%%%%%%%")
             this.setState({
                 visible1: true,
+                selectedKeys:[],
                 editData: this.props.data[selectedKeys]});
             }
         else{
@@ -169,7 +177,7 @@ class StudentView extends React.PureComponent {
       e.preventDefault();
       const { selectedKeys} = this.state;
       const data1 = this.props.data[selectedKeys];
-      console.log(data1);
+      // console.log(data1);
       this.props.form.validateFields((err, values) => {
           if (err) {
           return;
@@ -181,19 +189,20 @@ class StudentView extends React.PureComponent {
               code:values.code,
               realname:values.realname,
               phone:values.phone,
+              schoolId: this.props.schoolId,
             }
           }).then(() => {
-            message.success('删除成功');
             this.props.dispatch({
               type: 'studentusers/getList',
               payload: {
-                schoolId: 10,
+                schoolId: this.props.schoolId,
               }
             })
           })
           this.props.form.resetFields();
           this.setState({
               visible1: false,
+              selectedKeys:[],
           });
       });
     };
@@ -248,7 +257,6 @@ class StudentView extends React.PureComponent {
     });
     handleSearch = (selectedKeys, confirm) => {
     confirm();
-    console.log(selectedKeys[0])
     this.setState({ searchText: selectedKeys[0] });
     };
 
@@ -336,6 +344,11 @@ class StudentView extends React.PureComponent {
           })
         },
       };
+      const  pagination= {
+        current:get(this.props.pagination, 'page', 0),
+        total:get(this.props.pagination, 'total', 0),
+        pageSize:get(this.props.pagination, 'limit', 0),
+      }
     return (
       <div className="student_message">
         <Card title="学生管理" className="student_card">
@@ -367,11 +380,7 @@ class StudentView extends React.PureComponent {
             columns={columns}
             rowSelection = {rowSelection}
             dataSource={this.renderData()}
-            pagination= {{
-              current:get(this.props.pagination, 'page', 0),
-              total:get(this.props.pagination, 'total', 0),
-              pageSize:get(this.props.pagination, 'limit', 0),
-            }}
+            pagination= {pagination}
           >
           </Table>
         </Card>

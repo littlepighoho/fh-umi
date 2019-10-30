@@ -37,7 +37,7 @@ function formatTime (number, format) {
 
 const mapStateTopProps = (state, props) => {
   const data =get(state.school,"entities",[]);
-  // console.log("111",state.school.pagination)
+// console.log("pagination",state.school.pagination);
   return {
     data,
     pagination:state.school.pagination,
@@ -138,7 +138,6 @@ class SchoolView extends React.PureComponent {
           if (!err) {
             this.setState({
               visible: false,
-              count:count+1,
           });
         }
         this.props.form.resetFields();
@@ -241,7 +240,6 @@ class SchoolView extends React.PureComponent {
     });
     handleSearch = (selectedKeys, confirm) => {
     confirm();
-    console.log(selectedKeys[0])
     this.setState({ searchText: selectedKeys[0] });
     };
 
@@ -249,9 +247,16 @@ class SchoolView extends React.PureComponent {
     clearFilters();
     this.setState({ searchText: '' });
     };
-    onPageChange = () =>{
-
-    }
+    onPageChange = (page,pageSize) =>{
+      // console.log("value",page,pageSize);
+      this.props.dispatch({
+        type: 'school/getList',
+        payload: {
+          limit:pageSize,
+          page:page,
+        },
+      })
+  }
   renderData = () => {
     // console.log("pan",this.props.pagination);
     return this.props.data.map((item) => {
@@ -309,8 +314,14 @@ class SchoolView extends React.PureComponent {
                 </span>
     }
     ];
-      const selectedKeys = this.state.selectedKeys;
-
+    const selectedKeys = this.state.selectedKeys;
+    const  pagination= {
+      // current:get(this.props.pagination, 'page', 0),
+      total:get(this.props.pagination, 'total', 0),
+      pageSize: get(this.props.pagination, 'limit', 0),
+      showQuickJumper:true,
+      onChange:(page,pageSize) => this.onPageChange(page,pageSize),
+    }
       const rowSelection = {
         onChange: (selectedKeys) => {
           this.setState({
@@ -343,13 +354,7 @@ class SchoolView extends React.PureComponent {
             columns={columns}
             rowSelection = {rowSelection}
             dataSource={this.renderData()}
-            pagination= {{
-              current:get(this.props.pagination, 'page', 0),
-              total:get(this.props.pagination, 'total', 0),
-              pageSize: get(this.props.pagination, 'limit', 0),
-              showQuickJumper:true,
-              // onChange:{onPageChange() },
-            } }
+            pagination= {pagination }
           >
           </Table>
         </Card>

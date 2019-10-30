@@ -15,6 +15,7 @@ export default {
 
     effects:{
         * setStudent({payload}  , {call,put,all}){
+            // console.log("payload",payload);
             try{
                 const result = yield call(studentService.setStudent,payload);
                 const {data} = result;
@@ -22,16 +23,17 @@ export default {
                     type:'fetchStudentEntities',
                     payload:{
                         realname :data.realname,
-                        id:data.id,
+                        code:data.code,
                         phone:data.phone,
+                        schoolId :data.schoolId
                     }
                 })
                 if(data){
-                    message.success('注册成功');
+                    // message.success('注册成功');
                 }
             }
             catch(e){
-
+                console.log(e);
             }
         },
 
@@ -43,8 +45,9 @@ export default {
                     type:'fetchStudentEntities',
                     payload:{
                         realname :result.realname,
-                        id:result.id,
+                        code:result.code,
                         phone:result.phone,
+                        schoolId :result.schoolId
                     }
                 })
                 if(data){
@@ -52,14 +55,13 @@ export default {
                 }
             }
             catch(e){
-
+                console.log(e);
             }
         },
         * getStudent({payload}  , {call,put,all}){
             try{
                 const result = yield call(studentService.getStudent, payload);
                 const {data} = result;
-                console.log("models getStudent",result.schoolId);
                 yield put({
                     type:'saveState',
                     payload:{

@@ -27,7 +27,6 @@ export const editSchool = (payload) => {
 };
 
 export const getSchool = (payload) => {
-    // console.log(payload)
     const pattern = pathToRegexp.compile(API.School.getSchool)
     return  request({
         url: pattern({ sid: payload.schoolId }),
@@ -45,18 +44,18 @@ export const deleteSchool = (payload) => {
 };
 
 export const getList = (payload) => {
-    // console.log("service getList",payload);
+    // console.log("services",payload);
     return  request({
-        url:API.School.getList+'?page=2',
+        url:API.School.getList,
         method: 'get',
         data:{
-
+            limit:payload.pageSize,
+            page:payload.page,
         }
     })
 };
 
 export const fetchSchoolEntities = (payload) => {
-    // console.log("service fet" ,payload);
     return request ({
         url:API.School.mgetList,
         method: 'post',

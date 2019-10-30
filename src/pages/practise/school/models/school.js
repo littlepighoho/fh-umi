@@ -54,7 +54,6 @@ export default {
             try{
                 const result = yield call(schoolService.getSchool, payload);
                 const {data} = result;
-                // console.log("666"+result);
                 yield put({
                     type:'saveState',
                     payload:false
@@ -64,7 +63,6 @@ export default {
             }
         },
         *fetchSchoolEntities({ payload }, { call, put, all}) {
-            console.log("models fet",payload);
             try {
                 const result = yield call(schoolService.fetchSchoolEntities, payload);
                 yield put({
@@ -80,7 +78,6 @@ export default {
             }
         },
         * deleteSchool({payload}  , {call,put,all}){
-            console.log("$$$$$$$\n");
             try{
                 const result = yield call(schoolService.deleteSchool,payload);
                 const {data} = result;
@@ -94,19 +91,19 @@ export default {
             }
         },
         * getList({payload}  , {call,put,all}){
-            console.log("models list");
+            // console.log("model",payload);
             try{
                 const result = yield call(schoolService.getList,payload);
                 const {data} = result;
                 const ids = data.schools.map((item) => item.id);
-                console.log("ids",data)
                 yield put({
                     type: 'fetchSchoolEntities',
                     payload: {
                         ids,
+                        limit:payload.pageSize,
+                        page:payload.page,
                     }
                 })
-                console.log("result",data.pagination);
                 yield put({
                     type:'savePagination',
                     payload:{
@@ -116,6 +113,8 @@ export default {
                 })
             }
             catch(e){
+                console.log("%%%");
+                console.log(e);
             }
         },
 
