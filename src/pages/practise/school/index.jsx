@@ -3,7 +3,7 @@ import Highlighter from 'react-highlight-words';
 import  {Input, Icon,Card,Table,Form,Popconfirm,
     Drawer,Modal,Button,message,Row,Col,Divider} from 'antd';
 import router from 'umi/router';
-import {hashHistory} from 'React-router'
+import {hashHistory} from 'react-router'
 import { Link } from 'react-router-dom';
 import { get } from 'lodash-es';
 import { connect } from 'dva';
