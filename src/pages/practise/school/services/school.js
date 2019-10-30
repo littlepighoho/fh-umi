@@ -56,6 +56,7 @@ export const getList = (payload) => {
 };
 
 export const fetchSchoolEntities = (payload) => {
+    console.log("xxxxxx", payload, payload.ids)
     return request ({
         url:API.School.mgetList,
         method: 'post',

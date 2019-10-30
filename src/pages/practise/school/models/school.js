@@ -19,7 +19,7 @@ export default {
                 const result = yield call(schoolService.setSchool,payload);
                 const {data} = result;
                 yield put({
-                    type:'fetchSchoolEntities',
+                    type:'getList',
                     payload:{
                         name:data.name,
                         description:data.description,
@@ -36,7 +36,7 @@ export default {
                 const result = yield call(schoolService.editSchool,payload);
                 const {data} = result;
                 yield put({
-                    type:'fetchSchoolEntities',
+                    type:'getList',
                     payload:{
                         name:result.name,
                         description:result.description,
@@ -64,12 +64,14 @@ export default {
         },
         *fetchSchoolEntities({ payload }, { call, put, all}) {
             try {
+                console.log("fet",payload);
                 const result = yield call(schoolService.fetchSchoolEntities, payload);
                 yield put({
                     type: 'saveState',
                     payload: {
                         keyName: 'entities',
                         data: result.data,
+                        ids: payload.ids,
                     }
                 })
 
@@ -82,7 +84,7 @@ export default {
                 const result = yield call(schoolService.deleteSchool,payload);
                 const {data} = result;
                 yield put({
-                    type:'fetchSchoolEntities',
+                    type:'getList',
                     payload:{},
                 })
             }
@@ -91,10 +93,10 @@ export default {
             }
         },
         * getList({payload}  , {call,put,all}){
-            // console.log("model",payload);
             try{
                 const result = yield call(schoolService.getList,payload);
                 const {data} = result;
+ console.log("model",result);
                 const ids = data.schools.map((item) => item.id);
                 yield put({
                     type: 'fetchSchoolEntities',
@@ -114,7 +116,6 @@ export default {
                 })
             }
             catch(e){
-                console.log("%%%");
                 console.log(e);
             }
         },

@@ -17,10 +17,11 @@ export default {
         * setStudent({payload}  , {call,put,all}){
             // console.log("payload",payload);
             try{
+                // for
                 const result = yield call(studentService.setStudent,payload);
                 const {data} = result;
                 yield put({
-                    type:'fetchStudentEntities',
+                    type:'getList',
                     payload:{
                         realname :data.realname,
                         code:data.code,
@@ -42,7 +43,7 @@ export default {
                 const result = yield call(studentService.editStudent,payload);
                 const {data} = result;
                 yield put({
-                    type:'fetchStudentEntities',
+                    type:'getList',
                     payload:{
                         realname :result.realname,
                         code:result.code,
@@ -92,14 +93,14 @@ export default {
         * deleteStudent({payload}  , {call,put,all}){
             try{
                 const result = yield call(studentService.deleteStudent,payload);
-                const {data} = result;
+                // const {data} = result;
                 yield put({
-                    type:'fetchStudentEntities',
+                    type:'getList',
                     payload:{},
                 })
             }
             catch(e){
-
+                console.log("qwqwqwqw", e)
             }
         },
         * getList({payload}  , {call,put,all}){

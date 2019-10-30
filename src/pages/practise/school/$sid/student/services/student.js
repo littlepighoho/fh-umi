@@ -51,7 +51,6 @@ export const deleteStudent = (payload) => {
 };
 
 export const getList = (payload) => {
-    // console.log("service getList",payload.schoolId);
     const pattern = pathToRegexp.compile(API.Student.getList)
     return  request({
         url: pattern({ sid: payload.schoolId }),

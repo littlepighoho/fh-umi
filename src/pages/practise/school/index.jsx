@@ -61,9 +61,7 @@ class SchoolView extends React.PureComponent {
   };
 
   static getDerivedStateFromProps = (nextProps, prevState) => {
-    // console.log("preState",prevState);
     if(!prevState.hasFetchData) {
-      // console.log("%%%5")
       nextProps.dispatch({
         type: 'school/getList',
         payload: {},
@@ -73,9 +71,7 @@ class SchoolView extends React.PureComponent {
         hasFetchData: true,
       }
     }
-
   }
-
     handleDelete = (key) => {
     Modal.confirm({
         title:'删除提示',
@@ -86,15 +82,8 @@ class SchoolView extends React.PureComponent {
               payload: {
                 schoolId: key,
               }
-            }).then(() => {
-              message.success('删除成功');
-              this.props.dispatch({
-                type: 'school/getList',
-                payload: {
-                  schoolId: key,
-                }
-              })
             })
+              message.success('删除成功');
         }
     });
     };
@@ -133,13 +122,9 @@ class SchoolView extends React.PureComponent {
                 description:values.description,
               }
             }
-          }).then(() => {
-            message.success('创建成功');
-            this.props.dispatch({
-              type: 'school/getList',
-              payload: {}
-            })
           })
+          message.success('创建成功');
+
           if (!err) {
             this.setState({
               visible: false,
@@ -149,24 +134,17 @@ class SchoolView extends React.PureComponent {
         }
     )
   };
-
     handleEdit =(key) =>{
-      const { selectedKey } = this.state;
-      if(selectedKey == -1) {
-          message.error('你没有选择学校！');
-      }
-      else{
+      console.log(key);
        this.setState({
               visible1: true,
-              editData: this.props.data[selectedKey],
-            });
-          }
+              editData: key,
+        });
     }
-
     handleCreate = (e) => {
         e.preventDefault();
-        const { selectedKey } = this.state;
-        const data1 = this.props.data[selectedKey];
+        const { editData } = this.state;
+        // const data1 = this.props.data[selectedKey];
         this.props.form.validateFields((err, values) => {
             if (err) {
             return;
@@ -174,15 +152,10 @@ class SchoolView extends React.PureComponent {
             this.props.dispatch({
               type: 'school/editSchool',
               payload: {
-                  schoolId: data1.id,
+                  schoolId: editData.schoolId,
                   name:values.name,
                   description:values.description,
               }
-            }).then(() => {
-              this.props.dispatch({
-                type: 'school/getList',
-                payload: {}
-              })
             })
             this.props.form.resetFields();
             this.setState({
@@ -190,46 +163,6 @@ class SchoolView extends React.PureComponent {
             });
         });
     };
-    // handleEdit =(key) =>{
-    //   // const { selectedKey } = this.state;
-    //   console.log(key);
-    //   // if(selectedKey == -1) {
-    //   //     message.error('你没有选择学校！');
-    //   // }
-    //   // else{
-    //    this.setState({
-    //           visible1: true,
-    //           editData: key,
-    //         });
-    //       // }
-    // }
-    // handleCreate = (e) => {
-    //     e.preventDefault();
-    //     const { selectedKey } = this.state;
-    //     const data1 = this.props.data[selectedKey];
-    //     this.props.form.validateFields((err, values) => {
-    //         if (err) {
-    //         return;
-    //         }
-    //         this.props.dispatch({
-    //           type: 'school/editSchool',
-    //           payload: {
-    //               schoolId: data1.id,
-    //               name:values.name,
-    //               description:values.description,
-    //           }
-    //         }).then(() => {
-    //           this.props.dispatch({
-    //             type: 'school/getList',
-    //             payload: {}
-    //           })
-    //         })
-    //         this.props.form.resetFields();
-    //         this.setState({
-    //             visible1: false,
-    //         });
-    //     });
-    // };
     onPageChange = (page,pageSize) =>{
       const {name} = this.state;
       this.props.dispatch({
@@ -272,28 +205,31 @@ class SchoolView extends React.PureComponent {
       title: '学校id',
       key: 'schoolId',
       dataIndex: 'schoolId',
-      // ...this.getColumnSearchProps('schoolId')
+      width:"10%"
     },
     {
       title: '名字',
       key: 'name',
       dataIndex: 'name',
-      // ...this.getColumnSearchProps('name'),
+      width:"15%",
     },
     {
       title: '简介描述',
       key: 'description',
       dataIndex: 'description',
+      width:"20%",
     },
     {
       title: '创建时间',
       key: 'create_time',
       dataIndex: 'create_time',
+      width:"20%"
     },
     {
       title: '更新时间',
       key: 'update_time',
       dataIndex: 'update_time',
+      width:"20%"
     },
     {
       title: '操作',
@@ -305,11 +241,11 @@ class SchoolView extends React.PureComponent {
                     删除
                 </a>
                 <Divider type="vertical" />
-                <Link to={{pathname:`/practise/school/${record.schoolId}/student`,schoolId:record.schoolId}}>查看</Link>
-                {/* <Divider type="vertical" />
                 <a onClick={() => this.handleEdit(record)}>
                     修改
-                </a> */}
+                </a>
+                <Divider type="vertical" />
+                <Link to={{pathname:`/practise/school/${record.schoolId}/student`,schoolId:record.schoolId}}>查看</Link>
                 </span>
     }
     ];
@@ -344,18 +280,16 @@ class SchoolView extends React.PureComponent {
             <div className="school_operate">
               <Button type="primary"
                 onClick={this.showDrawer}
-                icon="plus"/>
-              <Button
-                type="primary"
-                icon="edit"
-                onClick={this.handleEdit}/>
+                icon="plus">
+                  添加
+                  </Button>
             </div>
           </div>
           <Table
             className="school_table"
             bordered
             columns={columns}
-            rowSelection = {rowSelection}
+            // rowSelection = {rowSelection}
             dataSource={this.renderData()}
             pagination= {pagination }
           >

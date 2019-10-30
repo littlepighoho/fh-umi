@@ -1,7 +1,7 @@
 import React from 'react';
 import Highlighter from 'react-highlight-words';
 import  {Input, Icon,Card,Table,Form,Popconfirm,
-    Drawer,Modal,Button,message,Row,Col} from 'antd'
+    Drawer,Modal,Button,message,Row,Col,Divider} from 'antd'
 import './../../index.less'
 import { get } from 'lodash-es';
 import { Link, withRouter} from 'react-router-dom';
@@ -143,27 +143,18 @@ class StudentView extends React.PureComponent {
     };
 
     handleEdit =(key) =>{
-        const { selectedKeys } = this.state;
-        // console.log(selectedKeys)
-        if(selectedKeys != '') {
-            if(selectedKeys.length > 1 ){
-                message.error('只能选择一个学生编辑');
-                return;
-            }
-            this.setState({
-                visible1: true,
-                selectedKeys:[],
-                editData: this.props.data[selectedKeys]});
-            }
-        else{
-            message.error('你没有选择学生！');
-        }
+      this.setState({
+          visible1: true,
+          selectedKeys:[],
+          editData: key
+        });
+
     }
 
     handleCreate = (e) => {
       e.preventDefault();
-      const { selectedKeys} = this.state;
-      const data1 = this.props.data[selectedKeys];
+      const { selectedKeys,editData} = this.state;
+      // const data1 = this.props.data[selectedKeys];
       // console.log(data1);
       this.props.form.validateFields((err, values) => {
           if (err) {
@@ -172,7 +163,7 @@ class StudentView extends React.PureComponent {
           this.props.dispatch({
             type: 'studentusers/editStudent',
             payload: {
-              studentId: data1.id,
+              studentId: editData.studentId,
               code:values.code,
               realname:values.realname,
               phone:values.phone,
@@ -193,65 +184,6 @@ class StudentView extends React.PureComponent {
           });
       });
     };
-    // getColumnSearchProps = dataIndex => ({
-    //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-    //     <div style={{ padding: 8 }}>
-    //       <Input
-    //         ref={node => {
-    //           this.searchInput = node;
-    //         }}
-    //         placeholder={`Search ${dataIndex}`}
-    //         value={selectedKeys[0]}
-    //         onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-    //         onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
-    //         style={{ width: 188, marginBottom: 8, display: 'block' }}
-    //       />
-    //       <Button
-    //         type="primary"
-    //         onClick={() => this.handleSearch(selectedKeys, confirm)}
-    //         icon="search"
-    //         size="small"
-    //         style={{ width: 90, marginRight: 8 }}
-    //       >
-    //         Search
-    //       </Button>
-    //       <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-    //         Reset
-    //       </Button>
-    //     </div>
-    //   ),
-    //   filterIcon: filtered => (
-    //     <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
-    //   ),
-    //   onFilter: (value, record) =>
-    //     record[dataIndex]
-    //       .toString()
-    //       .toLowerCase()
-    //       .includes(value.toLowerCase()),
-    //   onFilterDropdownVisibleChange: visible => {
-    //     if (visible) {
-    //       setTimeout(() => this.searchInput.select());
-    //     }
-    //   },
-    //   render: text => (
-    //     <Highlighter
-    //       highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-    //       searchWords={[this.state.searchText]}
-    //       autoEscape
-    //       textToHighlight={text.toString()}
-    //     />
-    //   ),
-    // });
-    // handleSearch = (selectedKeys, confirm) => {
-    // confirm();
-    // this.setState({ searchText: selectedKeys[0] });
-    // };
-
-    // handleReset = clearFilters => {
-    // clearFilters();
-    // this.setState({ searchText: '' });
-    // };
-
     renderData = () => {
       return this.props.data.map((item) => {
         return {
@@ -295,23 +227,21 @@ class StudentView extends React.PureComponent {
 
     const columns = [
       {
+        title: '学号',
+        key: 'studentId',
+        dataIndex: 'studentId',
+      },
+      {
         title:'真实姓名',
         key:'realname',
         dataIndex:'realname',
-        // ...this.getColumnSearchProps('realname'),
       },
     {
       title: 'code',
       key: 'code',
       dataIndex: 'code',
-      // ...this.getColumnSearchProps('code')
     },
-    {
-      title: '学号',
-      key: 'studentId',
-      dataIndex: 'studentId',
-      // ...this.getColumnSearchProps('studentId')
-    },
+
     {
       title: '系统账户',
       key: 'accountId',
@@ -340,6 +270,10 @@ class StudentView extends React.PureComponent {
           <a onClick={() => this.handleDelete(record.studentId)}>
               删除
           </a>
+          <Divider type="vertical" />
+                <a onClick={() => this.handleEdit(record)}>
+                    修改
+                </a>
           </span>
     }
     ];
@@ -347,7 +281,6 @@ class StudentView extends React.PureComponent {
       const selectedKeys = this.state.selectedKeys;
 
       const rowSelection = {
-        type: 'radio',
         onChange: (selectedKeys) => {
           this.setState({
             selectedKeys,
@@ -375,12 +308,14 @@ class StudentView extends React.PureComponent {
 
               <Button type="primary"
                 onClick={this.showDrawer}
-                icon="plus"/>
+                icon="plus">
+                  添加
+                  </Button>
 
-              <Button
+              {/* <Button
                 type="primary"
                 icon="edit"
-                onClick={this.handleEdit}/>
+                onClick={this.handleEdit}/> */}
 
                 <Button
                 type="primary">
@@ -392,7 +327,7 @@ class StudentView extends React.PureComponent {
             className="school_table"
             bordered
             columns={columns}
-            rowSelection = {rowSelection}
+            // rowSelection = {rowSelection}
             dataSource={this.renderData()}
             pagination= {pagination}
           >
