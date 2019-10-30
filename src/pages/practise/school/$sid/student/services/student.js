@@ -56,9 +56,12 @@ export const getList = (payload) => {
     return  request({
         url: pattern({ sid: payload.schoolId }),
         method: 'get',
-        data:{
+        params:{
             ids:payload.ids,
-            schoolId:payload.schoolId
+            schoolId:payload.schoolId,
+            limit:payload.pageSize,
+            page:payload.page,
+            key:payload.key,
         }
     })
 };

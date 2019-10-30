@@ -44,13 +44,13 @@ export const deleteSchool = (payload) => {
 };
 
 export const getList = (payload) => {
-    // console.log("services",payload);
     return  request({
         url:API.School.getList,
         method: 'get',
-        data:{
+        params:{
             limit:payload.pageSize,
             page:payload.page,
+            name:payload.name
         }
     })
 };

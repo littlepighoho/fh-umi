@@ -102,6 +102,7 @@ export default {
                         ids,
                         limit:payload.pageSize,
                         page:payload.page,
+                        name:payload.name,
                     }
                 })
                 yield put({

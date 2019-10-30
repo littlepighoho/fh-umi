@@ -2,7 +2,7 @@ import React from 'react';
 import Highlighter from 'react-highlight-words';
 import  {Input, Icon,Card,Table,Form,Popconfirm,
     Drawer,Modal,Button,message,Row,Col} from 'antd'
-import "./index.less"
+import './../../index.less'
 import { get } from 'lodash-es';
 import { Link, withRouter} from 'react-router-dom';
 import { connect } from 'dva';
@@ -54,7 +54,7 @@ class StudentView extends React.PureComponent {
     selectedKeys: [],
     visible: false, //add
     visible1: false, // edit
-    count:0,
+    name:'',
     editData:[],
     schoolId:0,
     hasFetchData: false,
@@ -67,20 +67,7 @@ class StudentView extends React.PureComponent {
         }
       })
   }
-  // static getDerivedStateFromProps = (nextProps, prevState) => {
-  //   if(!prevState.hasFetchData) {
-  //     nextProps.dispatch({
-  //       type: 'studentusers/getList',
-  //       payload: {
-  //         schoolId: 10,
-  //       }
-  //     })
-  //     return {
-  //       ...prevState,
-  //       hasFetchData: true,
-  //     }
-  //   }
-  // }
+
     handleDelete = (key) => {
      Modal.confirm({
       title:'删除提示',
@@ -206,64 +193,64 @@ class StudentView extends React.PureComponent {
           });
       });
     };
-    getColumnSearchProps = dataIndex => ({
-      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-        <div style={{ padding: 8 }}>
-          <Input
-            ref={node => {
-              this.searchInput = node;
-            }}
-            placeholder={`Search ${dataIndex}`}
-            value={selectedKeys[0]}
-            onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-            onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
-            style={{ width: 188, marginBottom: 8, display: 'block' }}
-          />
-          <Button
-            type="primary"
-            onClick={() => this.handleSearch(selectedKeys, confirm)}
-            icon="search"
-            size="small"
-            style={{ width: 90, marginRight: 8 }}
-          >
-            Search
-          </Button>
-          <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-            Reset
-          </Button>
-        </div>
-      ),
-      filterIcon: filtered => (
-        <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
-      ),
-      onFilter: (value, record) =>
-        record[dataIndex]
-          .toString()
-          .toLowerCase()
-          .includes(value.toLowerCase()),
-      onFilterDropdownVisibleChange: visible => {
-        if (visible) {
-          setTimeout(() => this.searchInput.select());
-        }
-      },
-      render: text => (
-        <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[this.state.searchText]}
-          autoEscape
-          textToHighlight={text.toString()}
-        />
-      ),
-    });
-    handleSearch = (selectedKeys, confirm) => {
-    confirm();
-    this.setState({ searchText: selectedKeys[0] });
-    };
+    // getColumnSearchProps = dataIndex => ({
+    //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    //     <div style={{ padding: 8 }}>
+    //       <Input
+    //         ref={node => {
+    //           this.searchInput = node;
+    //         }}
+    //         placeholder={`Search ${dataIndex}`}
+    //         value={selectedKeys[0]}
+    //         onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+    //         onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
+    //         style={{ width: 188, marginBottom: 8, display: 'block' }}
+    //       />
+    //       <Button
+    //         type="primary"
+    //         onClick={() => this.handleSearch(selectedKeys, confirm)}
+    //         icon="search"
+    //         size="small"
+    //         style={{ width: 90, marginRight: 8 }}
+    //       >
+    //         Search
+    //       </Button>
+    //       <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+    //         Reset
+    //       </Button>
+    //     </div>
+    //   ),
+    //   filterIcon: filtered => (
+    //     <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+    //   ),
+    //   onFilter: (value, record) =>
+    //     record[dataIndex]
+    //       .toString()
+    //       .toLowerCase()
+    //       .includes(value.toLowerCase()),
+    //   onFilterDropdownVisibleChange: visible => {
+    //     if (visible) {
+    //       setTimeout(() => this.searchInput.select());
+    //     }
+    //   },
+    //   render: text => (
+    //     <Highlighter
+    //       highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+    //       searchWords={[this.state.searchText]}
+    //       autoEscape
+    //       textToHighlight={text.toString()}
+    //     />
+    //   ),
+    // });
+    // handleSearch = (selectedKeys, confirm) => {
+    // confirm();
+    // this.setState({ searchText: selectedKeys[0] });
+    // };
 
-    handleReset = clearFilters => {
-    clearFilters();
-    this.setState({ searchText: '' });
-    };
+    // handleReset = clearFilters => {
+    // clearFilters();
+    // this.setState({ searchText: '' });
+    // };
 
     renderData = () => {
       return this.props.data.map((item) => {
@@ -278,8 +265,30 @@ class StudentView extends React.PureComponent {
         }
       })
     };
-
-
+    onPageChange = (page,pageSize) =>{
+      const {name} = this.state;
+      this.props.dispatch({
+        type: 'studentusers/getList',
+        payload: {
+          limit:pageSize,
+          page:page,
+          schoolId: this.props.schoolId,
+          name:name,
+        },
+      })
+  }
+  onSearchName = (value) =>{
+    this.props.dispatch({
+      type:'studentusers/getList',
+      payload:{
+        schoolId: this.props.schoolId,
+        key:value,
+      }
+    })
+    this.setState({
+      name:value,
+    })
+  }
   render(){
 
     const { getFieldDecorator } = this.props.form;
@@ -289,19 +298,19 @@ class StudentView extends React.PureComponent {
         title:'真实姓名',
         key:'realname',
         dataIndex:'realname',
-        ...this.getColumnSearchProps('realname'),
+        // ...this.getColumnSearchProps('realname'),
       },
     {
       title: 'code',
       key: 'code',
       dataIndex: 'code',
-      ...this.getColumnSearchProps('code')
+      // ...this.getColumnSearchProps('code')
     },
     {
       title: '学号',
       key: 'studentId',
       dataIndex: 'studentId',
-      ...this.getColumnSearchProps('studentId')
+      // ...this.getColumnSearchProps('studentId')
     },
     {
       title: '系统账户',
@@ -338,6 +347,7 @@ class StudentView extends React.PureComponent {
       const selectedKeys = this.state.selectedKeys;
 
       const rowSelection = {
+        type: 'radio',
         onChange: (selectedKeys) => {
           this.setState({
             selectedKeys,
@@ -348,34 +358,38 @@ class StudentView extends React.PureComponent {
         current:get(this.props.pagination, 'page', 0),
         total:get(this.props.pagination, 'total', 0),
         pageSize:get(this.props.pagination, 'limit', 0),
+        onChange:(page,pageSize) => this.onPageChange(page,pageSize),
       }
     return (
-      <div className="student_message">
-        <Card title="学生管理" className="student_card">
+      <div className="school_message">
+        <Card title="学生管理" className="school_card">
+          <div className="school_option">
+          <Search
+            className="school_search"
+              placeholder="输入学生真实姓名或者id"
+              enterButton="查询"
+              size="smart"
+              onSearch={value => this.onSearchName(value)}/>
 
-          <div className="student_option">
-            <div className="student_operate">
+            <div className="school_operate">
 
-                <Button type="primary"
+              <Button type="primary"
                 onClick={this.showDrawer}
-                icon="plus"
-                className="student_add"/>
+                icon="plus"/>
 
-                <Button
+              <Button
                 type="primary"
                 icon="edit"
-                className="student_delete"
                 onClick={this.handleEdit}/>
 
                 <Button
-                type="primary"
-                className="student_delete">
+                type="primary">
                 <Link to={`/practise/school`} >返回 </Link>
-                </Button>
+              </Button>
             </div>
           </div>
           <Table
-            className="student_table"
+            className="school_table"
             bordered
             columns={columns}
             rowSelection = {rowSelection}

@@ -7,7 +7,7 @@ import {hashHistory} from 'react-router'
 import { Link } from 'react-router-dom';
 import { get } from 'lodash-es';
 import { connect } from 'dva';
-
+import  './index.less'
 const { Search } = Input;
 const { confirm } = Modal;
 
@@ -49,13 +49,15 @@ class SchoolView extends React.PureComponent {
 
   state = {
     InputValue: '',
-    selectedKeys: [],
+    selectedKey: -1,
     visible: false, //add
     visible1: false, // edit
     count:0,
     hasFetchData: false,
     editData:[],
     key:-1,
+    name:'',
+    ischeck:false,
   };
 
   static getDerivedStateFromProps = (nextProps, prevState) => {
@@ -101,6 +103,7 @@ class SchoolView extends React.PureComponent {
     showDrawer = () => {
     this.setState({
         visible: true,
+        ischeck:false,
     });
     };
     //drawer里面的关闭按钮
@@ -108,6 +111,8 @@ class SchoolView extends React.PureComponent {
       this.setState({
           visible: false,
           visible1: false,
+          ischeck:false,
+
       });
         this.props.dispatch({
           type: 'school/getList',
@@ -146,26 +151,22 @@ class SchoolView extends React.PureComponent {
   };
 
     handleEdit =(key) =>{
-      const { selectedKeys } = this.state;
-      if(selectedKeys != '') {
-          if(selectedKeys.length > 1 ){
-              message.error('只能选择一个学校编辑');
-              return;
-          }
-          this.setState({
-              visible1: true,
-              editData: this.props.data[selectedKeys],
-            });
-          }
-      else{
+      const { selectedKey } = this.state;
+      if(selectedKey == -1) {
           message.error('你没有选择学校！');
       }
+      else{
+       this.setState({
+              visible1: true,
+              editData: this.props.data[selectedKey],
+            });
+          }
     }
 
     handleCreate = (e) => {
         e.preventDefault();
-        const { selectedKeys,key } = this.state;
-        const data1 = this.props.data[selectedKeys[0]];
+        const { selectedKey } = this.state;
+        const data1 = this.props.data[selectedKey];
         this.props.form.validateFields((err, values) => {
             if (err) {
             return;
@@ -189,73 +190,67 @@ class SchoolView extends React.PureComponent {
             });
         });
     };
-    getColumnSearchProps = dataIndex => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-          <div style={{ padding: 8 }}>
-            <Input
-              ref={node => {
-                this.searchInput = node;
-              }}
-              placeholder={`Search ${dataIndex}`}
-              value={selectedKeys[0]}
-              onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-              onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
-              style={{ width: 188, marginBottom: 8, display: 'block' }}
-            />
-            <Button
-              type="primary"
-              onClick={() => this.handleSearch(selectedKeys, confirm)}
-              icon="search"
-              size="small"
-              style={{ width: 90, marginRight: 8 }}
-            >
-              Search
-            </Button>
-            <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-              Reset
-            </Button>
-          </div>
-        ),
-        filterIcon: filtered => (
-          <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
-        ),
-        onFilter: (value, record) =>
-          record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase()),
-        onFilterDropdownVisibleChange: visible => {
-          if (visible) {
-            setTimeout(() => this.searchInput.select());
-          }
-        },
-        render: text => (
-          <Highlighter
-            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-            searchWords={[this.state.searchText]}
-            autoEscape
-            textToHighlight={text.toString()}
-          />
-        ),
-    });
-    handleSearch = (selectedKeys, confirm) => {
-    confirm();
-    this.setState({ searchText: selectedKeys[0] });
-    };
-
-    handleReset = clearFilters => {
-    clearFilters();
-    this.setState({ searchText: '' });
-    };
+    // handleEdit =(key) =>{
+    //   // const { selectedKey } = this.state;
+    //   console.log(key);
+    //   // if(selectedKey == -1) {
+    //   //     message.error('你没有选择学校！');
+    //   // }
+    //   // else{
+    //    this.setState({
+    //           visible1: true,
+    //           editData: key,
+    //         });
+    //       // }
+    // }
+    // handleCreate = (e) => {
+    //     e.preventDefault();
+    //     const { selectedKey } = this.state;
+    //     const data1 = this.props.data[selectedKey];
+    //     this.props.form.validateFields((err, values) => {
+    //         if (err) {
+    //         return;
+    //         }
+    //         this.props.dispatch({
+    //           type: 'school/editSchool',
+    //           payload: {
+    //               schoolId: data1.id,
+    //               name:values.name,
+    //               description:values.description,
+    //           }
+    //         }).then(() => {
+    //           this.props.dispatch({
+    //             type: 'school/getList',
+    //             payload: {}
+    //           })
+    //         })
+    //         this.props.form.resetFields();
+    //         this.setState({
+    //             visible1: false,
+    //         });
+    //     });
+    // };
     onPageChange = (page,pageSize) =>{
-      // console.log("value",page,pageSize);
+      const {name} = this.state;
       this.props.dispatch({
         type: 'school/getList',
         payload: {
           limit:pageSize,
           page:page,
+          name:name
         },
       })
+  }
+  onSearchName = value =>{
+    this.props.dispatch({
+      type: 'school/getList',
+      payload: {
+        name:value,
+      },
+    })
+    this.setState({
+      name:value,
+    })
   }
   renderData = () => {
     // console.log("pan",this.props.pagination);
@@ -277,13 +272,13 @@ class SchoolView extends React.PureComponent {
       title: '学校id',
       key: 'schoolId',
       dataIndex: 'schoolId',
-      ...this.getColumnSearchProps('schoolId')
+      // ...this.getColumnSearchProps('schoolId')
     },
     {
       title: '名字',
       key: 'name',
       dataIndex: 'name',
-      ...this.getColumnSearchProps('name'),
+      // ...this.getColumnSearchProps('name'),
     },
     {
       title: '简介描述',
@@ -311,45 +306,53 @@ class SchoolView extends React.PureComponent {
                 </a>
                 <Divider type="vertical" />
                 <Link to={{pathname:`/practise/school/${record.schoolId}/student`,schoolId:record.schoolId}}>查看</Link>
+                {/* <Divider type="vertical" />
+                <a onClick={() => this.handleEdit(record)}>
+                    修改
+                </a> */}
                 </span>
     }
     ];
-    const selectedKeys = this.state.selectedKeys;
+
     const  pagination= {
-      // current:get(this.props.pagination, 'page', 0),
+      current:get(this.props.pagination, 'page', 0),
       total:get(this.props.pagination, 'total', 0),
       pageSize: get(this.props.pagination, 'limit', 0),
       showQuickJumper:true,
       onChange:(page,pageSize) => this.onPageChange(page,pageSize),
     }
       const rowSelection = {
-        onChange: (selectedKeys) => {
+        type: 'radio',
+        onChange: (selectedKey) => {
           this.setState({
-            selectedKeys,
+            selectedKey,
           })
         },
+        checked:this.state.ischeck,
+        // console.log(check)
       };
     return (
-      <div className="student_message">
-        <Card title="学校管理" className="student_card">
-
-          <div className="student_option">
-            <div className="student_operate">
-                <Button type="primary"
+      <div className="school_message">
+        <Card title="学校管理" className="school_card">
+          <div className="school_option">
+            <Search
+            className="school_search"
+              placeholder="输入学校名字"
+              enterButton="查询"
+              size="smart"
+              onSearch={value => this.onSearchName(value)}/>
+            <div className="school_operate">
+              <Button type="primary"
                 onClick={this.showDrawer}
-                icon="plus"
-                className="student_add"/>
-
-                <Button
+                icon="plus"/>
+              <Button
                 type="primary"
                 icon="edit"
-                className="student_delete"
                 onClick={this.handleEdit}/>
             </div>
           </div>
-          <br></br>
           <Table
-            className="student_table"
+            className="school_table"
             bordered
             columns={columns}
             rowSelection = {rowSelection}

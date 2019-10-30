@@ -111,7 +111,10 @@ export default {
                     type: 'fetchStudentEntities',
                     payload: {
                         ids,
-                        schoolId :payload.schoolId
+                        schoolId :payload.schoolId,
+                        limit:payload.pageSize,
+                        page:payload.page,
+                        key:payload.key,
                     }
                 })
                 yield put({
