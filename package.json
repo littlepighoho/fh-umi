@@ -23,15 +23,9 @@
     "husky": "^0.14.3",
     "latest": "^0.2.0",
     "lint-staged": "^7.2.2",
-<<<<<<< HEAD
     "lodash-es": "^4.17.15",
     "moment": "^2.24.0",
     "node-sass": "^4.12.0",
-=======
-    "node-sass": "^4.12.0",
-    "file-loader": "^4.1.0",
-    "lodash-es": "^4.17.15",
->>>>>>> 7f611695b135814c08fc9a7a392396cb448229bc
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-core-image-upload": "^2.2.3",
