@@ -1,23 +1,47 @@
 import React from 'react';
-import  {Row, Col } from 'antd'
+import "./index.scss";
+import  {Card,Icon,Avator,Carousel,Descriptions} from 'antd';
+import router from 'umi/router';
+import { connect } from 'http2';
 
-class AccountView extends React.PureComponent {
+const mapStateToProps=(state)=>{
+  return{
+    auth:state.account.auth,
+  };
+};
 
-  DEMO = [{
-    title: 'hei',
-    description: 'heiasdasd',
-  }, {
-    title: 'sb',
-    description: 'sbsbsbsbsb',
-  }]
+@connect(mapStateToProps)
+class AccountView extends React.PureComponent{
+  state={
+    "username":"Administer",
+    "role":"总管理员",
+    "number":"001"
+  };
+  doGetMessage=(payload)=>{
+    this.props.dispatch({
+      type:'account/getMessage',
+      payload:{
+        "username":payload.username,
+        "role":payload.role,
+        "number":payload.number
+      },
+    }).then(()=>{
+      if(this.props.auth){
+        router.push('')
+      }
+    })
+  };
+  handleChange=()=>{
+    this.props.history.push('')
+  };
 
   render(){
-    return (
-      <div>
-        开始展示
-      </div>
+    return(
+      <ContentLayout dogemessage={this.doGetMessage}>
+        <div>
+          <button></button>
+        </div>
+      </ContentLayout>
     )
   }
 }
-
-export default AccountView;
