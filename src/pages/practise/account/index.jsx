@@ -1,6 +1,6 @@
 import React from 'react';
 import "./index.scss";
-import  {Card,Icon,Avator,Carousel,Descriptions} from 'antd';
+import { Avatar, Button, Descriptions,Statistic, Icon, Tag } from 'antd';
 import router from 'umi/router';
 import { connect } from 'http2';
 
@@ -37,11 +37,12 @@ class AccountView extends React.PureComponent{
 
   render(){
     return(
-      <ContentLayout dogemessage={this.doGetMessage}>
-        <div>
-          <button></button>
-        </div>
-      </ContentLayout>
+      <div className="Account_view">
+        <button></button>
+      </div>
     )
   }
 }
+
+
+export default AccountView;
