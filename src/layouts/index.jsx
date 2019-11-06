@@ -148,10 +148,10 @@ class BaseLayout extends React.PureComponent {
           <Header style={{ background: '#303133'}} >
             <FhHeader { ...this.props } />
           </Header>
-          <Content style={{ padding: '0 50px',  height:'calc(100% - 30px)',background: '#303133'}}>
+          <Content style={{ padding: '0 50px', background: '#303133'}}>
             {this.props.children}
           </Content>
-          <Footer style={{ textAlign: 'center',height:'30px',background: '#303133' }}>FH ©2019 Created by Rom Chung</Footer>
+          <Footer style={{ textAlign: 'center', background: '#303133' }}>FH ©2019 Created by Rom Chung</Footer>
         </Layout>
       </Layout>
     )

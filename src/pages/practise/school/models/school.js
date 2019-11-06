@@ -96,7 +96,6 @@ export default {
             try{
                 const result = yield call(schoolService.getList,payload);
                 const {data} = result;
- console.log("model",result);
                 const ids = data.schools.map((item) => item.id);
                 yield put({
                     type: 'fetchSchoolEntities',

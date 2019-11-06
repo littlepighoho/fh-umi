@@ -17,7 +17,9 @@ class FhHeader extends React.PureComponent {
       payload: {},
     })
   };
-
+  handleSkip =() =>{
+    this.props.history.push("/account");
+  }
   render() {
 
     return (
@@ -49,7 +51,7 @@ class FhHeader extends React.PureComponent {
                   </div>
               }
             >
-              <Menu.Item key="setting">个人设置</Menu.Item>
+              <Menu.Item key="setting" onClick={this.handleSkip}>个人设置</Menu.Item>
               <Menu.Item key="logout" onClick={this.handleLogout}>退出</Menu.Item>
             </SubMenu>}
             {!this.props.auth.logined && !this.props.isLoading && <Button

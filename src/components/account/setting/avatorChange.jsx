@@ -1,9 +1,14 @@
 
 import React from 'react';
 import './avatorChange.scss';
-import { Upload, Icon, Card,message,Avatar} from 'antd';
+import { Upload, Icon, Modal,message,Slider,Avatar} from 'antd';
 import router from 'umi/router';
 import { connect } from 'react-redux';
+import { get } from 'lodash-es';
+import { noop } from 'lodash-es';
+
+const BOX_SIZE = 200;
+const BOX_BORDER = 80;
 
 // 上传文件获取编码
 function getBase64(img, callback) {
@@ -23,8 +28,9 @@ function beforeUpload(file) {
 
 //接口配置
 const mapStateToProps = (state) => {
+  const me = get(state.account,"me",[]);
   return {
-    auth: state.account.auth,
+    me: me,
   }
 };
 
@@ -32,9 +38,19 @@ const mapStateToProps = (state) => {
 class AvatarChange extends React.Component {
   state = {
     loading: false,
-    avator:''
+    avator:'',
+    visible:false,
+    image:this.props.image,
+    scale:12,
   };
+  handleScale= (value) =>{
 
+  }
+  handleFileSelect=( file)=>{
+    this.setState({
+      image:file,
+    })
+  }
   handleChange = info => {
     if (info.file.status === 'uploading') {
       this.setState({ loading: true });
@@ -50,7 +66,16 @@ class AvatarChange extends React.Component {
       );
     }
   };
-
+  open = () =>{
+    this.setState({
+       visible:true,
+    })
+  }
+  onClose = () =>{
+    this.setState({
+      visible:false,
+    })
+  }
   render() {
     const uploadButton = (
       <div>
@@ -62,19 +87,36 @@ class AvatarChange extends React.Component {
     return (
         <div className="avatar_content">
           {/*上传图片*/}
+          <Avatar src={get(this.props,"me.avator",[])} size={160} onClick={this.open}/>
+        <Modal
+          visible={this.state.visible}
+          title="修改头像"
+          okText="确认"
+          onCancel={this.onClose}
+          onOk={this.handleCreate}
+          width={400}>
           <Upload
+            className="avatar_uploader"
             name="avatar"
             listType="picture-card"
-            className="avatar_uploader"
             showUploadList={false}
             action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-            beforeUpload={beforeUpload}
+            beforeUpload={this.handleFileSelect}
             onChange={this.handleChange}
-            value={this.state.avator}
           >
             {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%'}} /> : uploadButton}
           </Upload>
-        </div>
+          <Slider
+            onChange={(value) => {this.setState({scale:value})}}
+            className="avatar_slider"
+            min={1}
+            max={2}
+            step={0.01}
+            value={this.state.scale}
+            style={{ width: 280, margin: '10px auto' }}
+          />
+       </Modal>
+      </div>
     );
   }
 }

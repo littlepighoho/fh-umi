@@ -2,68 +2,61 @@ import React from 'react';
 import { Card, Form, Steps, Button, message,Avatar,DatePicker, Tooltip,Icon,Radio } from 'antd';
 import "./setting.scss";
 import { ContentLayout } from '@/layouts/contentLayout';
-import Step1 from '@/components/account/setting/Step1';
-import Step2 from '@/components/account/setting/Step2';
-import Step3 from '@/components/account/setting/Step3';
+// import Step1 from '@/components/account/setting/Step1';
+// import Step2 from '@/components/account/setting/Step2';
+// import Step3 from '@/components/account/setting/Step3';
 import AvatarChange from '@/components/account/setting/avatorChange';
 import { Input } from 'antd';
+import { Link } from 'react-router-dom';
+import { get } from 'lodash-es';
 import router from 'umi/router';
 import { connect } from 'react-redux';
+import { call } from 'redux-saga/effects';
 
 const { Step } = Steps;
 //电话修改
-const steps = [
-  {
-    id :1,
-    title: '验证信息',
-    content: 'First-content',
-  },
-  {
-    id:2,
-    title: '更改信息',
-    content: 'Second-content',
-  },
-  {
-    id:3,
-    title: '完成',
-    content: 'Last-content',
-  },
-];
-function getStepContent(id) {
-  // eslint-disable-next-line default-case
-  switch (id) {
-    case 0:
-      return <Step1 />;
-    case 1:
-      return <Step2 />;
-    case 2:
-      return  <Step3/>;
-  }
-}
+// const steps = [
+//   {
+//     id :1,
+//     title: '验证信息',
+//     content: 'First-content',
+//   },
+//   {
+//     id:2,
+//     title: '更改信息',
+//     content: 'Second-content',
+//   },
+//   {
+//     id:3,
+//     title: '完成',
+//     content: 'Last-content',
+//   },
+// ];
+// function getStepContent(id) {
+//   // eslint-disable-next-line default-case
+//   switch (id) {
+//     case 0:
+//       return <Step1 />;
+//     case 1:
+//       return <Step2 />;
+//     case 2:
+//       return  <Step3/>;
+//   }
+// }
 //路由配置
 const mapStateToProps = (state) => {
+  const me = get(state.account,"me",[]);
+  // console.log("me",me);
   return {
-    auth: state.account.auth,
+    me: me,
   }
 };
 
 @connect(mapStateToProps)
  class AccountSetting extends React.PureComponent{
-   constructor(props) {
-     super(props);
-     this.state = {
-       current: 0,
-       "username":"4@firehydrant.com",
-       "role":0,
-        "old_password":"123456",
-       "new_password":"",
-       "phone":"66666666",
-       "motto":"好好学习天天向上",
-       "avator":"http://demo.sc.chinaz.net/Files/DownLoad/moban/201907/moban3892/images/t1.jpg",
-       "nickname":"4@firehydrant.com",
-       "sex":1
-     };
-   }
+  state={
+    confirmDirty: false,
+  };
 
    doGetMessage = (payload) => {
     this.props.dispatch({
@@ -82,52 +75,53 @@ const mapStateToProps = (state) => {
       }
     })
   };
-
   //  //修改个人信息
-  handleChangeMessage= (payload) =>{
-    message.success('个人信息修改成功');
-    this.props.dispatch({
-      type: 'account/changeMessage',
-      payload: {
-        "username":payload.username,
-        "role":payload.role,
-        "motto":payload.motto,
-        "nickname":payload.nickname,
-        "sex":1
-
-      },
-    }).then(() => {
-      if(this.props.auth.logined) {
-        router.push('')
-      }
+  handleChangeMessage= () =>{
+    // console.log("payload");
+    this.props.form.validateFields((err, values) => {
+      console.log("values",values);
+      if (err) {
+        return;
+        }
+      this.props.dispatch({
+        type: 'account/changeMessage',
+        payload: {
+          username:values.username,
+          role:values.role,
+          motto:values.motto,
+          nickname:values.nickname,
+          sex:values.sex,
+          phone:values.phone,
+        },
+      }).then(() =>{
+        this.props.dispatch({
+          type: 'account/me',
+          payload: {},
+       })
+      })
     })
   };
-
-  handleChangePassword= (payload) =>{
-    message.success('密码修改成功');
-    this.props.dispatch({
-      type: 'account/changeMessage',
-      payload: {
-        new_password: payload.new_password
-
-      },
-    }).then(() => {
-      if(this.props.auth.logined) {
-        router.push('')
-      }
+  handleChangePassword= () =>{
+    // console.log("payload");
+    this.props.form.validateFields((err, values) => {
+      console.log("values",values);
+      if (err) {
+        return;
+        }
+      this.props.dispatch({
+        type: 'account/changeMessage',
+        payload: {
+          new_password:values.new_password,
+          old_password:values.old_password,
+        },
+      }).then(() =>{
+        this.props.dispatch({
+          type: 'account/me',
+          payload: {},
+       })
+      })
     })
   };
-
-   //修改电话号码
-   next() {
-     const current = this.state.current + 1;
-     this.setState({ current });
-   }
-
-   prev() {
-     const current = this.state.current - 1;
-     this.setState({ current });
-   }
 
    //密码不一致
   handleConfirmBlur = e => {
@@ -137,13 +131,12 @@ const mapStateToProps = (state) => {
 
   compareToFirstPassword = (rule, value, callback) => {
     const { form } = this.props;
-    if (value && value !== form.getFieldValue('password')) {
+    if (value && value !== form.getFieldValue('new_password')) {
       callback('密码不一致！');
     } else {
       callback();
     }
   };
-
   validateToNextPassword = (rule, value, callback) => {
     const { form } = this.props;
     if (value && this.state.confirmDirty) {
@@ -151,6 +144,7 @@ const mapStateToProps = (state) => {
     }
     callback();
   };
+
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
@@ -168,63 +162,65 @@ render() {
     labelCol: { span: 2 },
     wrapperCol: { span: 8 },
   };
-  const { current } = this.state;
   return (
-    <ContentLayout dogetMessage={this.doGetMessage}>
+    <ContentLayout>
 
 
         {/*个人基础信息*/}
         <Card  className="account_changeDate" title="修改个人信息">
           <Form className="account_description" {...formItemLayout} >
-            <Form.Item
-              label={
-                <span>
-              昵称&nbsp;
-                  <Tooltip title="What do you want others to call you?">
-                <Icon type="question-circle-o" />
-              </Tooltip>
-            </span>
-              }
-            >
+            <Form.Item label={<span style={{ color: 'white'}}>用户名</span>}>
               {getFieldDecorator('nickname')(
-                <Input placeholder={this.state.nickname}  value={this.state.nickname} allowClear/>)}
-            </Form.Item>
+                 <Input placeholder={get(this.props,"me.nickname",[])}   allowClear/>)}
+             </Form.Item>
 
             <Form.Item label="性别">
-              {getFieldDecorator('sex')(
-                <Radio.Group defaultValue={this.state.sex}  value={this.state.sex} >
-                <Radio value="0">小姐姐</Radio>
-                <Radio value="1">小哥哥</Radio>
+              {getFieldDecorator('sex',{  initialValue: get(this.props,"me.sex",[])})(
+                <Radio.Group   >
+                <Radio value={2}>小姐姐</Radio>
+                <Radio value={1}>小哥哥</Radio>
               </Radio.Group>)}
             </Form.Item>
 
             <Form.Item label="角色">
-              {getFieldDecorator('role')(
-                <Radio.Group defaultValue={this.state.role}  value={this.state.role} >
-                  <Radio value="0">普通用户</Radio>
-                  <Radio value="1">管理员</Radio>
+              {getFieldDecorator('role',{ initialValue: get(this.props,"me.role",[])})(
+                <Radio.Group >
+                  <Radio value={0}>普通用户</Radio>
+                  <Radio value={1}>管理员</Radio>
                 </Radio.Group>)}
             </Form.Item>
-
-            <Form.Item label="生日">
-              {getFieldDecorator('date-picker')(<DatePicker />)}
+            <Form.Item label="电话号码">
+            {getFieldDecorator('phone')(
+                <Input placeholder={get(this.props,"me.phone",[])}   allowClear/>)}
             </Form.Item>
 
             <Form.Item label="一句话签名">
               {getFieldDecorator('motto')(
-                <Input placeholder={this.state.motto}  value={this.state.motto} allowClear/>)}
+                <Input placeholder={get(this.props,"me.motto",[])}   allowClear/>)}
             </Form.Item>
           </Form>
-          <AvatarChange className={"data_avatar"}/>
-          <button  type="primary" className="account_button"
-                   onClick={this.handleChangeMessage}>确认修改</button>
+          <AvatarChange className="data_avatar"/>
+          <Button  type="primary" className="account_button"
+              onClick={this.handleChangeMessage}>
+                <Link to={{pathname:'/account'}}>确认修改</Link>
+          </Button>
         </Card>
 
       {/*修改密码*/}
       <Card  className="account_changeDate" title="修改密码">
         <Form className="account_description" {...formItemLayout} onSubmit={this.handleSubmit}>
-          <Form.Item label="密码" hasFeedback>
-            {getFieldDecorator('password', {
+        <Form.Item label={<span style={{ color: 'white'}}>原密码</span>}>
+            {getFieldDecorator('old_password', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入您的密码',
+                },
+              ],
+            })(<Input.Password />)}
+          </Form.Item>
+          <Form.Item label={<span style={{ color: 'white'}}>新密码</span>}hasFeedback>
+            {getFieldDecorator('new_password', {
               rules: [
                 {
                   required: true,
@@ -234,50 +230,25 @@ render() {
                   validator: this.validateToNextPassword,
                 },
               ],
-            })(<Input.Password  value={this.state.new_password}/>)}
+            })(<Input.Password />)}
           </Form.Item>
-          <Form.Item label="确认密码" hasFeedback>
-            {getFieldDecorator('confirm', {
+
+          <Form.Item label={<span style={{ color: 'white'}}>确认密码</span>} hasFeedback>
+            {getFieldDecorator('new_password1', {
               rules: [
                 {
                   required: true,
-                  message: '请确认您的密码',
+                  message: '请输入密码',
                 },
                 {
                   validator: this.compareToFirstPassword,
                 },
               ],
-            })(<Input.Password  value={this.state.old_password} onBlur={this.handleConfirmBlur} />)}
+            })(<Input.Password onBlur={this.handleConfirmBlur} />)}
           </Form.Item>
         </Form>
-        <button  type="primary" className="account_button" onClick={this.handleChangePassword}>确认修改</button>
-      </Card>
-
-      {/*修改电话号码*/}
-      <Card  className="account_changeDate" title="修改电话">
-        <Steps current={current}>
-          {steps.map(item => (
-            <Step key={item.title} title={item.title} />
-          ))}
-        </Steps>
-        <div className="steps-content">{getStepContent(current)}</div>
-        <div className="steps-action">
-          {current < steps.length - 1 && (
-            <Button type="primary" onClick={() => this.next()}>
-              下一步
-            </Button>
-          )}
-          {current === steps.length - 1 && (
-            <Button type="primary" onClick={() => message.success('手机号修改成功')}>
-              完成修改
-            </Button>
-          )}
-          {current > 0 && (
-            <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
-              上一步
-            </Button>
-          )}
-        </div>
+        <Button  type="primary" className="account_button"
+         onClick={this.handleChangePassword}>确认修改</Button>
       </Card>
 
       <button type="primary" className="account_backButton"

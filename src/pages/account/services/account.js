@@ -55,13 +55,24 @@ export const accounts = () =>{
 export const getMessage =() =>{
   return request({
     url:API.Account.getMessage,
-    method:'post'
+    method:'get'
   })
 };
 
-export const changeMessage =() =>{
+export const changeMessage =(payload) =>{
+  console.log("servise",payload);
   return request({
     url:API.Account.changeMessage,
-    method:'post'
+    method:'put',
+    data:{
+      username:payload.username,
+      role:payload.role,
+      motto:payload.motto,
+      nickname:payload.nickname,
+      sex:payload.sex,
+      phone:payload.phone,
+      new_password:payload.new_password,
+      old_password:payload.old_password,
+    }
   })
 };

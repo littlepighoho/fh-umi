@@ -3,64 +3,66 @@ import "./index.scss";
 import {Card,Icon,Avatar,Carousel,Descriptions} from  'antd';
 import { ContentLayout } from '@/layouts/contentLayout';
 import { connect } from 'dva';
+import { get } from 'lodash-es';
 import router from 'umi/router';
 
 // <<<<<<< HEAD
 const mapStateToProps = (state) => {
+  console.log("state",state)
   return {
-    auth: state.account.auth,
+    me: state.account.me,
+    entities:state.account.entities,
   };
 };
 
+function formatNumber (n) {
+  n = n.toString()
+  return n[1] ? n : '0' + n;
+}
+// 参数number为毫秒时间戳，format为需要转换成的日期格式
+function formatTime (number, format) {
+  var time = new Date(number)
+  // time  =  time *1000;
+  var newArr = []
+  var formatArr = ['Y', 'M', 'D', 'h', 'm', 's']
+  newArr.push(time.getFullYear())
+  newArr.push(formatNumber(time.getMonth() + 1))
+  newArr.push(formatNumber(time.getDate()))
+
+  newArr.push(formatNumber(time.getHours()))
+  newArr.push(formatNumber(time.getMinutes()))
+  newArr.push(formatNumber(time.getSeconds()))
+
+  for (var i in newArr) {
+      format = format.replace(formatArr[i], newArr[i])
+  }
+  return format;
+}
+
+function getSex(number){
+  if( number == 1)
+    return "小哥哥";
+  else if(number == 2)
+    return "小姐姐";
+  else
+    return "未知";
+}
+function getRole(number){
+  if( number == 0)
+    return "普通用户";
+  else
+    return "管理员";
+}
+function getTeamRole(number){
+  if( number == 0)
+    return "成员";
+  else
+    return "队长";
+}
 
 @connect(mapStateToProps)
 class AccountView extends React.PureComponent{
 
-  state = {
-    "username":"4@firehydrant.com",
-    "team":{
-      "role":'队员',
-      "nickname":"国服集结",
-      "create_time":1563979767.82811,
-      "id":2
-    },
-    "role":'普通用户',
-    "phone":"66666666",
-    "motto":"好好学习天天向上",
-    "avator":"http://demo.sc.chinaz.net/Files/DownLoad/moban/201907/moban3892/images/t1.jpg",
-    "nickname":"4@firehydrant.com",
-    "update_time":1563976794.03092,
-    "create_time":1563976794.0309,
-    "sex":'小姐姐'
-  };
-
-  doGetMessage = (payload) => {
-    this.props.dispatch({
-      type: 'account/getMessage',
-      payload: {
-        "username":payload.username,
-        "team":{
-          "role":payload.role,
-          "nickname":payload.nickname,
-          "create_time":payload.create_time,
-          "id":payload.id
-        },
-        "role":payload.role,
-        "phone":payload.phone,
-        "motto":payload.motto,
-        "avator":payload.avator,
-        "nickname":payload.nickname,
-        "update_time":payload.update_time,
-        "create_time":payload.create_time,
-        "sex":1
-
-      },
-    }).then(() => {
-      if(this.props.auth) {
-        router.push('')
-      }
-    })
-  };
   handleChangeAvatar = () => {
     this.props.history.push('/account/setting');
   };
@@ -68,6 +70,12 @@ class AccountView extends React.PureComponent{
   handleChange = () =>{
     this.props.history.push('/account/setting')
   };
+  componentDidMount(){
+    this.props.dispatch({
+      type: 'account/me',
+      payload: {},
+    })
+  }
 
   render() {
     return (
@@ -76,19 +84,26 @@ class AccountView extends React.PureComponent{
           {/*个人基础信息*/}
         <Card  className="account_date"
           cover={
-            <Avatar className="account_avatar" src={this.state.avator} title="更改"onClick={this.handleChangeAvatar}/>
-          } title="个人资料"
+            <Avatar className="account_avatar" src={get(this.props, 'me.avator', '')} title="更改"onClick={this.handleChangeAvatar}/>
+          }
+          title="个人资料"
         >
           <Descriptions className="account_description" column={4}>
-            <Descriptions.Item label="用户名" span={2}>{this.state.username} </Descriptions.Item>
-            <Descriptions.Item label="角色" span={2}>{this.state.role}</Descriptions.Item>
-            <Descriptions.Item label="昵称" span={2} >{this.state.nickname}</Descriptions.Item>
-            <Descriptions.Item label="性别" span={2}>{this.state.sex}</Descriptions.Item>
-            <Descriptions.Item label="电话" span={2}>{this.state.phone}</Descriptions.Item>
-            <Descriptions.Item label="创建时间" span={2}>{this.state.create_time}</Descriptions.Item>
-            <Descriptions.Item label="一句话签名">
-              &nbsp;&nbsp;&nbsp;&nbsp;{this.state.motto}
+            <Descriptions.Item label="用户名" span={2}>  {get(this.props, 'me.username', '')} </Descriptions.Item>
+            <Descriptions.Item label="角色" span={2}>{getRole(get(this.props, 'me.role', ''))}</Descriptions.Item>
+            <Descriptions.Item label="昵称" span={2} >{get(this.props, 'me.nickname', '')}</Descriptions.Item>
+            <Descriptions.Item label="性别" span={2}>{getSex(get(this.props, 'me.sex', ''))}</Descriptions.Item>
+            <Descriptions.Item label="电话" span={2}>{get(this.props, 'me.phone', '')}</Descriptions.Item>
+            <Descriptions.Item label="一句话签名" span={2}>
+              &nbsp;&nbsp;&nbsp;&nbsp;{get(this.props, 'me.motto', '')}
             </Descriptions.Item>
+            <Descriptions.Item label="创建时间" span={2}>
+              {formatTime(get(this.props, 'me.create_time', '')*1000,"Y-M-D h:m:s")}
+            </Descriptions.Item>
+            <Descriptions.Item label="更新时间" span={2}>
+              {formatTime(get(this.props, 'me.update_time', '')*1000,"Y-M-D h:m:s")}
+            </Descriptions.Item>
+
           </Descriptions>
           <button  type="primary" className="account_button" onClick={this.handleChange}>
               修改个人信息</button>
@@ -98,10 +113,10 @@ class AccountView extends React.PureComponent{
                 title="团队信息"
         >
           <Descriptions className="account_description" column={4}>
-            <Descriptions.Item label="团队昵称" span={2}>{this.state.team.nickname} </Descriptions.Item>
-            <Descriptions.Item label="角色" span={2}>{this.state.team.role}</Descriptions.Item>
-            <Descriptions.Item label="创建时间" span={2}>{this.state.team.create_time}</Descriptions.Item>
-            <Descriptions.Item label="id" span={2}>{this.state.team.id}</Descriptions.Item>
+            <Descriptions.Item label="团队昵称" span={2}>{get(this.props, 'me.team.nickname', '')} </Descriptions.Item>
+            {/* <Descriptions.Item label="团队id" span={2}>{get(this.props, 'me.team.id', '')}</Descriptions.Item> */}
+            <Descriptions.Item label="角色" span={2}>{getTeamRole(get(this.props, 'me.team.role', ''))}</Descriptions.Item>
+            <Descriptions.Item label="创建时间" span={2}>{formatTime(get(this.props, 'me.team.create_time', '')*1000,"Y-M-D h:m:s")}</Descriptions.Item>
           </Descriptions>
         </Card>
 
@@ -176,59 +191,7 @@ class AccountView extends React.PureComponent{
       </div>
       </ContentLayout>
 
-// import "./account.scss"
-// import { Avatar, Button, Descriptions,Statistic, Icon, Tag } from 'antd';
-// import { connect } from 'dva';
-// import { get } from 'lodash-es';
-// import VipSvg from '@/assets/img/vip.svg'
 
-// const mapStateToProps = (state) => {
-//   return {
-//     me: state.global.me,
-//   }
-// }
-
-// @connect(mapStateToProps)
-// class AccountView extends React.PureComponent {
-
-//   render() {
-//     return (
-//       <div className="dashboard_view">
-//         <div className="dashboard_content">
-//           <div className="dashboard_item dashboard_account">
-//             <div className="avatar">
-//               <Avatar
-//                 size={80}
-//                 src="http://demo.sc.chinaz.net/Files/DownLoad/moban/201907/moban3892/images/t1.jpg"
-//               />
-//             </div>
-//             <div className="profile">
-//               <div className="profile_title">
-//                 <div className="name">
-//                   {get(this.props, 'me.nickname', '')}
-//                   {/*<Icon component={VipSvg}/>*/}
-//                 </div>
-//                 <div className="statics">
-//                   <Statistic  value={99} prefix={<Icon type="like"  theme="twoTone" twoToneColor="#52c41a"/>} />
-//                   <Statistic  value={10} prefix={<Icon type="frown" theme="twoTone" twoToneColor="#f5222d"/>} />
-//                 </div>
-//               </div>
-//               <Descriptions >
-//                 <Descriptions.Item label="姓名">{get(this.props, 'me.name', '')}</Descriptions.Item>
-//                 <Descriptions.Item label="电话">{get(this.props, 'me.phone', '')}</Descriptions.Item>
-//                 <Descriptions.Item label="介绍">
-//                   {get(this.props, 'me.motto', "") === "" ? "这个人很懒，什么也没有留下" : this.props.me.motto}
-//                 </Descriptions.Item>
-//               </Descriptions>
-//               <Button size="small" type="primary" >修改个人资料</Button>
-//             </div>
-//           </div>
-//           <div className="dashboard_item">
-
-//           </div>
-//         </div>
-//       </div>
-// >>>>>>> origin/dev
     )
   }
 }

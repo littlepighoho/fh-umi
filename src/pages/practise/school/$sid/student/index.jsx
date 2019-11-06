@@ -190,7 +190,6 @@ class StudentView extends React.PureComponent {
           realname:item.realname,
           code:item.code,
           studentId: item.id,
-          accountId:item.account.id,
           create_time: formatTime(item.create_time * 1000,"Y-M-D h:m:s"),
           update_time:formatTime(item.update_time * 1000,"Y-M-D h:m:s"),
           schoolId:item.school.id,
@@ -228,25 +227,14 @@ class StudentView extends React.PureComponent {
     const columns = [
       {
         title: '学号',
-        key: 'studentId',
-        dataIndex: 'studentId',
+        key: 'code',
+        dataIndex: 'code',
       },
       {
         title:'真实姓名',
         key:'realname',
         dataIndex:'realname',
       },
-    {
-      title: 'code',
-      key: 'code',
-      dataIndex: 'code',
-    },
-
-    {
-      title: '系统账户',
-      key: 'accountId',
-      dataIndex: 'accountId',
-    },
     {
       title: '创建时间',
       key: 'create_time',
@@ -256,11 +244,6 @@ class StudentView extends React.PureComponent {
       title: '更新时间',
       key: 'update_time',
       dataIndex: 'update_time',
-    },
-    {
-      title: '学校id',
-      key: 'schoolId',
-      dataIndex: 'schoolId',
     },
     {
       title: '操作',

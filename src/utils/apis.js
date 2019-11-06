@@ -4,8 +4,9 @@ const Account = {
   register: '/accounts/register',
   login: '/accounts/login',
   logout: '/accounts/logout',
-  me: '/accounts'
-
+  me: '/accounts',
+  getMessage:'/accounts',
+  changeMessage:'/accounts',
 }
 
 const School = {

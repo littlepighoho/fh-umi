@@ -16,30 +16,49 @@ export default {
         const result = yield call(accountService.getMessage, payload);
         const { data } = result;
         yield put({
-          type: 'saveAuth',
-          payload: false,
+          type: 'saveState',
+          payload: {
+            keyName:'entities',
+            data:result.data,
+          },
         })
       } catch (e) {
       }
     },
     * changeMessage({ payload }, { call, put, all }) {
+      console.log("model",payload);
       try {
         const result = yield call(accountService.changeMessage, payload);
         const { data } = result;
         yield put({
-          type: 'saveAuth',
-          payload: false,
+          type: 'me',
+          payload: {
+            username:payload.username,
+            role:payload.role,
+            motto:payload.motto,
+            nickname:payload.nickname,
+            sex:payload.sex,
+            phone:payload.phone,
+            new_password:payload.new_password,
+            old_password:payload.old_password,
+          },
+
         })
       } catch (e) {
+        console(e);
       }
     },
     * me({payload}, { call, put }) {
-      const  { data } = yield call(accountService.me, payload);
-      if (data) {
-        yield put({
-          type: 'saveMe',
-          payload: data,
-        })
+      try{
+        const  { data } = yield call(accountService.me, payload);
+        if (data) {
+          yield put({
+            type: 'saveMe',
+            payload: data,
+          })
+        }
+      }catch(e){
+        console(e);
       }
     },
   },
@@ -49,6 +68,9 @@ export default {
     },
     saveMe(state, { payload }) {
       return { ...state, me: payload, auth: { logined: true, fetched: true } };
-    }
+    },
+    saveState(state, { payload }) {
+      return { ...state, [payload.keyName]: payload.data };
+  }
   },
 }

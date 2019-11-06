@@ -201,23 +201,18 @@ class SchoolView extends React.PureComponent {
 
   render(){
     const { getFieldDecorator } = this.props.form;
-    const columns = [{
-      title: '学校id',
-      key: 'schoolId',
-      dataIndex: 'schoolId',
-      width:"10%"
-    },
+    const columns = [
     {
       title: '名字',
       key: 'name',
       dataIndex: 'name',
-      width:"15%",
+      width:"20%",
     },
     {
       title: '简介描述',
       key: 'description',
       dataIndex: 'description',
-      width:"20%",
+      width:"25%",
     },
     {
       title: '创建时间',
@@ -234,7 +229,6 @@ class SchoolView extends React.PureComponent {
     {
       title: '操作',
       dataIndex: 'option',
-
         render: (text, record) =>
                 <span>
                 <a onClick={() => this.handleDelete(record.schoolId)}>
@@ -245,7 +239,7 @@ class SchoolView extends React.PureComponent {
                     修改
                 </a>
                 <Divider type="vertical" />
-                <Link to={{pathname:`/practise/school/${record.schoolId}/student`,schoolId:record.schoolId}}>查看</Link>
+                <Link to={{pathname:`/practise/school/${record.schoolId}/student`}}>查看</Link>
                 </span>
     }
     ];
@@ -330,7 +324,7 @@ class SchoolView extends React.PureComponent {
         <Modal
           visible={this.state.visible1}
           title="修改学校信息"
-          okText="Create"
+          okText="修改"
           onCancel={this.onClose}
           onOk={this.handleCreate}
         >
