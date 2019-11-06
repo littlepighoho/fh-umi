@@ -53,18 +53,6 @@ td.ant-table-column-has-actions.ant-table-column-has-filters{
   top:-570px;
 }
 
-/*分页*/
-.ant-pagination-prev, .ant-pagination-next, .ant-pagination-jump-prev, .ant-pagination-jump-next{
-  margin-left: 20px;
-}
-.ant-pagination-item-link{
-  margin-top: -100px;
-  left: -10px;
-}
-.ant-pagination-item-1 .ant-pagination-item-active{
-  display: inline;
-}
-
 a{
   margin-top: -100px;
   left: -1px;
@@ -90,4 +78,7 @@ td{
 }
 .ant-table-thead > tr > th {
   text-align: center;
+}
+.ant-form-item-label > label {
+  color: black;
 }
