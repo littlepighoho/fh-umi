@@ -1,6 +1,7 @@
 import React from 'react';
 import "./index.scss";
 import {Card,Icon,Avatar,Carousel,Descriptions} from  'antd';
+import { buildResourcePath } from '@/utils/path_helper';
 import { ContentLayout } from '@/layouts/contentLayout';
 import { connect } from 'dva';
 import { get } from 'lodash-es';
@@ -84,7 +85,9 @@ class AccountView extends React.PureComponent{
           {/*个人基础信息*/}
         <Card  className="account_date"
           cover={
-            <Avatar className="account_avatar" src={get(this.props, 'me.avator', '')} title="更改"onClick={this.handleChangeAvatar}/>
+            <Avatar className="account_avatar"
+            src={get(this.props.me, 'avator') ? buildResourcePath(get(this.props.me, 'avator')) : null}
+             title="更改"onClick={this.handleChangeAvatar}/>
           }
           title="个人资料"
         >
@@ -109,16 +112,23 @@ class AccountView extends React.PureComponent{
               修改个人信息</button>
         </Card>
           {/*团队信息*/}
-        <Card  className="account_team"
-                title="团队信息"
-        >
-          <Descriptions className="account_description" column={4}>
-            <Descriptions.Item label="团队昵称" span={2}>{get(this.props, 'me.team.nickname', '')} </Descriptions.Item>
-            {/* <Descriptions.Item label="团队id" span={2}>{get(this.props, 'me.team.id', '')}</Descriptions.Item> */}
-            <Descriptions.Item label="角色" span={2}>{getTeamRole(get(this.props, 'me.team.role', ''))}</Descriptions.Item>
-            <Descriptions.Item label="创建时间" span={2}>{formatTime(get(this.props, 'me.team.create_time', '')*1000,"Y-M-D h:m:s")}</Descriptions.Item>
-          </Descriptions>
-        </Card>
+          {
+            get(this.props, 'me.team.nickname', '') != '' ?
+            (<Card  className="account_team"
+                    title="团队信息"
+            >
+            <Descriptions className="account_description" column={4}>
+              <Descriptions.Item label="团队昵称" span={2}>{get(this.props, 'me.team.nickname', '')} </Descriptions.Item>
+              <Descriptions.Item label="角色" span={2}>{getTeamRole(get(this.props, 'me.team.role', ''))}</Descriptions.Item>
+              <Descriptions.Item label="创建时间" span={2}>{formatTime(get(this.props, 'me.team.create_time', '')*1000,"Y-M-D h:m:s")}</Descriptions.Item>
+            </Descriptions>
+          </Card>)
+          :false
+          // (<Card  className="account_team"
+          // title="团队信息">
+          //    没有加入团队
+          // </Card>)
+          }
 
         {/*发布任务数据分析*/}
         <Card  className="account_num"

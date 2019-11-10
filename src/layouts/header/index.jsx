@@ -4,8 +4,16 @@ import { Menu, Icon, Avatar, Button, Spin } from 'antd';
 import { connect } from 'dva';
 import { get } from 'lodash-es'
 import router from 'umi/router';
+import { buildResourcePath } from '@/utils/path_helper';
 const { SubMenu } = Menu;
 
+const mapStateToProps = (state) => {
+  return {
+    me: state.global.me,
+  }
+}
+
+@connect(mapStateToProps)
 class FhHeader extends React.PureComponent {
 
   state = {
@@ -43,7 +51,8 @@ class FhHeader extends React.PureComponent {
                       shape="square"
                       size="large"
                       className="account_avatar"
-                      src="http://demo.sc.chinaz.net/Files/DownLoad/moban/201907/moban3892/images/t1.jpg"
+                      // src="http://demo.sc.chinaz.net/Files/DownLoad/moban/201907/moban3892/images/t1.jpg"
+                      src={get(this.props.me, 'avator') ? buildResourcePath(get(this.props.me, 'avator')) : null}
                     />
                     <div style={{ margin: '0 12px', fontSize: '16px'}}>
                       {this.props.me.nickname}

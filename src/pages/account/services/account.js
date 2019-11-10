@@ -17,7 +17,6 @@ export const me = () => {
     method: 'get',
   })
 };
-
 export const logout = () => {
   return request({
     url: API.Account.logout,
@@ -60,7 +59,7 @@ export const getMessage =() =>{
 };
 
 export const changeMessage =(payload) =>{
-  console.log("servise",payload);
+  // console.log("servise",payload);
   return request({
     url:API.Account.changeMessage,
     method:'put',
@@ -73,6 +72,8 @@ export const changeMessage =(payload) =>{
       phone:payload.phone,
       new_password:payload.new_password,
       old_password:payload.old_password,
+      avator : payload.avator,
+
     }
   })
-};
+}

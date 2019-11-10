@@ -11,6 +11,16 @@ export default {
     },
   },
   effects: {
+    *changeAvatar({payload}, { call, put }) {
+      const result = yield call(accountService.changeMessage, payload)
+      console.log(result);
+      yield put({
+        type: 'me',
+        payload: {
+          avator:payload.avator,
+        },
+      })
+    },
     * getMessage({ payload }, { call, put, all }) {
       try {
         const result = yield call(accountService.getMessage, payload);

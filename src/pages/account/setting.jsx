@@ -1,52 +1,17 @@
 import React from 'react';
-import { Card, Form, Steps, Button, message,Avatar,DatePicker, Tooltip,Icon,Radio } from 'antd';
+import { Card, Form, Input, Button, message,Avatar,DatePicker, Tooltip,Icon,Radio } from 'antd';
 import "./setting.scss";
 import { ContentLayout } from '@/layouts/contentLayout';
-// import Step1 from '@/components/account/setting/Step1';
-// import Step2 from '@/components/account/setting/Step2';
-// import Step3 from '@/components/account/setting/Step3';
+import FHAvatarEditor from '../../components/account/setting/avatorChange';
 import AvatarChange from '@/components/account/setting/avatorChange';
-import { Input } from 'antd';
 import { Link } from 'react-router-dom';
 import { get } from 'lodash-es';
 import router from 'umi/router';
-import { connect } from 'react-redux';
-import { call } from 'redux-saga/effects';
+import { connect } from 'dva';
 
-const { Step } = Steps;
-//电话修改
-// const steps = [
-//   {
-//     id :1,
-//     title: '验证信息',
-//     content: 'First-content',
-//   },
-//   {
-//     id:2,
-//     title: '更改信息',
-//     content: 'Second-content',
-//   },
-//   {
-//     id:3,
-//     title: '完成',
-//     content: 'Last-content',
-//   },
-// ];
-// function getStepContent(id) {
-//   // eslint-disable-next-line default-case
-//   switch (id) {
-//     case 0:
-//       return <Step1 />;
-//     case 1:
-//       return <Step2 />;
-//     case 2:
-//       return  <Step3/>;
-//   }
-// }
 //路由配置
 const mapStateToProps = (state) => {
   const me = get(state.account,"me",[]);
-  // console.log("me",me);
   return {
     me: me,
   }
@@ -56,8 +21,30 @@ const mapStateToProps = (state) => {
  class AccountSetting extends React.PureComponent{
   state={
     confirmDirty: false,
+      newAvatar: '',
+      processing: false,
   };
-
+  handleAvatarConfirm = (imageData) => {
+    this.setState({
+      newAvatar: imageData,
+    });
+  };
+  handleEditAccount = () => {
+    this.setState({
+      processing: true,
+    },() =>this.props.dispatch({
+      type: 'account/changeAvatar',
+      payload: {
+        avator: this.state.newAvatar,
+      }
+    }).then(() => {
+      this.setState({
+        processing: false,
+        newAvatar:''
+      })
+    })
+    )
+  }
    doGetMessage = (payload) => {
     this.props.dispatch({
       type: 'account/getMessage',
@@ -157,6 +144,7 @@ const mapStateToProps = (state) => {
 
 
 render() {
+  const { newAvatar } = this.state;
   const { getFieldDecorator } = this.props.form;
   const formItemLayout = {
     labelCol: { span: 2 },
@@ -174,7 +162,7 @@ render() {
                  <Input placeholder={get(this.props,"me.nickname",[])}   allowClear/>)}
              </Form.Item>
 
-            <Form.Item label="性别">
+              <Form.Item label={<span style={{ color: 'white'}}>性别</span>}>
               {getFieldDecorator('sex',{  initialValue: get(this.props,"me.sex",[])})(
                 <Radio.Group   >
                 <Radio value={2}>小姐姐</Radio>
@@ -182,24 +170,55 @@ render() {
               </Radio.Group>)}
             </Form.Item>
 
-            <Form.Item label="角色">
+            <Form.Item label={<span style={{ color: 'white'}}>角色</span>}>
               {getFieldDecorator('role',{ initialValue: get(this.props,"me.role",[])})(
                 <Radio.Group >
                   <Radio value={0}>普通用户</Radio>
                   <Radio value={1}>管理员</Radio>
                 </Radio.Group>)}
             </Form.Item>
-            <Form.Item label="电话号码">
+            <Form.Item label={<span style={{ color: 'white'}}>电话号码</span>}>
             {getFieldDecorator('phone')(
                 <Input placeholder={get(this.props,"me.phone",[])}   allowClear/>)}
             </Form.Item>
 
-            <Form.Item label="一句话签名">
+            <Form.Item label={<span style={{ color: 'white'}}>一句话签名</span>}>
               {getFieldDecorator('motto')(
                 <Input placeholder={get(this.props,"me.motto",[])}   allowClear/>)}
             </Form.Item>
           </Form>
-          <AvatarChange className="data_avatar"/>
+
+          <div className="avatar_item">
+              { newAvatar ? <React.Fragment>
+                <div align="center">
+                  <h2 className="avatar-title">确认要更换成此头像吗？</h2></div>
+                <img className="avatar-img" src={newAvatar} width={180} height={180} alt="" />
+                <br></br>
+                <Button
+                  loading={this.state.processing}
+                  type="primary"
+                  onClick={this.handleEditAccount}
+                  className="btn-update"
+                >
+                  <Icon type="upload" /> 确认上传
+                </Button>
+                <Button
+                  className="btn-dete"
+                  type="primary"
+                  disabled={this.state.processing}
+                  onClick={() => { this.handleAvatarConfirm(''); }}
+                >
+                  <Icon type="delete" /> 重新选择
+                </Button>
+              </React.Fragment> : <FHAvatarEditor
+                borderWidth={50}
+                borderHeight={30}
+                width={180}
+                height={180}
+                onUpload={this.handleAvatarConfirm}
+              />}
+              </div>
+
           <Button  type="primary" className="account_button"
               onClick={this.handleChangeMessage}>
                 <Link to={{pathname:'/account'}}>确认修改</Link>
