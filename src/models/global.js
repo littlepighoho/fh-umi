@@ -64,6 +64,7 @@ export default {
       }
     },
     * me({payload}, { call, put }) {
+      // console.log("$$$$");
       const  { data } = yield call(accountService.me, payload);
       if (data) {
         yield put({

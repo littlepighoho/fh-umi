@@ -36,8 +36,8 @@ export default {
       }
     },
     * changeMessage({ payload }, { call, put, all }) {
-      console.log("model",payload);
       try {
+        console.log("model",payload);
         const result = yield call(accountService.changeMessage, payload);
         const { data } = result;
         yield put({
@@ -52,7 +52,6 @@ export default {
             new_password:payload.new_password,
             old_password:payload.old_password,
           },
-
         })
       } catch (e) {
         console(e);

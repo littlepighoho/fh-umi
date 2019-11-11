@@ -8,6 +8,7 @@ import { buildResourcePath } from '@/utils/path_helper';
 const { SubMenu } = Menu;
 
 const mapStateToProps = (state) => {
+  // console.log("header",state);
   return {
     me: state.global.me,
   }

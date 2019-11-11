@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Form, Input, Button, message,Avatar,DatePicker, Tooltip,Icon,Radio } from 'antd';
+import { Card, Form, Button,Input, message,Avatar,DatePicker, Tooltip,Icon,Radio } from 'antd';
 import "./setting.scss";
 import { ContentLayout } from '@/layouts/contentLayout';
 import FHAvatarEditor from '../../components/account/setting/avatorChange';
@@ -8,10 +8,12 @@ import { Link } from 'react-router-dom';
 import { get } from 'lodash-es';
 import router from 'umi/router';
 import { connect } from 'dva';
+import account from './models/account';
 
 //路由配置
 const mapStateToProps = (state) => {
   const me = get(state.account,"me",[]);
+  console.log("account",state);
   return {
     me: me,
   }
@@ -22,7 +24,7 @@ const mapStateToProps = (state) => {
   state={
     confirmDirty: false,
       newAvatar: '',
-      processing: false,
+      processing: false,   //表示过程的状态
   };
   handleAvatarConfirm = (imageData) => {
     this.setState({
@@ -31,7 +33,7 @@ const mapStateToProps = (state) => {
   };
   handleEditAccount = () => {
     this.setState({
-      processing: true,
+      processing: true,  //上传时是上传状态
     },() =>this.props.dispatch({
       type: 'account/changeAvatar',
       payload: {
@@ -39,34 +41,19 @@ const mapStateToProps = (state) => {
       }
     }).then(() => {
       this.setState({
-        processing: false,
+        processing: false, //上传结束后，状态更改
         newAvatar:''
+      })
+      this.props.dispatch({
+        type:'global/me',  //重新拉取全局
       })
     })
     )
   }
-   doGetMessage = (payload) => {
-    this.props.dispatch({
-      type: 'account/getMessage',
-      payload: {
-        "username":payload.username,
-        "role":payload.role,
-        "motto":payload.motto,
-        "nickname":payload.nickname,
-        "sex":1
-
-      },
-    }).then(() => {
-      if(this.props.auth.logined) {
-        router.push('')
-      }
-    })
-  };
   //  //修改个人信息
   handleChangeMessage= () =>{
-    // console.log("payload");
+    //从表中获取数据
     this.props.form.validateFields((err, values) => {
-      console.log("values",values);
       if (err) {
         return;
         }
@@ -80,18 +67,15 @@ const mapStateToProps = (state) => {
           sex:values.sex,
           phone:values.phone,
         },
-      }).then(() =>{
-        this.props.dispatch({
-          type: 'account/me',
-          payload: {},
-       })
-      })
+    }).then(() =>{
+      message.success('信息修改成功')
+    })
     })
   };
+  //修改
   handleChangePassword= () =>{
-    // console.log("payload");
     this.props.form.validateFields((err, values) => {
-      console.log("values",values);
+      // console.log("values",values);
       if (err) {
         return;
         }
@@ -106,9 +90,15 @@ const mapStateToProps = (state) => {
           type: 'account/me',
           payload: {},
        })
+       message.success('密码修改成功');
       })
     })
   };
+  handleback = () =>{
+    // this.handleChangeMessage();
+    // this.handleChangePassword();
+    this.props.history.push('/account')
+  }
 
    //密码不一致
   handleConfirmBlur = e => {
@@ -191,7 +181,8 @@ render() {
           <div className="avatar_item">
               { newAvatar ? <React.Fragment>
                 <div align="center">
-                  <h2 className="avatar-title">确认要更换成此头像吗？</h2></div>
+                  {/* <h2 className="avatar-title">确认要更换成此头像吗？</h2> */}
+                  </div>
                 <img className="avatar-img" src={newAvatar} width={180} height={180} alt="" />
                 <br></br>
                 <Button
@@ -221,30 +212,21 @@ render() {
 
           <Button  type="primary" className="account_button"
               onClick={this.handleChangeMessage}>
-                <Link to={{pathname:'/account'}}>确认修改</Link>
+                  确认修改
           </Button>
         </Card>
 
       {/*修改密码*/}
       <Card  className="account_changeDate" title="修改密码">
-        <Form className="account_description" {...formItemLayout} onSubmit={this.handleSubmit}>
+        <Form className="account_description" {...formItemLayout}  >
         <Form.Item label={<span style={{ color: 'white'}}>原密码</span>}>
             {getFieldDecorator('old_password', {
-              rules: [
-                {
-                  required: true,
-                  message: '请输入您的密码',
-                },
-              ],
+              rules: [],
             })(<Input.Password />)}
           </Form.Item>
           <Form.Item label={<span style={{ color: 'white'}}>新密码</span>}hasFeedback>
             {getFieldDecorator('new_password', {
               rules: [
-                {
-                  required: true,
-                  message: '请输入您的密码',
-                },
                 {
                   validator: this.validateToNextPassword,
                 },
@@ -255,10 +237,6 @@ render() {
           <Form.Item label={<span style={{ color: 'white'}}>确认密码</span>} hasFeedback>
             {getFieldDecorator('new_password1', {
               rules: [
-                {
-                  required: true,
-                  message: '请输入密码',
-                },
                 {
                   validator: this.compareToFirstPassword,
                 },
@@ -271,7 +249,7 @@ render() {
       </Card>
 
       <button type="primary" className="account_backButton"
-              onClick={()=>{this.props.history.push('/account')}}>返回</button>
+              onClick={this.handleback}>返回</button>
     </ContentLayout>
   )
 }

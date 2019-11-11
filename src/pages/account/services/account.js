@@ -59,7 +59,7 @@ export const getMessage =() =>{
 };
 
 export const changeMessage =(payload) =>{
-  // console.log("servise",payload);
+  console.log("servise",payload);
   return request({
     url:API.Account.changeMessage,
     method:'put',
@@ -70,10 +70,9 @@ export const changeMessage =(payload) =>{
       nickname:payload.nickname,
       sex:payload.sex,
       phone:payload.phone,
+      avator : payload.avator,
       new_password:payload.new_password,
       old_password:payload.old_password,
-      avator : payload.avator,
-
     }
   })
-}
+};

@@ -9,7 +9,7 @@ import router from 'umi/router';
 
 // <<<<<<< HEAD
 const mapStateToProps = (state) => {
-  console.log("state",state)
+  // console.log("state",state)
   return {
     me: state.account.me,
     entities:state.account.entities,

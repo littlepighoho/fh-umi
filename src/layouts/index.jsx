@@ -97,7 +97,7 @@ class BaseLayout extends React.PureComponent {
   render() {
     const { location } = this.props;
     const key = location.pathname.split("/")[1];
-    console.log(this.props)
+    // console.log(this.props)
     if(key === "welcome") {
       return <WelcomeView {...this.props} />
     }

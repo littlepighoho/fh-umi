@@ -15,7 +15,7 @@ const BOX_SIZE = 100;
 const BOX_BORDER = 50;
 const mapStateToProps = (state) => {
   const me = get(state.global,"me",[]);
-  console.log(me)
+  // console.log(me)
   return {
     me: me,
   }
@@ -95,16 +95,56 @@ class avatorChange extends React.PureComponent {
         ...this.props.style,
       }}
     >
-      {this.state.image ? <AvatarEditor
-        ref={this.editor}
-        image={this.state.image}
-        width={this.props.width}
-        height={this.props.height}
-        border={this.props.borderWidth}
-        color={rgba('rgba(0,0,0,0.8)')} // RGBA
-        scale={this.state.scale / 10 } // eslint-disable-line
-        rotate={0}
-      /> : <div
+      {this.state.image ?
+      <div>
+        <AvatarEditor
+            ref={this.editor}
+            image={this.state.image}
+            width={this.props.width}
+            height={this.props.height}
+            border={this.props.borderWidth}
+            color={rgba('rgba(0,0,0,0.8)')} // RGBA
+            scale={this.state.scale / 10 } // eslint-disable-line
+            rotate={0}
+          />
+        <div className="control-bar">
+          <Slider
+            accept="image/*"
+            min={this.props.min}
+            max={this.props.max}
+            value={this.state.scale}
+            tipFormatter={value => value / 10}  // eslint-disable-line
+            onChange={(value) => { this.setState({ scale: value }); }}
+            disabled={!this.state.image}
+          />
+          <Row>
+            <Col span={12}>
+              <Button
+                type="primary"
+                loading={this.state.uploading}
+                disabled={!this.state.image && !this.props.disabled}
+                onClick={this.handleSave}
+              >
+                {!this.state.uploading && <Icon type="check" />} 确定
+              </Button>
+            </Col>
+            <Col span={12} style={{ textAlign: 'right' }}>
+            <Upload
+              beforeUpload={this.handleFileSelect}
+              showUploadList={false}
+            >
+              <Button
+                type="default"
+                disabled={!this.state.image}
+              >
+              <Icon type="reload" /> 重新选择
+              </Button>
+            </Upload>
+          </Col>
+        </Row>
+      </div>
+    </div>
+      : <div
         className="select-cover"
         style={{
           backgroundImage:"url("+(get(this.state.global,"me.avator",[]) ? buildResourcePath(get(this.props.me, 'avator')) : null)+")",
@@ -114,46 +154,10 @@ class avatorChange extends React.PureComponent {
       >
         <Upload beforeUpload={this.handleFileSelect} >
           <Button type="primary" style={{ opacity:'0.8'}}>
-            <Icon type="upload" /> 选择图片
+            <Icon type="upload" /> 修改头像
           </Button>
         </Upload>
       </div>}
-      <div className="control-bar">
-        <Slider
-          accept="image/*"
-          min={this.props.min}
-          max={this.props.max}
-          value={this.state.scale}
-          tipFormatter={value => value / 10}  // eslint-disable-line
-          onChange={(value) => { this.setState({ scale: value }); }}
-          disabled={!this.state.image}
-        />
-        <Row>
-          <Col span={12}>
-            <Button
-              type="primary"
-              loading={this.state.uploading}
-              disabled={!this.state.image && !this.props.disabled}
-              onClick={this.handleSave}
-            >
-              {!this.state.uploading && <Icon type="check" />} 确定
-            </Button>
-          </Col>
-          <Col span={12} style={{ textAlign: 'right' }}>
-            <Upload
-              beforeUpload={this.handleFileSelect}
-              showUploadList={false}
-            >
-              <Button
-                type="default"
-                disabled={!this.state.image}
-              >
-                <Icon type="reload" /> 重新选择
-              </Button>
-            </Upload>
-          </Col>
-        </Row>
-      </div>
     </div>);
   }
 }
