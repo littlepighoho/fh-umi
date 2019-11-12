@@ -5,7 +5,6 @@ const Account = {
   me: '/accounts'
 };
 
-
 const Teams = {
   create:'/teams',
 };

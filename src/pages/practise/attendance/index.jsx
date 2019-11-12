@@ -14,7 +14,6 @@ const EditableRow = ({ form, index, ...props }) => (
   </EditableContext.Provider>
 );
 const EditableFormRow = Form.create()(EditableRow);
-
 //转换时间
 function formatNumber (n) {
   n = n.toString();
@@ -36,7 +35,6 @@ function formatTime (number, format) {
   }
   return format;
 }
-
 const mapStateToProps = (state,props) => {
   const data=get(state.attendance,"entities",[]);
   return{
