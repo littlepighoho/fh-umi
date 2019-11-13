@@ -28,10 +28,10 @@ export default {
 
     //批量获取考勤信息
     * fetchAttendance({ payload }, { call, put, all }) {
-      console.log("models mget");
+      console.log("批量获取考勤信息models_mget",payload);
       try {
         const result = yield call(Attendance.fetchAttendance, payload);
-        console.log("232423423432423", result);
+        console.log("批量获取考勤信息", result);
         yield put({
           type: 'saveState',
           payload: {
@@ -45,8 +45,10 @@ export default {
     },
 
     //获取考勤列表
+    //payload 是
+    //
     * getAttendanceList({ payload }, { call, put, all }) {
-      console.log("models list");
+      console.log("获取考勤列表models",payload);
       try {
         const result = yield call(Attendance.getAttendanceList, payload);
         const { data } = result;
@@ -55,10 +57,23 @@ export default {
           type: 'fetchAttendance',
           payload: {
             ids,
+            limit:payload.pageSize,
+            page:payload.page,
+            key:payload.key,
+            leaver:payload.leaver,
+            absent:payload.absent,
+            late:payload.late,
           },
+        });
+        yield put({
+          type:'savePagination',
+          payload:{
+            keyName:'pagination',
+            data:result.data.pagination,
+          }
         })
-      } catch (e) {
-        console.log("!1222232");
+      }
+      catch (e) {
         console.log(e);
       }
     },
@@ -94,7 +109,7 @@ export default {
             absent: result.absent,
             late: result.late,
           }
-        })
+        });
         if(data){
           message.success('修改成功');
         }
@@ -104,8 +119,12 @@ export default {
     },
   },
     reducers: {
+
       saveState(state, { payload }) {
         return { ...state, [payload.keyName]: payload.data };
+      },
+      savePagination(state,{payload}){
+        return {...state,[payload.keyName]:payload.data};
       }
     }
 }

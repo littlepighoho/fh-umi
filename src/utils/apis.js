@@ -10,11 +10,11 @@ const Teams = {
 };
 
 const Attendance = {
-  getAttendanceList: '/practice/schools/10/courses/3/arrangements/3/attendance/list',
-  getAttendance:'/practice/schools/10/courses/3/arrangements/3/attendance/:atid',
-  getList:'/practice/schools/10/courses/3/arrangements/3/attendance/_mget',
-  deleteAttendance:'/practice/schools/10/courses/3/arrangements/3/attendance/:atid',
-  exitAttendance:'/practice/schools/10/courses/3/arrangements/3/attendance/:atid',
+  getAttendanceList: '/practice/schools/70/courses/5/arrangements/4/attendance/list',
+  getAttendance:'/practice/schools/70/courses/5/arrangements/4/attendance/:atid',
+  getList:'/practice/schools/70/courses/5/arrangements/4/attendance/_mget',
+  deleteAttendance:'/practice/schools/70/courses/5/arrangements/4/attendance/:atid',
+  exitAttendance:'/practice/schools/70/courses/5/arrangements/4/attendance/:atid',
 };
 
 

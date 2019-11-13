@@ -13,7 +13,6 @@
     "babel-eslint": "^9.0.0",
     "css-animation": "^1.6.0",
     "dva": "^2.6.0-beta.6",
-    "eslint": "^5.4.0",
     "eslint-config-umi": "^1.4.0",
     "eslint-plugin-flowtype": "^2.50.0",
     "eslint-plugin-import": "^2.14.0",
@@ -36,7 +35,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^9.0.0",
-    "eslint": "^5.4.0",
+    "eslint": "^5.16.0",
     "eslint-config-umi": "^1.4.0",
     "eslint-plugin-flowtype": "^2.50.0",
     "eslint-plugin-import": "^2.14.0",
@@ -58,5 +57,20 @@
   },
   "engines": {
     "node": ">=8.0.0"
-  }
+  },
+  "name": "fh-umi",
+  "description": "1. 先用终端或者cmd进入工程的目录中（或者在编辑器的Terminal进入）",
+  "version": "1.0.0",
+  "main": ".umirc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/littlepighoho/fh-umi.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/littlepighoho/fh-umi/issues"
+  },
+  "homepage": "https://github.com/littlepighoho/fh-umi#readme"
 }

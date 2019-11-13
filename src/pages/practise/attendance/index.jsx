@@ -3,10 +3,9 @@ import './attendance.scss';
 import { Table, Input, Button, Icon, Card, message, Form, Modal, Divider } from 'antd';
 import {get} from "lodash-es";
 import {connect} from 'dva';
-import props from 'prop-types';
-import attendance from '@/pages/practise/attendance/models/attendance';
 import { parse } from 'path-to-regexp';
-
+import router from 'umi/router';
+const { Search } = Input;
 const EditableContext = React.createContext();
 const EditableRow = ({ form, index, ...props }) => (
   <EditableContext.Provider value={form}>
@@ -14,7 +13,15 @@ const EditableRow = ({ form, index, ...props }) => (
   </EditableContext.Provider>
 );
 const EditableFormRow = Form.create()(EditableRow);
-//转换时间
+const mapStateToProps = (state,props) => {
+  const data=get(state.attendance,"entities",[]);
+  return{
+    data,
+    pagination:state.attendance.pagination,
+  }
+};
+
+//---------------------------转换时间-------------------------------
 function formatNumber (n) {
   n = n.toString();
   return n[1] ? n : '0' + n;
@@ -35,13 +42,6 @@ function formatTime (number, format) {
   }
   return format;
 }
-const mapStateToProps = (state,props) => {
-  const data=get(state.attendance,"entities",[]);
-  return{
-    data,
-    pagination:state.attendance.pagination,
-  }
-};
 
 @connect(mapStateToProps)
 //----------------------------------------------------------------------------
@@ -50,13 +50,16 @@ class AttendanceView extends React.PureComponent {
     searchText: '',
     data:[],
     editing: false,
+    selectedKey: -1,
     InputValue:'',
     hasFetchData:false,
     editData:[],
     visible1:false,
     visible:true,
+    key:-1,
+    name:'',
   };
-  //接口
+  //--------------------------------------接口---------------------------
   componentDidMount() {
       this.props.dispatch({
           type: 'attendance/getAttendanceList',
@@ -64,6 +67,80 @@ class AttendanceView extends React.PureComponent {
           }
         })
   }
+  //----------------分页----------------------------------
+
+  onPageChange = (page,pageSize) =>{
+    const {name} = this.state;
+    const {leaver} = this.state;
+    const {late}=this.state;
+    const {absent}=this.state;
+    this.props.dispatch({
+      type: 'attendance/getAttendanceList',
+      payload: {
+        limit:pageSize,
+        page:page,
+        key:name,
+        leaver:leaver,
+        late:late,
+        absent: absent
+      },
+    })
+  };
+
+  //----------------搜索--------------------------------------
+  onSearchName = value =>{
+    console.log("搜索函数");
+    this.props.dispatch({
+      type: 'attendance/getAttendanceList',
+      payload: {
+        key:value,
+      },
+    });
+    this.setState({
+      name:value,
+    })
+
+  };
+
+  onSearchAbsent= value =>{
+    this.props.dispatch({
+      type: 'attendance/getAttendanceList',
+      payload: {
+        absent:value,
+      },
+    });
+    this.setState({
+      absent:value,
+    });
+  };
+
+  onSearchLeaver= value =>{
+    this.props.dispatch({
+      type: 'attendance/getAttendanceList',
+      payload: {
+        leaver:value,
+      },
+    });
+    this.setState({
+      leaver:value,
+    })
+  };
+
+  onSearchLate= value =>{
+    this.props.dispatch({
+      type: 'attendance/getAttendanceList',
+      payload: {
+        late:value,
+      },
+    });
+    this.setState({
+      late:value,
+    })
+  };
+
+
+  //-------------------删除-------------------------------
+
   handleDelete = (key) => {
     Modal.confirm({
       title:'删除提示',
@@ -81,65 +158,8 @@ class AttendanceView extends React.PureComponent {
   };
 
 
-  handleSearch = (selectedKeys, confirm) => {
-    confirm();
-    this.setState({ searchText: selectedKeys[0] });
-  };
-  handleReset = clearFilters => {
-    clearFilters();
-    this.setState({ searchText: '' });
-  };
 
-  //查找
-  getColumnSearchProps = dataIndex => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          ref={node => {
-            this.searchInput = node;
-          }}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
-        />
-        <Button
-          type="primary"
-          onClick={() => this.handleSearch(selectedKeys, confirm)}
-          icon="search"
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          搜索
-        </Button>
-        <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-          重置
-        </Button>
-      </div>
-    ),
-    filterIcon: filtered => (
-      <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
-    ),
-    onFilter: (value, record) => {
-      console.log(value, record);
-      if (dataIndex === "absent"){
-        return parseInt(record[dataIndex], 10) >= value
-      }
-      else if(dataIndex=="student_number"){
-        return parseInt(record[dataIndex],10)==value
-      }
-      else{
-        return parse(record[dataIndex])==value
-      }
-    },
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => this.searchInput.select());
-      }
-    },
-  });
-
+  //------------------修改--------------------------------------
   handleEdit=(key)=>{
       this.setState({
         visible1:true,
@@ -172,12 +192,7 @@ class AttendanceView extends React.PureComponent {
     });
   };
 
-  showDrawer=()=>{
-    this.setState({
-      visible:true,
-    });
-  };
-
+//----------修改框---------------
   onClose=()=>{
     this.setState({
       visible:false,
@@ -188,11 +203,9 @@ class AttendanceView extends React.PureComponent {
       payload:{
       },
     })
-  }
+  };
 
-
-//-------------------------------------------------------
-  //列表声明+数据
+//------------------------列表声明+数据-------------------------------
   constructor(props){
     super(props);
     this.columns = [
@@ -200,25 +213,16 @@ class AttendanceView extends React.PureComponent {
         title: '学生ID',
         dataIndex: 'student_number',
         key: 'student_number',
-        ...this.getColumnSearchProps('student_number'),
       },
       {
         title: '学生姓名',
         dataIndex: 'realname',
         key: 'realname',
-        ...this.getColumnSearchProps('realname'),
       },
       {
         title: '旷课次数',
         dataIndex: 'absent',
         key: 'absent',
-        editable: true,
-        ...this.getColumnSearchProps('absent'),
-      },
-      {
-        title: '请假次数',
-        dataIndex: 'leaver',
-        key: 'leaver',
         editable: true,
       },
 
@@ -228,6 +232,13 @@ class AttendanceView extends React.PureComponent {
         key: 'late',
         editable: true,
       },
+      {
+        title: '请假次数',
+        dataIndex: 'leaver',
+        key: 'leaver',
+        editable: true,
+      },
+
       {
         title: '创建时间',
         dataIndex: 'create_time',
@@ -254,8 +265,12 @@ class AttendanceView extends React.PureComponent {
           </span>
       },
     ];
+
   }
-  //
+
+
+
+  //-------------------声明数据-----------------------------------
   data = () => {
     return this.props.data.map((item) => {
       return{
@@ -271,6 +286,7 @@ class AttendanceView extends React.PureComponent {
     });
   };
 
+
   render(){
     const { data } = this.state;
     const {getFieldDecorator} =this.props.form;
@@ -278,6 +294,13 @@ class AttendanceView extends React.PureComponent {
       body: {
         row: EditableFormRow,
       },
+    };
+    const  pagination= {
+      current:get(this.props.pagination, 'page', 0),
+      total:get(this.props.pagination, 'total', 0),
+      pageSize: get(this.props.pagination, 'limit', 0),
+      showQuickJumper:true,
+      onChange:(page,pageSize) => this.onPageChange(page,pageSize),
     };
     const columns = this.columns.map(col => {
       if (!col.editable) {
@@ -293,20 +316,55 @@ class AttendanceView extends React.PureComponent {
         }),
       };
     });
-
     return(
       <div>
-        <Table columns={columns}
+        <Table
+               columns={columns}
                dataSource={this.data()} bordered
-               components={components}
                className="card"
                size={'middle'}
-               pagination={{ pageSize: 8}}>
+               pagination= {pagination}
+        >
         </Table>
 
         <Card title={"课程信息"} className="card1">
+          <div>
           <p>学校：2</p>
           <p>课程：2</p>
+          </div>
+        </Card>
+
+        <Card title={"查询"} className="card2">
+          <div className="cardsearch">
+            <Search
+              className="search"
+              placeholder="输入学生名字"
+              enterButton="查询"
+              size="smart"
+              onSearch={value => this.onSearchName(value)}/>
+            <br/>  <br/>
+            <Search
+              className="search"
+              placeholder="旷课>="
+              enterButton="查询"
+              size="smart"
+              onSearch={value => this.onSearchAbsent(value)}/>
+            <br/>  <br/>
+            <Search
+              className="search"
+              placeholder="迟到>="
+              enterButton="查询"
+              size="smart"
+              onSearch={value => this.onSearchLate(value)}/>
+            <br/>  <br/>
+            <Search
+              className="search"
+              placeholder="请假>="
+              enterButton="查询"
+              size="smart"
+              onSearch={value => this.onSearchLeaver(value)}/>
+          <br/>
+          </div>
         </Card>
 
         <Modal
@@ -324,13 +382,7 @@ class AttendanceView extends React.PureComponent {
                 <Input placeholder={this.state.editData.absent}/>
               )}
             </Form.Item>
-            <Form.Item label="请假次数">
-              {getFieldDecorator('leaver',{
-                rules:[],
-              })(
-                <Input placeholder={this.state.editData.leaver}/>
-              )}
-            </Form.Item>
+
             <Form.Item label="迟到次数">
               {getFieldDecorator('late',{
                 rules:[],
@@ -338,8 +390,14 @@ class AttendanceView extends React.PureComponent {
                 <Input placeholder={this.state.editData.late}/>
               )}
             </Form.Item>
+            <Form.Item label="请假次数">
+              {getFieldDecorator('leaver',{
+                rules:[],
+              })(
+                <Input placeholder={this.state.editData.leaver}/>
+              )}
+            </Form.Item>
           </Form>
-
         </Modal>
       </div>
     )

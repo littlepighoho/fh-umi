@@ -19,13 +19,22 @@ export const fetchAttendance=(payload)=>{
 
 
 //获取考勤列表
+//data:值，是我传给后台的值
+//params用于get
+//data用于post
+
 export const getAttendanceList = (payload) => {
-  // console.log("services list",payload.ids);
+  console.log("获取考勤列表services",payload);
   return request({
     url: API.Attendance.getAttendanceList,
     method: 'get',
-    data:{
-
+    params:{
+      limit:payload.pageSize,
+      page:payload.page,
+      key:payload.key,
+      leaver:payload.leaver,
+      absent:payload.absent,
+      late:payload.late,
     }
   })
 };

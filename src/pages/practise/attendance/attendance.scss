@@ -2,29 +2,26 @@
 td.ant-table-column-has-actions.ant-table-column-has-filters{
   color: #222222;
 }
-
-
 .card {
   width: 1070px;
-  height: 550px;
+  height: 710px;
   margin-left: 30px;
   margin-top: 20px;
   background-color: white;
 }
-
 .card2{
   width: 210px;
   height: auto;
   margin-left: 1120px;
-  top:-520px;
+  top:-690px;
   background-color: white;
-}
 
+}
 .card1{
   width: 210px;
   height: auto;
   margin-left: 1120px;
-  top:-540px;
+  top:-710px;
   background-color: white;
 }
 .card1 p{
@@ -81,4 +78,15 @@ td{
 }
 .ant-form-item-label > label {
   color: black;
+}
+.search{
+  width: 200px;
+  margin-left: 30px;
+}
+.ant-pagination-options-quick-jumper{
+  color: #222222;
+}
+.cardsearch{
+  margin-left: -50px;
+
 }
