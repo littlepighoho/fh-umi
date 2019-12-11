@@ -11,7 +11,8 @@ const { confirm } = Modal;
 
 
 const mapStateTopProps = (state, props) => {
-
+// console.log("abc",state);
+  // console.log("phone",get(props.global,"me.phone",[]));
   const schoolId = props.match.params.sid;
   const data =get(state.studentusers,"entities",[]);
   return {
@@ -143,6 +144,7 @@ class StudentView extends React.PureComponent {
     };
 
     handleEdit =(key) =>{
+      // console.log("key",key);
       this.setState({
           visible1: true,
           selectedKeys:[],
@@ -320,6 +322,7 @@ class StudentView extends React.PureComponent {
         <Drawer
           title="添加学生"
           width={350}
+          okText="添加"
           onClose={this.onClose}
           visible={this.state.visible}
         >
@@ -362,7 +365,8 @@ class StudentView extends React.PureComponent {
         <Modal
           visible={this.state.visible1}
           title="修改学生信息"
-          okText="Create"
+          okText="修改"
+          cancelText="取消"
           onCancel={this.onClose}
           onOk={this.handleCreate}
         >
@@ -385,7 +389,7 @@ class StudentView extends React.PureComponent {
               {getFieldDecorator('phone', {
                   rules: [],
               })(
-                  <Input/>
+                  <Input  />
                 )}
             </Form.Item>
           </Form>

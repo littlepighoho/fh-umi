@@ -149,6 +149,7 @@ class SchoolView extends React.PureComponent {
             if (err) {
             return;
             }
+            // if(values.name != null && )
             this.props.dispatch({
               type: 'school/editSchool',
               payload: {
@@ -301,7 +302,7 @@ class SchoolView extends React.PureComponent {
                     {getFieldDecorator('name', {
                         rules: [
                             {
-                                required: true, message: '学校名称不为空'
+                                required: true, message: '学校名称不能为空'
                             }
                         ],
                     })(
@@ -310,7 +311,9 @@ class SchoolView extends React.PureComponent {
                     </Form.Item>
                     <Form.Item label="描述介绍">
                     {getFieldDecorator('description', {
-                        rules: [{ }],
+                        rules: [{
+                          required: true, message: '描述不能空'
+                         }],
                     })(
                         <Input placeholder="描述介绍" />
                       )}
@@ -325,6 +328,7 @@ class SchoolView extends React.PureComponent {
           visible={this.state.visible1}
           title="修改学校信息"
           okText="修改"
+          cancelText="取消"
           onCancel={this.onClose}
           onOk={this.handleCreate}
         >
