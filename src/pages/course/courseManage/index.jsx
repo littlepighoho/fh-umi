@@ -251,6 +251,7 @@ class CourseManage extends Component {
               style={{
                 marginBottom: 24,
               }}
+
               bordered={false}
               title="XX 指数"
               loading={radarData.length === 0}
