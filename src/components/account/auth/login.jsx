@@ -14,7 +14,7 @@ class Login extends React.PureComponent {
       username: this.state.username,
       password: this.state.password
     })
-  }
+  };
   handleInputChange = (keyName) => ({ target }) => {
     this.setState({
       [keyName]: target.value,

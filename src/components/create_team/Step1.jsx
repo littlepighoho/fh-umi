@@ -11,12 +11,10 @@ const data = [
 
 class Step1 extends React.Component {
   state = {};
-
   render() {
     function onChange(e) {
       console.log(`checked = ${e.target.checked}`);
     }
-
     return (
       <div>
         <h3 className="team_fist">请阅读创建队伍需知</h3>

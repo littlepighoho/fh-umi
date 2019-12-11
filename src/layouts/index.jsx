@@ -96,6 +96,7 @@ class BaseLayout extends React.PureComponent {
     const key = location.pathname.split("/")[1];
     return key;
   };
+
   render() {
     const { location } = this.props;
     const key = location.pathname.split("/")[1];
@@ -103,6 +104,7 @@ class BaseLayout extends React.PureComponent {
     if(key === "welcome") {
       return <WelcomeView {...this.props} />
     }
+
 
     return (
       <Layout className="layout" style={{height:"100%"}}>

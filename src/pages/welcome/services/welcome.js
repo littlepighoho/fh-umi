@@ -17,7 +17,6 @@ class Weclome extends Component{
       )
 
     }
-
 }
 
 export default  Weclome;

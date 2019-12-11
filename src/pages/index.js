@@ -33,7 +33,6 @@ class firstView extends React.PureComponent {
          <Top />
 
 
-
         {/*--------欢迎字样 -------------*/}
         <div className="typeface">
           HELLO,

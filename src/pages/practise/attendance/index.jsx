@@ -59,7 +59,7 @@ class AttendanceView extends React.PureComponent {
     key:-1,
     name:'',
   };
-  //--------------------------------------接口---------------------------
+  //------------------------------接口----------------------------------
   componentDidMount() {
       this.props.dispatch({
           type: 'attendance/getAttendanceList',
@@ -67,8 +67,7 @@ class AttendanceView extends React.PureComponent {
           }
         })
   }
-  //----------------分页----------------------------------
-
+  //------------------------------分页----------------------------------
   onPageChange = (page,pageSize) =>{
     const {name} = this.state;
     const {leaver} = this.state;
@@ -87,7 +86,7 @@ class AttendanceView extends React.PureComponent {
     })
   };
 
-  //----------------搜索--------------------------------------
+  //------------------------------搜索----------------------------------
   onSearchName = value =>{
     console.log("搜索函数");
     this.props.dispatch({
@@ -101,7 +100,6 @@ class AttendanceView extends React.PureComponent {
     })
 
   };
-
   onSearchAbsent= value =>{
     this.props.dispatch({
       type: 'attendance/getAttendanceList',
@@ -113,7 +111,6 @@ class AttendanceView extends React.PureComponent {
       absent:value,
     });
   };
-
   onSearchLeaver= value =>{
     this.props.dispatch({
       type: 'attendance/getAttendanceList',
@@ -125,7 +122,6 @@ class AttendanceView extends React.PureComponent {
       leaver:value,
     })
   };
-
   onSearchLate= value =>{
     this.props.dispatch({
       type: 'attendance/getAttendanceList',
@@ -138,9 +134,7 @@ class AttendanceView extends React.PureComponent {
     })
   };
 
-
-  //-------------------删除-------------------------------
-
+  //------------------------------删除---------------------------------
   handleDelete = (key) => {
     Modal.confirm({
       title:'删除提示',
@@ -157,9 +151,7 @@ class AttendanceView extends React.PureComponent {
     })
   };
 
-
-
-  //------------------修改--------------------------------------
+  //------------------------------修改---------------------------------
   handleEdit=(key)=>{
       this.setState({
         visible1:true,
@@ -169,7 +161,6 @@ class AttendanceView extends React.PureComponent {
   handleCreate=(e)=>{
     e.preventDefault();
     const{editData}=this.state;
-    // const data1=key;
     this.props.form.validateFields((err,values)=>{
       console.log("values",values);
       if(err){
@@ -192,7 +183,7 @@ class AttendanceView extends React.PureComponent {
     });
   };
 
-//----------修改框---------------
+  //---------------------------关闭修改框-------------------------------
   onClose=()=>{
     this.setState({
       visible:false,
@@ -205,7 +196,7 @@ class AttendanceView extends React.PureComponent {
     })
   };
 
-//------------------------列表声明+数据-------------------------------
+//-----------------------------列表声明+数据---------------------------
   constructor(props){
     super(props);
     this.columns = [
@@ -268,9 +259,7 @@ class AttendanceView extends React.PureComponent {
 
   }
 
-
-
-  //-------------------声明数据-----------------------------------
+  //----------------------------声明数据--------------------------------
   data = () => {
     return this.props.data.map((item) => {
       return{
@@ -290,11 +279,6 @@ class AttendanceView extends React.PureComponent {
   render(){
     const { data } = this.state;
     const {getFieldDecorator} =this.props.form;
-    const components = {
-      body: {
-        row: EditableFormRow,
-      },
-    };
     const  pagination= {
       current:get(this.props.pagination, 'page', 0),
       total:get(this.props.pagination, 'total', 0),
@@ -329,8 +313,8 @@ class AttendanceView extends React.PureComponent {
 
         <Card title={"课程信息"} className="card1">
           <div>
-          <p>学校：2</p>
-          <p>课程：2</p>
+          <p>学校：北京师范大学</p>
+          <p>课程：测试</p>
           </div>
         </Card>
 
