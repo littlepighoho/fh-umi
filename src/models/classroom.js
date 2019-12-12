@@ -24,6 +24,7 @@ const Model = {
     },
     classroomEntities: [],
     classroomEntity: {},
+    classroomUser: [],
     chooseSchool: false,
   },
   effects: {
@@ -134,6 +135,33 @@ const Model = {
         message.error(e.toString())
       }
     },
+    // 创建课室指派
+    *addClassroomUser({ payload }, { call }) {
+      try {
+        const response = yield call(classroomUserAdd, payload);
+        const { data } = response;
+        if (get(data, 'id', null)) {
+          message.success('指派成功')
+        } else {
+          message.error('指派失败')
+        }
+      } catch (e) {
+        message.error(e.toString())
+      }
+    },
+    // 获取课室指派的所有信息
+    *getClassroomUserEntity({ payload }, { call, put }) {
+      try {
+        const response = yield call(classroomUserGetEntity, payload);
+        const { data } = response;
+        yield put({
+          type: 'saveClassroomUser',
+          payload: data,
+        })
+      } catch (e) {
+        message.error(e.toString())
+      }
+    }
   },
   reducers: {
     saveClassroomList(state, { payload }) {
@@ -165,6 +193,12 @@ const Model = {
         },
         classroomEntities: [],
         chooseSchool: false,
+      }
+    },
+    saveClassroomUser(state, { payload }) {
+      return {
+        ...state,
+        classroomUser: payload,
       }
     },
   },

@@ -1,4 +1,19 @@
-import { Avatar, Card, Col, Icon, List, Row, Skeleton, Statistic } from 'antd';
+import {
+  Avatar,
+  Card,
+  Col,
+  Icon,
+  List,
+  Row,
+  Skeleton,
+  Statistic,
+  Form,
+  Modal,
+  Input,
+  InputNumber,
+  Select,
+  TimePicker,
+} from 'antd';
 import React, { Component } from 'react';
 import Link from 'umi/link';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -9,6 +24,9 @@ import EditableLinkGroup from './components/EditableLinkGroup';
 import styles from './style.less';
 import { DVAKEYS } from '@/constant/dvaKeys';
 import get from 'lodash/get';
+
+const { Option } = Select;
+const FormItem = Form.Item;
 
 const PageHeaderContent = ({ courseEntity }) => {
   const loading = courseEntity && Object.keys(courseEntity).length;
@@ -86,16 +104,27 @@ class CourseManage extends Component {
         schoolId: nextProps.schoolId,
         courseId: nextProps.courseId,
         params: {
-          limit: nextProps.limit,
+          limit: 9999,
           page: 1,
         },
-      }
+      },
     })
   };
 
   state = {
     arrangementMode: 'hide',
     studentMode: 'hide',
+    visible: false,
+    current: undefined,
+  };
+
+  formLayout = {
+    labelCol: {
+      span: 7,
+    },
+    wrapperCol: {
+      span: 13,
+    },
   };
 
   componentDidMount() {
@@ -175,6 +204,83 @@ class CourseManage extends Component {
     });
   };
 
+  showModal = () => {
+    this.setState({
+      visible: true,
+      current: undefined,
+    });
+  };
+
+  showEditModal = item => {
+    this.setState({
+      visible: true,
+      current: item,
+    });
+  };
+
+  handleCancel = () => {
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    const { dispatch, form, match } = this.props;
+    const { current } = this.state;
+    const id = current ? current.id : '';
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      if (current) {
+        const start_time = fieldsValue.start_time.format('X');
+        const end_time = fieldsValue.end_time.format('X');
+        dispatch({
+          type: DVAKEYS.ARRANGEMENT.EDIT_ARRANGEMENT,
+          payload: {
+            schoolId: match.params.sid,
+            courseId: match.params.cid,
+            arrangementId: id,
+            ...fieldsValue,
+            start_time,
+            end_time,
+          },
+        }).then(() => {
+          this.setState({
+            visible: false,
+          });
+          CourseManage.fetchArrangementList({
+            dispatch,
+            schoolId: match.params.sid,
+            courseId: match.params.cid,
+          })
+        })
+      } else {
+        console.log(fieldsValue.start_time)
+        const start_time = fieldsValue.start_time.format('X');
+        const end_time = fieldsValue.end_time.format('X');
+        dispatch({
+          type: DVAKEYS.ARRANGEMENT.ADD_ARRANGEMENT,
+          payload: {
+            schoolId: match.params.sid,
+            courseId: match.params.cid,
+            ...fieldsValue,
+            start_time,
+            end_time,
+          },
+        }).then(() => {
+          this.setState({
+            visible: false,
+          });
+          CourseManage.fetchArrangementList({
+            dispatch,
+            schoolId: match.params.sid,
+            courseId: match.params.cid,
+          })
+        })
+      }
+    })
+  };
+
   render() {
     const links = [
       {
@@ -183,17 +289,130 @@ class CourseManage extends Component {
       },
     ];
     const {
-      activities,
+      form,
       arrangementLoading,
-      activitiesLoading,
-      radarData,
       course,
       arrangement,
       student,
     } = this.props;
+    const { current, visible } = this.state;
+    const { getFieldDecorator } = form;
     const { arrangementEntities } = arrangement;
     const { courseEntity } = course;
     const { studentEntities } = student;
+    const getModalContent = () => <Form onSubmit={this.handleSubmit}>
+      <FormItem label="排课名称" {...this.formLayout}>
+        {getFieldDecorator('name', {
+          rules: [
+            {
+              required: true,
+              message: '请输入排课名称',
+            },
+          ],
+          initialValue: get(current, 'name', ''),
+        })(<Input placeholder="" />)}
+      </FormItem>
+      <FormItem label="开始周" {...this.formLayout}>
+        {getFieldDecorator('start_week', {
+          rules: [
+            {
+              required: true,
+              message: '请选择开始周',
+            },
+          ],
+          initialValue: get(current, 'start_week', 1),
+        })(<InputNumber min={1} />)}
+      </FormItem>
+      <FormItem label="结束周" {...this.formLayout}>
+        {getFieldDecorator('end_week', {
+          rules: [
+            {
+              required: true,
+              message: '请选择结束周',
+            },
+          ],
+          initialValue: get(current, 'end_week', 17),
+        })(<InputNumber min={1} />)}
+      </FormItem>
+      <FormItem label="周几" {...this.formLayout}>
+        {getFieldDecorator('day_of_week', {
+          rules: [
+            {
+              required: true,
+              message: '请选择周几',
+            },
+          ],
+          initialValue: get(current, 'day_of_week', 1),
+        })(<Select>
+          <Option value={1}>周一</Option>
+          <Option value={2}>周二</Option>
+          <Option value={3}>周三</Option>
+          <Option value={4}>周四</Option>
+          <Option value={5}>周五</Option>
+          <Option value={6}>周六</Option>
+          <Option value={0}>周日</Option>
+        </Select>)}
+      </FormItem>
+      <FormItem label="单双周" {...this.formLayout}>
+        {getFieldDecorator('odd_even', {
+          rules: [
+            {
+              required: true,
+              message: '请选择单双周',
+            },
+          ],
+          initialValue: get(current, 'odd_even', 0),
+        })(<Select>
+          <Option value={0}>单双周</Option>
+          <Option value={1}>单周</Option>
+          <Option value={2}>双周</Option>
+        </Select>)}
+      </FormItem>
+      <FormItem label="开始节" {...this.formLayout}>
+        {getFieldDecorator('start_section', {
+          rules: [
+            {
+              required: true,
+              message: '请选择开始节',
+            },
+          ],
+          initialValue: get(current, 'start_section', 1),
+        })(<InputNumber min={1} />)}
+      </FormItem>
+      <FormItem label="结束节" {...this.formLayout}>
+        {getFieldDecorator('end_section', {
+          rules: [
+            {
+              required: true,
+              message: '请选择结束节',
+            },
+          ],
+          initialValue: get(current, 'end_section', 2),
+        })(<InputNumber min={1} />)}
+      </FormItem>
+      <FormItem label="开始时间" {...this.formLayout}>
+        {getFieldDecorator('start_time', {
+          rules: [
+            {
+              required: true,
+              message: '请选择开始时间',
+            },
+          ],
+          initialValue: moment(get(current, 'start_time', 0)),
+        })(<TimePicker />)}
+      </FormItem>
+      <FormItem label="结束时间" {...this.formLayout}>
+        {getFieldDecorator('end_time', {
+          rules: [
+            {
+              required: true,
+              message: '请选择结束时间',
+            },
+          ],
+          initialValue: moment(get(current, 'end_time', 0)),
+        })(<TimePicker />)}
+      </FormItem>
+    </Form>;
     return (
       <PageHeaderWrapper
         content={<PageHeaderContent courseEntity={courseEntity} />}
@@ -214,8 +433,13 @@ class CourseManage extends Component {
                 padding: 0,
               }}
             >
-              <Card.Grid className={styles.projectGrid} key="add" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <div style={{ height: '95px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <Card.Grid
+                className={styles.projectGrid}
+                key="add"
+                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                onClick={this.showModal}
+              >
+                  <div style={{ height: '95px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                   <div>
                     <Icon type="plus" /> 添加排课
                   </div>
@@ -252,32 +476,31 @@ class CourseManage extends Component {
                   }
                   return null
                 }
-                  return <Card.Grid className={styles.projectGrid} key={item.id}>
-                    <Card
-                      bodyStyle={{
-                        padding: 0,
-                      }}
-                      bordered={false}
-                    >
-                      <Card.Meta
-                        title={
-                          <div className={styles.cardTitle}>
-                            <Avatar size="small" src={item.logo} />
-                            <Link >{item.name}</Link>
-                          </div>
-                        }
-                        description="暂无简介"
-                      />
-                      <div className={styles.projectItemContent}>
-                        <span>{item.start_week} 至 {item.end_week} 周 周 {item.day_of_week} {item.start_section} ～ {item.end_section} 节</span>
-                        <Link></Link>
-                        <span className={styles.datetime} title={item.update_time}>
-                        {moment(item.create_time).fromNow()}
-                      </span>
-                      </div>
-                    </Card>
-                  </Card.Grid>
-
+                return <Card.Grid className={styles.projectGrid} key={item.id}>
+                  <Card
+                    bodyStyle={{
+                      padding: 0,
+                    }}
+                    bordered={false}
+                  >
+                    <Card.Meta
+                      title={
+                        <div className={styles.cardTitle}>
+                          <Avatar size="small" src={item.logo} />
+                          <Link >{item.name}</Link>
+                        </div>
+                      }
+                      description="暂无简介"
+                    />
+                    <div className={styles.projectItemContent}>
+                      <span>{item.start_week} 至 {item.end_week} 周 周 {item.day_of_week} {item.start_section} ～ {item.end_section} 节</span>
+                      <Link></Link>
+                      <span className={styles.datetime} title={item.update_time}>
+                      {moment(item.create_time).fromNow()}
+                    </span>
+                    </div>
+                  </Card>
+                </Card.Grid>
               }).filter(item => !!item)}
             </Card>
             <Card
@@ -360,9 +583,20 @@ class CourseManage extends Component {
             </Card>
           </Col>
         </Row>
+        <Modal
+          title="排课创建"
+          destroyOnClose
+          visible={visible}
+          okText="确认"
+          cancelText="取消"
+          onOk={this.handleSubmit}
+          onCancel={this.handleCancel}
+        >
+          {getModalContent()}
+        </Modal>
       </PageHeaderWrapper>
     );
   }
 }
 
-export default CourseManage;
+export default Form.create()(CourseManage);

@@ -57,6 +57,7 @@ const Model = {
       try {
         const response = yield call(arrangementFetchList, payload);
         const { data } = response;
+        data.reverse();
         yield put({
           type: 'saveArrangementEntities',
           payload: data,

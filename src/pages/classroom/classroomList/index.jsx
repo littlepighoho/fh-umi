@@ -7,6 +7,7 @@ import {
   List, Modal,
   Tooltip,
   InputNumber,
+  Drawer,
 } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
@@ -130,6 +131,7 @@ class ClassroomList extends Component {
       }
     })
   };
+
   handleClassroomDel = item => {
     const { dispatch } = this.props;
     confirm({
@@ -153,6 +155,26 @@ class ClassroomList extends Component {
       },
     });
   };
+
+  showDrawer = item => {
+    this.props.dispatch({
+      type: DVAKEYS.CLASSROOM.GET_CLASSROOM_USER_ENTITY,
+      payload: {
+        classroomId: item.id,
+        schoolId: item.school.id,
+      },
+    })
+    this.setState({
+      drawerVisible: true,
+    })
+  };
+
+  handleDrawerClose = () => {
+    this.setState({
+      drawerVisible: false,
+    })
+  }
+
   render() {
     const {
       school,
@@ -160,7 +182,7 @@ class ClassroomList extends Component {
       classroomLoading,
       form,
     } = this.props;
-    const { current, visible } = this.state;
+    const { current, visible, drawerVisible } = this.state;
     const { getFieldDecorator } = form;
     const { schoolEntities } = school;
     const { chooseSchool, classroomEntities } = classroom;
@@ -172,7 +194,7 @@ class ClassroomList extends Component {
         </div>
         <div>
           <p>使用情况</p>
-          <p>未安排</p>
+          <p>未使用</p>
         </div>
       </div>
     );
@@ -208,7 +230,7 @@ class ClassroomList extends Component {
                 onClick={this.showModal}
               >
                 <div className={styles.cardItemContent}>
-                    创建教室
+                    增加课室
                 </div>
               </Card>
             </List.Item>
@@ -223,7 +245,7 @@ class ClassroomList extends Component {
                   <Tooltip key="edit" title="编辑" onClick={() => this.showEditModal(item)}>
                     <Icon type="edit" />
                   </Tooltip>,
-                  <Tooltip key="share" title="指派" >
+                  <Tooltip key="share" title="指派详情" onClick={() => this.showDrawer(item)}>
                     <Icon type="share-alt" />
                   </Tooltip>,
                   <Tooltip key="delete" title="删除" onClick={() => this.handleClassroomDel(item)} >
@@ -329,6 +351,15 @@ class ClassroomList extends Component {
         >
           {getModalContent()}
         </Modal>
+        <Drawer
+          title="课室指派情况"
+          placement="right"
+          closable={false}
+          onClose={this.handleDrawerClose}
+          visible={drawerVisible}
+        >
+
+        </Drawer>
       </PageHeaderWrapper>
     );
   }

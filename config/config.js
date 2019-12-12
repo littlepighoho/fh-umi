@@ -155,7 +155,8 @@ export default {
             {
               name: '课室',
               icon: 'smile',
-              path: '/classroom/classroomlist',
+              path: '/classroom/',
+              authority: ['admin'],
               component: './classroom/classroomList',
             },
             {
