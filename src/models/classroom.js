@@ -83,10 +83,14 @@ const Model = {
       try {
         const response = yield call(classroomAdd, payload);
         const { data } = response;
-        if (get(data, 'id', null)) {
-          message.success('创建成功')
+        if (payload.data.length === 1) {
+          if (data[payload.data[0].name] === 1) {
+            message.success('创建成功')
+          } else {
+            message.error('创建失败')
+          }
         } else {
-          message.error('创建失败')
+
         }
       } catch (e) {
         message.error(e.toString());

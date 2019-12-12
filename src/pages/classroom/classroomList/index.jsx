@@ -1,31 +1,53 @@
 import {
   Avatar,
   Card,
-  Col,
-  Dropdown,
   Empty,
   Form,
-  Icon,
-  List,
-  Menu,
-  Row,
-  Select,
-  Tooltip
+  Icon, Input,
+  List, Modal,
+  Tooltip,
+  InputNumber,
 } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import numeral from 'numeral';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import get from 'lodash/get';
 import { DVAKEYS } from '@/constant/dvaKeys';
-
 import StandardFormRow from './components/StandardFormRow';
 import TagSelect from './components/TagSelect';
 import styles from './style.less';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
-const { Option } = Select;
 const FormItem = Form.Item;
+const { confirm } = Modal;
 
 class ClassroomList extends Component {
+  static fetchClassroomList = nextProps => {
+    nextProps.dispatch({
+      type: DVAKEYS.CLASSROOM.GET_CLASSROOM_LIST,
+      payload: {
+        schoolId: nextProps.schoolId,
+        params: {
+          page: 1,
+          limit: 9999,
+        },
+      },
+    })
+  };
+
+  state = {
+    current: undefined,
+    visible: false,
+  };
+
+  formLayout = {
+    labelCol: {
+      span: 7,
+    },
+    wrapperCol: {
+      span: 13,
+    },
+  };
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -42,10 +64,95 @@ class ClassroomList extends Component {
     })
   }
 
-  handleAddClassroom = () => {
 
+  showModal = () => {
+    this.setState({
+      visible: true,
+      current: undefined,
+    });
   };
 
+  showEditModal = item => {
+    this.setState({
+      visible: true,
+      current: item,
+    });
+  };
+
+  handleCancel = () => {
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    const { dispatch, form } = this.props;
+    const { current } = this.state;
+    const id = current ? current.id : '';
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      if (current) {
+        dispatch({
+          type: DVAKEYS.CLASSROOM.EDIT_CLASSROOM,
+          payload: {
+            schoolId: fieldsValue.school[0],
+            classroomId: id,
+            name: fieldsValue.name,
+            size: fieldsValue.size,
+          },
+        }).then(() => {
+          this.setState({
+            visible: false,
+          });
+          ClassroomList.fetchClassroomList({
+            dispatch,
+            schoolId: fieldsValue.school[0],
+          })
+        })
+      } else {
+        const data = (new Array(fieldsValue.number)).fill({ name: fieldsValue.name, size: fieldsValue.size });
+        dispatch({
+          type: DVAKEYS.CLASSROOM.ADD_CLASSROOM,
+          payload: {
+            schoolId: fieldsValue.school[0],
+            data,
+          },
+        }).then(() => {
+          this.setState({
+            visible: false,
+          });
+          ClassroomList.fetchClassroomList({
+            dispatch,
+            schoolId: fieldsValue.school[0],
+          })
+        })
+      }
+    })
+  };
+  handleClassroomDel = item => {
+    const { dispatch } = this.props;
+    confirm({
+      title: '删除课室',
+      content: `您确认要删除该课室：${item.name} 吗？`,
+      okText: '确定',
+      cancelText: '取消',
+      onOk() {
+        dispatch({
+          type: DVAKEYS.CLASSROOM.DELETE_CLASSROOM,
+          payload: {
+            schoolId: item.school.id,
+            classroomId: item.id,
+          },
+        }).then(() => {
+          ClassroomList.fetchClassroomList({
+            dispatch,
+            schoolId: item.school.id,
+          })
+        })
+      },
+    });
+  };
   render() {
     const {
       school,
@@ -53,6 +160,7 @@ class ClassroomList extends Component {
       classroomLoading,
       form,
     } = this.props;
+    const { current, visible } = this.state;
     const { getFieldDecorator } = form;
     const { schoolEntities } = school;
     const { chooseSchool, classroomEntities } = classroom;
@@ -69,25 +177,6 @@ class ClassroomList extends Component {
       </div>
     );
 
-    const itemMenu = (
-      <Menu>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="https://www.alipay.com/">
-            1st menu item
-          </a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="https://www.taobao.com/">
-            2nd menu item
-          </a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="https://www.tmall.com/">
-            3d menu item
-          </a>
-        </Menu.Item>
-      </Menu>
-    );
     const cardList = classroomEntities && (
       <List
         rowKey="id"
@@ -116,7 +205,7 @@ class ClassroomList extends Component {
                   fontSize: '16px',
                 }}
                 style={{ height: '182px' }}
-                onClick={this.handleAddClassroom}
+                onClick={this.showModal}
               >
                 <div className={styles.cardItemContent}>
                     创建教室
@@ -131,11 +220,14 @@ class ClassroomList extends Component {
                   paddingBottom: 20,
                 }}
                 actions={[
-                  <Tooltip key="edit" title="编辑">
+                  <Tooltip key="edit" title="编辑" onClick={() => this.showEditModal(item)}>
                     <Icon type="edit" />
                   </Tooltip>,
                   <Tooltip key="share" title="指派" >
                     <Icon type="share-alt" />
+                  </Tooltip>,
+                  <Tooltip key="delete" title="删除" onClick={() => this.handleClassroomDel(item)} >
+                    <Icon type="delete" />
                   </Tooltip>,
                 ]}
               >
@@ -159,6 +251,43 @@ class ClassroomList extends Component {
         </div>
       </div>
     );
+
+    const getModalContent = () => <Form onSubmit={this.handleSubmit}>
+        <FormItem label="课室名字" {...this.formLayout}>
+          {getFieldDecorator('name', {
+            rules: [
+              {
+                required: true,
+                message: '请输入课室名字',
+              },
+            ],
+            initialValue: get(current, 'name', ''),
+          })(<Input placeholder="" />)}
+        </FormItem>
+        <FormItem label="座位个数" {...this.formLayout}>
+          {getFieldDecorator('size', {
+            rules: [
+              {
+                required: true,
+                message: '请选择座位个数',
+              },
+            ],
+            initialValue: get(current, 'size', 1),
+          })(<InputNumber min={1} />)}
+        </FormItem>
+        {!get(current, 'id', null) && <FormItem label="课室数量" {...this.formLayout}>
+          {getFieldDecorator('number', {
+            rules: [
+              {
+                required: true,
+                message: '请选择课室数量',
+              },
+            ],
+            initialValue: 1,
+          })(<InputNumber min={1} />)}
+        </FormItem>}
+      </Form>;
+
     return (
       <PageHeaderWrapper content={content} >
         <div className={styles.filterCardList}>
@@ -189,6 +318,17 @@ class ClassroomList extends Component {
           <br />
           {cardList}
         </div>
+        <Modal
+          title={`课室${current ? '编辑' : '创建'}`}
+          destroyOnClose
+          visible={visible}
+          okText="确认"
+          cancelText="取消"
+          onOk={this.handleSubmit}
+          onCancel={this.handleCancel}
+        >
+          {getModalContent()}
+        </Modal>
       </PageHeaderWrapper>
     );
   }
@@ -196,26 +336,28 @@ class ClassroomList extends Component {
 
 const WarpForm = Form.create({
   onValuesChange({ dispatch }, value) {
+    if (get(value, 'school', null)) {
+      const { school } = value;
+      const schoolId = school[0];
+      if (schoolId) {
+        dispatch({
+          type: DVAKEYS.CLASSROOM.GET_CLASSROOM_LIST,
+          payload: {
+            schoolId,
+            params: {
+              page: 1,
+              limit: 9999,
+            },
+          },
+        });
+      } else {
+        dispatch({
+          type: DVAKEYS.CLASSROOM.INIT_CLASSROOM_LIST,
+        })
+      }
+    }
     // 表单项变化时请求数据
     // 模拟查询表单生效
-    const { school } = value;
-    const schoolId = school[0];
-    if (schoolId) {
-      dispatch({
-        type: DVAKEYS.CLASSROOM.GET_CLASSROOM_LIST,
-        payload: {
-          schoolId,
-          params: {
-            page: 1,
-            limit: 9999,
-          },
-        },
-      });
-    } else {
-      dispatch({
-        type: DVAKEYS.CLASSROOM.INIT_CLASSROOM_LIST,
-      })
-    }
   },
 })(ClassroomList);
 export default connect(({ school, classroom, loading }) => ({
