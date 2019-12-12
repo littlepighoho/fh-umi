@@ -1,4 +1,4 @@
-import { Avatar, Card, Col, List, Skeleton, Row, Statistic } from 'antd';
+import { Avatar, Card, Col, Icon, List, Row, Skeleton, Statistic } from 'antd';
 import React, { Component } from 'react';
 import Link from 'umi/link';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -8,36 +8,10 @@ import Radar from './components/Radar';
 import EditableLinkGroup from './components/EditableLinkGroup';
 import styles from './style.less';
 import { DVAKEYS } from '@/constant/dvaKeys';
+import get from 'lodash/get';
 
-const links = [
-  {
-    title: '操作一',
-    href: '',
-  },
-  {
-    title: '操作二',
-    href: '',
-  },
-  {
-    title: '操作三',
-    href: '',
-  },
-  {
-    title: '操作四',
-    href: '',
-  },
-  {
-    title: '操作五',
-    href: '',
-  },
-  {
-    title: '操作六',
-    href: '',
-  },
-];
-
-const PageHeaderContent = ({ currentUser }) => {
-  const loading = currentUser && Object.keys(currentUser).length;
+const PageHeaderContent = ({ courseEntity }) => {
+  const loading = courseEntity && Object.keys(courseEntity).length;
 
   if (!loading) {
     return (
@@ -54,72 +28,105 @@ const PageHeaderContent = ({ currentUser }) => {
   return (
     <div className={styles.pageHeaderContent}>
       <div className={styles.avatar}>
-        <Avatar size="large" src={currentUser.avatar} />
+        <Avatar size="large" />
       </div>
       <div className={styles.content}>
         <div className={styles.contentTitle}>
-          早安，
-          {currentUser.name}
-          ，祝你开心每一天！
+          {courseEntity.name}
         </div>
         <div>
-          {currentUser.title} |{currentUser.group}
+          {courseEntity.description}
         </div>
       </div>
     </div>
   );
 };
 
-const ExtraContent = () => (
-  <div className={styles.extraContent}>
-    <div className={styles.statItem}>
-      <Statistic title="项目数" value={56} />
+const ExtraContent = ({ arrangementEntities }) => {
+  if (!arrangementEntities) {
+    return (
+      <Skeleton
+        paragraph={{
+          rows: 1,
+        }}
+        active
+      />
+    )
+  }
+  return (
+    <div className={styles.extraContent}>
+      <div className={styles.statItem}>
+        <Statistic title="排课数" value={arrangementEntities.length} />
+      </div>
+      <div className={styles.statItem}>
+        <Statistic title="学生数" value={8} suffix="人" />
+      </div>
+      <div className={styles.statItem}>
+        <Statistic title="报名" value={223} suffix="人/次"/>
+      </div>
     </div>
-    <div className={styles.statItem}>
-      <Statistic title="团队内排名" value={8} suffix="/ 24" />
-    </div>
-    <div className={styles.statItem}>
-      <Statistic title="项目访问" value={2223} />
-    </div>
-  </div>
-);
+  )
+};
 
 @connect(
-  ({ courseAndcourseManage: { currentUser, projectNotice, activities, radarData }, arrangement, course, loading }) => ({
-    currentUser,
-    projectNotice,
-    activities,
-    radarData,
+  ({ arrangement, course, loading, student }) => ({
     arrangement,
     course,
-    currentUserLoading: loading.effects['courseAndcourseManage/fetchUserCurrent'],
-    projectLoading: loading.effects['courseAndcourseManage/fetchProjectNotice'],
+    student,
+    arrangementLoading: loading.models.arrangement,
     activitiesLoading: loading.effects['courseAndcourseManage/fetchActivitiesList'],
   }),
 )
 class CourseManage extends Component {
+
+  static fetchArrangementList = nextProps => {
+    nextProps.dispatch({
+      type: DVAKEYS.ARRANGEMENT.GET_ARRANGEMENT_LIST,
+      payload: {
+        schoolId: nextProps.schoolId,
+        courseId: nextProps.courseId,
+        params: {
+          limit: nextProps.limit,
+          page: 1,
+        },
+      }
+    })
+  };
+
+  state = {
+    arrangementMode: 'hide',
+    studentMode: 'hide',
+  };
+
   componentDidMount() {
     const { dispatch, match } = this.props;
     dispatch({
-      type: 'courseAndcourseManage/init',
+      type: DVAKEYS.COURSE.GET_COURSE_ENTITY,
+      payload: {
+        courseId: match.params.cid,
+        schoolId: match.params.sid,
+      },
+    });
+    dispatch({
+      type: DVAKEYS.STUDENT.GET_STUDENT_LIST,
+      payload: {
+        schoolId: match.params.sid,
+        params: {
+          page: 1,
+          limit: 9999999,
+        },
+      },
     });
     dispatch({
       type: DVAKEYS.ARRANGEMENT.GET_ARRANGEMENT_LIST,
       payload: {
         params: {
-          limit: 6,
+          limit: 99999,
           page: 1,
         },
         courseId: match.params.cid,
         schoolId: match.params.sid,
       },
-    });
-  }
-
-  componentWillUnmount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'courseAndcourseManage/clear',
     });
   }
 
@@ -156,22 +163,41 @@ class CourseManage extends Component {
     );
   };
 
+  handleAllClick = key => {
+    this.setState({
+      arrangementMode: key,
+    });
+  };
+
+  handleStudentAllClick = key => {
+    this.setState({
+      studentMode: key,
+    });
+  };
+
   render() {
+    const links = [
+      {
+        title: '学校',
+        url: `/school/${get(this.props.course, 'courseEntity.school.id', null)}`,
+      },
+    ];
     const {
-      currentUser,
       activities,
-      projectNotice,
-      projectLoading,
+      arrangementLoading,
       activitiesLoading,
       radarData,
       course,
       arrangement,
+      student,
     } = this.props;
     const { arrangementEntities } = arrangement;
+    const { courseEntity } = course;
+    const { studentEntities } = student;
     return (
       <PageHeaderWrapper
-        content={<PageHeaderContent currentUser={currentUser} />}
-        extraContent={<ExtraContent />}
+        content={<PageHeaderContent courseEntity={courseEntity} />}
+        extraContent={<ExtraContent arrangementEntities={arrangementEntities}/>}
       >
         <Row gutter={24}>
           <Col xl={16} lg={24} md={24} sm={24} xs={24}>
@@ -182,39 +208,77 @@ class CourseManage extends Component {
               }}
               title="进行中的排课"
               bordered={false}
-              extra={<Link to="/">全部排课</Link>}
-              loading={projectLoading}
+              extra={<Link onClick={() => this.handleAllClick(this.state.arrangementMode === 'all' ? 'hide' : 'all')}>{this.state.arrangementMode === 'all' ? '收起' : '全部'} </Link>}
+              loading={arrangementLoading}
               bodyStyle={{
                 padding: 0,
               }}
             >
-              {arrangementEntities.map(item => (
-                <Card.Grid className={styles.projectGrid} key={item.id}>
-                  <Card
-                    bodyStyle={{
-                      padding: 0,
-                    }}
-                    bordered={false}
-                  >
-                    <Card.Meta
-                      title={
-                        <div className={styles.cardTitle}>
-                          <Avatar size="small" src={item.logo} />
-                          <Link >{item.name}</Link>
-                        </div>
-                      }
-                      description="暂无简介"
-                    />
-                    <div className={styles.projectItemContent}>
-                      <span>{item.start_week} 至 {item.end_week} 周 周 {item.day_of_week} {item.start_section} ～ {item.end_section} 节</span>
-                      <Link></Link>
-                      <span className={styles.datetime} title={item.update_time}>
+              <Card.Grid className={styles.projectGrid} key="add" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div style={{ height: '95px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <div>
+                    <Icon type="plus" /> 添加排课
+                  </div>
+                </div>
+              </Card.Grid>
+              {arrangementEntities.map((item, index) => {
+                if (this.state.arrangementMode === 'hide') {
+                  if (index <= 4) {
+                    return <Card.Grid className={styles.projectGrid} key={item.id}>
+                      <Card
+                        bodyStyle={{
+                          padding: 0,
+                        }}
+                        bordered={false}
+                      >
+                        <Card.Meta
+                          title={
+                            <div className={styles.cardTitle}>
+                              <Avatar size="small" src={item.logo} />
+                              <Link >{item.name}</Link>
+                            </div>
+                          }
+                          description="暂无简介"
+                        />
+                        <div className={styles.projectItemContent}>
+                          <span>{item.start_week} 至 {item.end_week} 周 周 {item.day_of_week} {item.start_section} ～ {item.end_section} 节</span>
+                          <Link></Link>
+                          <span className={styles.datetime} title={item.update_time}>
                         {moment(item.create_time).fromNow()}
                       </span>
-                    </div>
-                  </Card>
-                </Card.Grid>
-              ))}
+                        </div>
+                      </Card>
+                    </Card.Grid>
+                  }
+                  return null
+                }
+                  return <Card.Grid className={styles.projectGrid} key={item.id}>
+                    <Card
+                      bodyStyle={{
+                        padding: 0,
+                      }}
+                      bordered={false}
+                    >
+                      <Card.Meta
+                        title={
+                          <div className={styles.cardTitle}>
+                            <Avatar size="small" src={item.logo} />
+                            <Link >{item.name}</Link>
+                          </div>
+                        }
+                        description="暂无简介"
+                      />
+                      <div className={styles.projectItemContent}>
+                        <span>{item.start_week} 至 {item.end_week} 周 周 {item.day_of_week} {item.start_section} ～ {item.end_section} 节</span>
+                        <Link></Link>
+                        <span className={styles.datetime} title={item.update_time}>
+                        {moment(item.create_time).fromNow()}
+                      </span>
+                      </div>
+                    </Card>
+                  </Card.Grid>
+
+              }).filter(item => !!item)}
             </Card>
             <Card
               bodyStyle={{
@@ -223,15 +287,15 @@ class CourseManage extends Component {
               bordered={false}
               className={styles.activeCard}
               title="动态"
-              loading={activitiesLoading}
+              // loading={}
             >
-              <List
-                loading={activitiesLoading}
-                renderItem={item => this.renderActivities(item)}
-                dataSource={activities}
-                className={styles.activitiesList}
-                size="large"
-              />
+              {/*<List*/}
+                {/*loading={activitiesLoading}*/}
+                {/*renderItem={item => this.renderActivities(item)}*/}
+                {/*dataSource={activities}*/}
+                {/*className={styles.activitiesList}*/}
+                {/*size="large"*/}
+              {/*/>*/}
             </Card>
           </Col>
           <Col xl={8} lg={24} md={24} sm={24} xs={24}>
@@ -239,7 +303,7 @@ class CourseManage extends Component {
               style={{
                 marginBottom: 24,
               }}
-              title="快速开始 / 便捷导航"
+              title="便捷导航"
               bordered={false}
               bodyStyle={{
                 padding: 0,
@@ -253,12 +317,12 @@ class CourseManage extends Component {
               }}
 
               bordered={false}
-              title="XX 指数"
-              loading={radarData.length === 0}
+              title="数据"
+              // loading={radarData.length === 0}
             >
-              <div className={styles.chart}>
-                <Radar hasLegend height={343} data={radarData} />
-              </div>
+              {/*<div className={styles.chart}>*/}
+                {/*<Radar hasLegend height={343} data={radarData} />*/}
+              {/*</div>*/}
             </Card>
             <Card
               bodyStyle={{
@@ -266,19 +330,31 @@ class CourseManage extends Component {
                 paddingBottom: 12,
               }}
               bordered={false}
-              title="团队"
-              loading={projectLoading}
+              title="参与学生"
+              loading={arrangementLoading}
+              extra={<a onClick={() => this.handleStudentAllClick(this.state.studentMode === 'all' ? 'hide' : 'all')}>{this.state.studentMode === 'all' ? '收起' : '全部'}</a>}
             >
               <div className={styles.members}>
-                <Row gutter={48}>
-                  {projectNotice.map(item => (
-                    <Col span={12} key={`members-item-${item.id}`}>
-                      <Link to={item.href}>
-                        <Avatar src={item.logo} size="small" />
-                        <span className={styles.member}>{item.member}</span>
-                      </Link>
-                    </Col>
-                  ))}
+                <Row gutter={6}>
+                  {studentEntities.map((item, index) => {
+                    if (this.state.studentMode === 'hide') {
+                      if (index < 8) {
+                        return <Col span={6} key={`members-item-${item.id}`}>
+                          <Link to={item.href}>
+                            <span className={styles.member}>{item.realname}</span>
+                          </Link>
+                        </Col>
+                      }
+                      return null
+                    }
+                    return (
+                      <Col span={6} key={`members-item-${item.id}`}>
+                        <Link to={item.href}>
+                          <span className={styles.member}>{item.realname}</span>
+                        </Link>
+                      </Col>
+                    )
+                  }).filter(item => !!item)}
                 </Row>
               </div>
             </Card>

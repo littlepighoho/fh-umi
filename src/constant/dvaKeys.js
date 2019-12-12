@@ -61,6 +61,17 @@ const ATTENDANCE = {
   GET_ATTENDANCE_ENTITY: 'attendance/getAttendanceEntity',
 };
 
+const CLASSROOM = {
+  ROOT: 'classroom',
+  GET_CLASSROOM_LIST: 'classroom/getClassroomList',
+  FETCH_CLASSROOM_LIST: 'classroom/fetchClassroomList',
+  ADD_CLASSROOM: 'classroom/addClassroom',
+  DELETE_CLASSROOM: 'classroom/deleteClassroom',
+  EDIT_CLASSROOM: 'classroom/editClassroom',
+  GET_CLASSROOM_ENTITY: 'classroom/getClassroomEntity',
+  INIT_CLASSROOM_LIST: 'classroom/initClassroomList',
+};
+
 export const DVAKEYS = {
   ACCOUNT,
   SCHOOL,
@@ -68,4 +79,5 @@ export const DVAKEYS = {
   COURSE,
   ARRANGEMENT,
   ATTENDANCE,
+  CLASSROOM,
 };

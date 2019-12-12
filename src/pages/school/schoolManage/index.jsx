@@ -19,7 +19,8 @@ const { RangePicker } = DatePicker;
   school,
   student,
   course,
-  loading: loading.global,
+  studentLoading: loading.models.student,
+  courseLoading: loading.models.course,
 }))
 class SchoolManage extends Component {
   // 刷新列表
@@ -328,7 +329,7 @@ class SchoolManage extends Component {
       form: { getFieldDecorator },
     } = this.props;
     const { current, visible } = this.state;
-    const { school, loading, student, course } = this.props;
+    const { school, courseLoading, studentLoading, student, course } = this.props;
     const { studentList, studentEntities } = student;
     const { courseList, courseEntities } = course;
     const { schoolEntity } = school;
@@ -480,7 +481,7 @@ class SchoolManage extends Component {
               marginBottom: 16,
             }}
             pagination={coursePaginationProps}
-            loading={loading}
+            loading={courseLoading}
             dataSource={courseEntities}
             columns={this.courseColumns}
           />
@@ -500,7 +501,7 @@ class SchoolManage extends Component {
               marginBottom: 16,
             }}
             pagination={studentPaginationProps}
-            loading={loading}
+            loading={studentLoading}
             dataSource={studentEntities}
             columns={this.studentColumns}
           />

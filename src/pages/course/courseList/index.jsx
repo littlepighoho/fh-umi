@@ -1,7 +1,8 @@
-import { Card, Col, Form, List, Row, Select, Typography } from 'antd';
+import { Card, Form, List, Typography, Empty } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import AvatarList from './components/AvatarList';
 import StandardFormRow from './components/StandardFormRow';
 import TagSelect from './components/TagSelect';
@@ -48,7 +49,7 @@ class CourseList extends Component {
       <List
         rowKey="id"
         loading={loading}
-        locale={{ emptyText: chooseSchool ? '暂无课程' : '请选择学校' }}
+        locale={{ emptyText: chooseSchool ? <Empty description="暂无课程"/> : <Empty description="请选择学校"/> }}
         grid={{
           gutter: 24,
           xl: 4,
@@ -88,34 +89,45 @@ class CourseList extends Component {
         )}
       />
     );
-    return (
-      <div className={styles.coverCardList}>
-        <Card bordered={false}>
-          <Form layout="inline">
-            <StandardFormRow
-              title="所属学校"
-              block
-              style={{
-                paddingBottom: 11,
-              }}
-            >
-              <FormItem>
-                {getFieldDecorator('school')(
-                  <TagSelect
-                    expandable
-                    hideCheckAll
-                  >
-                    {schoolEntities.map((item) => (
-                        <TagSelect.Option value={item.id}>{item.name}</TagSelect.Option>
-                      ))}
-                  </TagSelect>,
-                )}
-              </FormItem>
-            </StandardFormRow>
-          </Form>
-        </Card>
-        <div className={styles.cardList}>{cardList}</div>
+    const content = (
+      <div className={styles.pageHeaderContent}>
+        <p>
+          享受最好的体验
+        </p>
+        <div className={styles.contentLink}>
+        </div>
       </div>
+    );
+    return (
+      <PageHeaderWrapper content={content} >
+        <div className={styles.coverCardList}>
+          <Card bordered={false}>
+            <Form layout="inline">
+              <StandardFormRow
+                title="所属学校"
+                block
+                style={{
+                  paddingBottom: 11,
+                }}
+              >
+                <FormItem>
+                  {getFieldDecorator('school')(
+                    <TagSelect
+                      expandable
+                      hideCheckAll
+                    >
+                      {schoolEntities.map((item) => (
+                          <TagSelect.Option value={item.id}>{item.name}</TagSelect.Option>
+                        ))}
+                    </TagSelect>,
+                  )}
+                </FormItem>
+              </StandardFormRow>
+            </Form>
+          </Card>
+          <div className={styles.cardList}>{cardList}</div>
+        </div>
+      </PageHeaderWrapper>
     );
   }
 }

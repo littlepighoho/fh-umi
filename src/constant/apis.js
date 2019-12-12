@@ -44,6 +44,14 @@ const ATTENDANCE = {
   ADD: '/server/api/practice/schools/:sid/courses/:cid/arrangements/:aid/attendance',
 };
 
+const CLASSROOM = {
+  LIST: '/server/api/practice/schools/:sid/classrooms/list',
+  MGET: '/server/api/practice/schools/:sid/classrooms/_mget',
+  CURD: '/server/api/practice/schools/:sid/classrooms/:cid',
+  ADD: '/server/api/practice/schools/:sid/classrooms',
+  USER: '/server/api/practice/schools/:sid/classrooms/:cid/user?debug=1',
+  DELUSER: '/server/api/practice/schools/:sid/classrooms/:cid/user/:uid',
+};
 
 export const API = {
   ACCOUNT,
@@ -52,4 +60,5 @@ export const API = {
   COURSE,
   ARRANGEMENT,
   ATTENDANCE,
+  CLASSROOM,
 };

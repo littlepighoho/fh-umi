@@ -1,19 +1,19 @@
 import React, { PureComponent, createElement } from 'react';
 import { Button } from 'antd';
 import styles from './index.less';
+import router from 'umi/router'
 
 class EditableLinkGroup extends PureComponent {
   static defaultProps = {
     links: [],
-    linkElement: 'a',
   };
 
   render() {
-    const { links, linkElement } = this.props;
+    const { links } = this.props;
     return (
       <div className={styles.linkGroup}>
         {links.map(link =>
-          <a onClick={() => router.push()}>link.title,</a>
+          <a onClick={() => router.push(link.url)}>{link.title}</a>
         )}
       </div>
     );

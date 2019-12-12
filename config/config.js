@@ -153,12 +153,19 @@ export default {
               ],
             },
             {
+              name: '课室',
+              icon: 'smile',
+              path: '/classroom/classroomlist',
+              component: './classroom/classroomList',
+            },
+            {
               path: '/account/accountlist',
               name: '账户',
               icon: 'usergroup-add',
               component: './account/accountList',
               authority: ['admin'],
             },
+
             {
               component: './404',
             },
