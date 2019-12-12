@@ -33,7 +33,7 @@ class CourseList extends Component {
 
   handleCourseClick = (item) => {
     router.push(`/course/${item.school.id}/${item.id}`)
-  }
+  };
 
   render() {
     const {
