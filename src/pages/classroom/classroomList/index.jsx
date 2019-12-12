@@ -24,42 +24,10 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
 const { Option } = Select;
 const FormItem = Form.Item;
-export function formatWan(val) {
-  const v = val * 1;
-  if (!v || Number.isNaN(v)) return '';
-  let result = val;
-
-  if (val > 10000) {
-    result = (
-      <span>
-        {Math.floor(val / 10000)}
-        <span
-          style={{
-            position: 'relative',
-            top: -2,
-            fontSize: 14,
-            fontStyle: 'normal',
-            marginLeft: 2,
-          }}
-        >
-          万
-        </span>
-      </span>
-    );
-  }
-
-  return result;
-}
 
 class ClassroomList extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'classroomAndclassroomList/fetch',
-      payload: {
-        count: 8,
-      },
-    });
     dispatch({
       type: DVAKEYS.SCHOOL.GET_SCHOOL_LIST,
       payload: {
@@ -74,36 +42,33 @@ class ClassroomList extends Component {
     })
   }
 
+  handleAddClassroom = () => {
+
+  };
+
   render() {
     const {
-      classroomAndclassroomList: { list },
-      loading,
       school,
       classroom,
+      classroomLoading,
       form,
     } = this.props;
     const { getFieldDecorator } = form;
     const { schoolEntities } = school;
     const { chooseSchool, classroomEntities } = classroom;
-    const CardInfo = ({ activeUser  }) => (
+    const CardInfo = ({ activeUser }) => (
       <div className={styles.cardInfo}>
         <div>
           <p>座位数</p>
           <p>{activeUser}</p>
         </div>
+        <div>
+          <p>使用情况</p>
+          <p>未安排</p>
+        </div>
       </div>
     );
 
-    // const formItemLayout = {
-    //   wrapperCol: {
-    //     xs: {
-    //       span: 24,
-    //     },
-    //     sm: {
-    //       span: 16,
-    //     },
-    //   },
-    // };
     const itemMenu = (
       <Menu>
         <Menu.Item>
@@ -134,40 +99,55 @@ class ClassroomList extends Component {
           sm: 2,
           xs: 1,
         }}
-        loading={loading}
+        loading={classroomLoading}
         locale={{ emptyText: chooseSchool ? <Empty description="暂无课室"/> : <Empty description="请选择学校"/> }}
-        dataSource={classroomEntities}
-        renderItem={item => (
-          <List.Item key={item.id}>
-            <Card
-              hoverable
-              bodyStyle={{
-                paddingBottom: 20,
-              }}
-              actions={[
-                <Tooltip key="download" title="下载">
-                  <Icon type="download" />
-                </Tooltip>,
-                <Tooltip key="edit" title="编辑">
-                  <Icon type="edit" />
-                </Tooltip>,
-                <Tooltip title="分享" key="share">
-                  <Icon type="share-alt" />
-                </Tooltip>,
-                <Dropdown key="ellipsis" overlay={itemMenu}>
-                  <Icon type="ellipsis" />
-                </Dropdown>,
-              ]}
-            >
-              <Card.Meta title={item.name} />
-              <div className={styles.cardItemContent}>
-                <CardInfo
-                  activeUser={item.size}
-                />
-              </div>
-            </Card>
-          </List.Item>
-        )}
+        dataSource={chooseSchool ? [{ name: 'add' }, ...classroomEntities] : []}
+        renderItem={item => {
+          if (item.name === 'add') {
+            return <List.Item key={item.id} >
+              <Card
+                hoverable
+                bodyStyle={{
+                  paddingBottom: 20,
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '16px',
+                }}
+                style={{ height: '182px' }}
+                onClick={this.handleAddClassroom}
+              >
+                <div className={styles.cardItemContent}>
+                    创建教室
+                </div>
+              </Card>
+            </List.Item>
+          }
+          return <List.Item key={item.id}>
+              <Card
+                hoverable
+                bodyStyle={{
+                  paddingBottom: 20,
+                }}
+                actions={[
+                  <Tooltip key="edit" title="编辑">
+                    <Icon type="edit" />
+                  </Tooltip>,
+                  <Tooltip key="share" title="指派" >
+                    <Icon type="share-alt" />
+                  </Tooltip>,
+                ]}
+              >
+                <Card.Meta title={item.name} />
+                <div className={styles.cardItemContent}>
+                  <CardInfo
+                    activeUser={item.size}
+                  />
+                </div>
+              </Card>
+            </List.Item>
+        }}
       />
     );
     const content = (
@@ -238,9 +218,8 @@ const WarpForm = Form.create({
     }
   },
 })(ClassroomList);
-export default connect(({ classroomAndclassroomList, school, classroom, loading }) => ({
-  classroomAndclassroomList,
+export default connect(({ school, classroom, loading }) => ({
   school,
   classroom,
-  loading: loading.models.classroomAndclassroomList,
+  classroomLoading: loading.models.classroom,
 }))(WarpForm);
