@@ -9,6 +9,7 @@ import {
   Menu,
   Table,
   Tag,
+  Modal,
 } from 'antd';
 import { GridContent, PageHeaderWrapper, RouteContext } from '@ant-design/pro-layout';
 import React, { Component, Fragment } from 'react';
@@ -18,6 +19,9 @@ import get from 'lodash/get';
 import moment from 'moment';
 import styles from './style.less';
 import { DVAKEYS } from '@/constant/dvaKeys';
+import router from 'umi/router';
+
+const { confirm } = Modal;
 
 const mobileMenu = (
   <Menu>
@@ -27,37 +31,6 @@ const mobileMenu = (
     <Menu.Item key="4">选项二</Menu.Item>
     <Menu.Item key="">选项三</Menu.Item>
   </Menu>
-);
-const action = (
-  <RouteContext.Consumer>
-    {({ isMobile }) => {
-      if (isMobile) {
-        return (
-          <Dropdown.Button
-            type="primary"
-            icon={<Icon type="down" />}
-            overlay={mobileMenu}
-            placement="bottomRight"
-          >
-            主操作
-          </Dropdown.Button>
-        );
-      }
-
-      return (
-        <Fragment>
-          <Button >修改</Button>
-          <Button type="danger">删除</Button>
-        </Fragment>
-      );
-    }}
-  </RouteContext.Consumer>
-);
-const extra = (
-  <div className={styles.moreInfo}>
-    <Statistic title="学生数量" value={200}/>
-    <Statistic title="请假人次" value={4}/>
-  </div>
 );
 
 
@@ -204,20 +177,81 @@ class Arrangement extends Component {
     })
   };
 
+  handleArrangementDelClick = () => {
+    confirm({
+      title: '删除排课',
+      content: '您确认要删除本排课吗？',
+      okText: '确定',
+      cancelText: '取消',
+      onOk: () => {
+        const { dispatch, match } = this.props;
+        dispatch({
+          type: DVAKEYS.ARRANGEMENT.DELETE_ARRANGEMENT,
+          payload: {
+            schoolId: match.params.sid,
+            courseId: match.params.cid,
+            arrangementId: match.params.aid,
+          },
+        }).then(() => {
+          router.push(`/course/${match.params.sid}/${match.params.cid}`);
+        })
+      }
+    })
+  };
+
   render() {
     const { studentLoading, attendanceLoading, course, attendance, arrangement, student } = this.props;
     const { arrangementEntity } = arrangement;
     const { courseEntity } = course;
     const { studentEntities } = student;
     const { attendanceEntities } = attendance;
+    let leaverNumber = 0;
+    let absentNumber = 0;
     const data = attendanceEntities.map(item => {
       const stu = studentEntities.filter(it => it.id === item.student.id)[0];
+      if (get(item, 'leaver', null)) {
+        leaverNumber += 1;
+      }
+      if (get(item, 'absent', null)) {
+        absentNumber += 1;
+      }
       return {
         ...item,
         code: get(stu, 'code', 0),
         name: get(stu, 'realname', ''),
       }
     });
+    const extra = (
+      <div className={styles.moreInfo}>
+        <Statistic title="学生数量" value={200}/>
+        <Statistic title="缺勤 / 请假" value={`${absentNumber} / ${leaverNumber}`}/>
+      </div>
+    );
+    const action = (
+      <RouteContext.Consumer>
+        {({ isMobile }) => {
+          if (isMobile) {
+            return (
+              <Dropdown.Button
+                type="primary"
+                icon={<Icon type="down" />}
+                overlay={mobileMenu}
+                placement="bottomRight"
+              >
+                主操作
+              </Dropdown.Button>
+            );
+          }
+
+          return (
+            <Fragment>
+              <Button size="small" >修改</Button>
+              <Button size="small" type="danger" onClick={this.handleArrangementDelClick}>删除</Button>
+            </Fragment>
+          );
+        }}
+      </RouteContext.Consumer>
+    );
     const description = (
       <RouteContext.Consumer>
         {({ isMobile }) => (
@@ -243,6 +277,7 @@ class Arrangement extends Component {
             <Card
               className={styles.tabsCard}
               bordered={false}
+              title="考勤"
             >
               <Table
                 pagination={false}
