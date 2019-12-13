@@ -147,6 +147,11 @@ export default {
                   component: './course/arrangement',
                 },
                 {
+                  name: '评价',
+                  path: '/course/:sid/:cid/evaluate',
+                  component: './course/evaluate',
+                },
+                {
                   path: '/course/',
                   component: './course/courseList',
                 },

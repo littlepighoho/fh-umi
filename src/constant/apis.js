@@ -53,6 +53,28 @@ const CLASSROOM = {
   DELUSER: '/server/api/practice/schools/:sid/classrooms/:cid/user/:uid',
 };
 
+const EVALUATE = {
+  STUDENT: {
+    LIST: '/server/api/practice/schools/:sid/courses/:cid/evaluate/st/list',
+    CURD: '/server/api/practice/schools/:sid/courses/:cid/evaluate/st/:eid',
+    MGET: '/server/api/practice/schools/:sid/courses/:cid/evaluate/st/_mget',
+    ADD: '/server/api/practice/schools/:sid/courses/:cid/evaluate/st',
+  },
+  COURSE: {
+    LIST: '/server/api/practice/schools/:sid/courses/:cid/evaluate/sc/list',
+    CURD: '/server/api/practice/schools/:sid/courses/:cid/evaluate/sc/:eid',
+    MGET: '/server/api/practice/schools/:sid/courses/:cid/evaluate/sc/_mget',
+    ADD: '/server/api/practice/schools/:sid/courses/:cid/evaluate/sc',
+  },
+  TEACHER: {
+    LIST: '/server/api/practice/schools/:sid/courses/:cid/evaluate/ts/list',
+    CURD: '/server/api/practice/schools/:sid/courses/:cid/evaluate/ts/:eid',
+    MGET: '/server/api/practice/schools/:sid/courses/:cid/evaluate/ts/_mget',
+    ADD: '/server/api/practice/schools/:sid/courses/:cid/evaluate/ts',
+  },
+};
+
+
 export const API = {
   ACCOUNT,
   SCHOOL,
@@ -61,4 +83,5 @@ export const API = {
   ARRANGEMENT,
   ATTENDANCE,
   CLASSROOM,
+  EVALUATE,
 };

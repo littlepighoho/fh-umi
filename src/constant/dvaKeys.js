@@ -74,6 +74,26 @@ const CLASSROOM = {
   INIT_CLASSROOM_LIST: 'classroom/initClassroomList',
 };
 
+const EVALUATE = {
+  ROOT: 'evaluate',
+  GET_EVALUATE_STUDENT_LIST: 'evaluate/getEvaluateStudentList',
+  FETCH_EVALUATE_STUDENT_LIST: 'evaluate/fetchEvaluateStudentList',
+  GET_EVALUATE_STUDENT_ENTITY: 'evaluate/getEvaluateStudentEntity',
+  DELETE_EVALUATE_STUDENT: 'evaluate/deleteEvaluateStudent',
+  ADD_EVALUATE_STUDENT: 'evaluate/addEvaluateStudent',
+  GET_EVALUATE_COURSE_LIST: 'evaluate/getEvaluateCourseList',
+  FETCH_EVALUATE_COURSE_LIST: 'evaluate/fetchEvaluateCourseList',
+  GET_EVALUATE_COURSE_ENTITY: 'evaluate/getEvaluateCourseEntity',
+  DELETE_EVALUATE_COURSE: 'evaluate/deleteEvaluateCourse',
+  ADD_EVALUATE_COURSE: 'evaluate/addEvaluateCourse',
+  GET_EVALUATE_TEACHER_LIST: 'evaluate/getEvaluateTeacherList',
+  FETCH_EVALUATE_TEACHER_LIST: 'evaluate/fetchEvaluateTeacherList',
+  GET_EVALUATE_TEACHER_ENTITY: 'evaluate/getEvaluateTeacherEntity',
+  DELETE_EVALUATE_TEACHER: 'evaluate/deleteEvaluateTeacher',
+  ADD_EVALUATE_TEACHER: 'evaluate/addEvaluateTeacher',
+};
+
+
 export const DVAKEYS = {
   ACCOUNT,
   SCHOOL,
@@ -82,4 +102,5 @@ export const DVAKEYS = {
   ARRANGEMENT,
   ATTENDANCE,
   CLASSROOM,
+  EVALUATE,
 };

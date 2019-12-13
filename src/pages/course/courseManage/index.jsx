@@ -292,6 +292,11 @@ class CourseManage extends Component {
         title: '学校',
         url: `/school/${get(this.props.course, 'courseEntity.school.id', null)}`,
       },
+      {
+        title: '评价',
+        url: `/course/${get(this.props.course, 'courseEntity.school.id', null)}/${get(this.props.course, 'courseEntity.id', null)}/evaluate`,
+
+      }
     ];
     const {
       form,
