@@ -47,6 +47,16 @@ const Model = {
         });
         const ids = evaluates.map(item => item.id);
         yield put({
+          type: DVAKEYS.STUDENT.GET_STUDENT_LIST,
+          payload: {
+            schoolId: payload.schoolId,
+            params: {
+              limit: 9999,
+              page: 1,
+            },
+          },
+        });
+        yield put({
           type: 'fetchEvaluateStudentList',
           payload: {
             ids,
@@ -89,11 +99,11 @@ const Model = {
       try {
         const response = yield call(evaluateAddStudent, payload);
         const { data } = response;
-        if (get(data, 'id', null)) {
-          message.success('导入成功')
-        } else {
-          message.error('导入失败')
-        }
+        // if (get(data, 'id', null)) {
+        //   message.success('导入成功')
+        // } else {
+        //   message.error('导入失败')
+        // }
       } catch (e) {
         message.error(e.toString());
       }
@@ -127,6 +137,16 @@ const Model = {
           },
         });
         const ids = evaluates.map(item => item.id);
+        yield put({
+          type: DVAKEYS.STUDENT.GET_STUDENT_LIST,
+          payload: {
+            schoolId: payload.schoolId,
+            params: {
+              limit: 9999,
+              page: 1,
+            },
+          },
+        });
         yield put({
           type: 'fetchEvaluateCourseList',
           payload: {
@@ -170,11 +190,11 @@ const Model = {
       try {
         const response = yield call(evaluateAddCourse, payload);
         const { data } = response;
-        if (get(data, 'id', null)) {
-          message.success('导入成功')
-        } else {
-          message.error('导入失败')
-        }
+        // if (get(data, 'id', null)) {
+        //   message.success('导入成功')
+        // } else {
+        //   message.error('导入失败')
+        // }
       } catch (e) {
         message.error(e.toString());
       }
@@ -207,6 +227,16 @@ const Model = {
           },
         });
         const ids = evaluates.map(item => item.id);
+        yield put({
+          type: DVAKEYS.STUDENT.GET_STUDENT_LIST,
+          payload: {
+            schoolId: payload.schoolId,
+            params: {
+              limit: 9999,
+              page: 1,
+            },
+          },
+        });
         yield put({
           type: 'fetchEvaluateTeacherList',
           payload: {
@@ -250,11 +280,11 @@ const Model = {
       try {
         const response = yield call(evaluateAddTeacher, payload);
         const { data } = response;
-        if (get(data, 'id', null)) {
-          message.success('导入成功')
-        } else {
-          message.error('导入失败')
-        }
+        // if (get(data, 'id', null)) {
+        //   message.success('导入成功')
+        // } else {
+        //   message.error('导入失败')
+        // }
       } catch (e) {
         message.error(e.toString());
       }

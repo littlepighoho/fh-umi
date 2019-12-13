@@ -89,7 +89,7 @@ export async function evaluateAddStudent(payload) {
     sid: payload.schoolId,
     cid: payload.courseId,
   }), {
-    method: 'PUT',
+    method: 'POST',
     data: {
       data: payload.data,
     },
@@ -184,7 +184,7 @@ export async function evaluateAddCourse(payload) {
     sid: payload.schoolId,
     cid: payload.courseId,
   }), {
-    method: 'PUT',
+    method: 'POST',
     data: {
       data: payload.data,
     },
@@ -281,7 +281,7 @@ export async function evaluateAddTeacher(payload) {
     sid: payload.schoolId,
     cid: payload.courseId,
   }), {
-    method: 'PUT',
+    method: 'POST',
     data: {
       data: payload.data,
     },
