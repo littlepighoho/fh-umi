@@ -1,11 +1,13 @@
-import { Button, Card, Col, Form, Icon, List, Row, Select, Tag } from 'antd';
+import { Button, Card, Col, Form, Icon, List, Rate, Select, Tag } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ArticleListContent from './components/ArticleListContent';
 import StandardFormRow from './components/StandardFormRow';
 import TagSelect from './components/TagSelect';
 import styles from './style.less';
 import { DVAKEYS } from '@/constant/dvaKeys';
+import get from 'lodash/get';
 
 const FormItem = Form.Item;
 
@@ -31,12 +33,23 @@ class Evaluate extends Component {
     const { getFieldDecorator } = form;
     const { studentEntities } = student;
     const { evaluateEntities } = evaluate;
+    const data = evaluateEntities.map(item => {
+      const stu = studentEntities.filter(it => it.id === item.author.id)[0];
+      return {
+        ...item,
+        author: stu,
+      }
+    });
     return (
-      <>
+      <PageHeaderWrapper
+        title="评价"
+        className={styles.pageHeader}
+
+      >
         <Card bordered={false}>
           <Form layout="inline">
             <StandardFormRow
-              title="所属类目"
+              title="评价类型"
               block
               style={{
                 paddingBottom: 11,
@@ -45,7 +58,7 @@ class Evaluate extends Component {
             >
               <FormItem>
                 {getFieldDecorator('mode')(
-                  <TagSelect expandable hideCheckAll>
+                  <TagSelect expandable hideCheckAll defaultValue={["student"]}>
                     <TagSelect.Option value="student">学生对老师</TagSelect.Option>
                     <TagSelect.Option value="course">学生对课程</TagSelect.Option>
                     <TagSelect.Option value="teacher">老师对学生</TagSelect.Option>
@@ -70,7 +83,7 @@ class Evaluate extends Component {
             loading={evaluateLoading && studentLoading}
             rowKey="id"
             itemLayout="vertical"
-            dataSource={evaluateEntities}
+            dataSource={data}
             renderItem={item => (
               <List.Item
                 key={item.id}
@@ -79,19 +92,19 @@ class Evaluate extends Component {
                 <List.Item.Meta
                   title={
                     <a className={styles.listItemMetaTitle} href={item.href}>
-                      {item.title}
+                      {get(item, 'author.code', '')} {get(item, 'author.realname', '')}
                     </a>
                   }
-                  // description={
-                  //  // 星级别
-                  // }
+                  description={
+                    <Rate disabled defaultValue={item.star} />
+                  }
                 />
                 <ArticleListContent data={item} />
               </List.Item>
             )}
           />
         </Card>
-      </>
+      </PageHeaderWrapper>
     );
   }
 }
@@ -127,11 +140,11 @@ const WarpForm = Form.create({
       })
     } else {
       // dispatch({
-      //   type: DVAKEYS.EVALUATE.ADD_EVALUATE_COURSE,
+      //   type: DVAKEYS.EVALUATE.ADD_EVALUATE_STUDENT,
       //   payload: {
       //     schoolId: match.params.sid,
       //     courseId: match.params.cid,
-      //     data: [{code: '1701030158', star: 3, message: '123123'}]
+      //     data: [{code: '1701030158', star: 2, message: '123123'}]
       //   }
       // })
       dispatch({

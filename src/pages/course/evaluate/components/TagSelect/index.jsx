@@ -32,24 +32,20 @@ class TagSelect extends Component {
   static getDerivedStateFromProps(nextProps) {
     if ('value' in nextProps) {
       return {
-        value: nextProps.value || [],
+        value: nextProps.value || nextProps.defaultProps || [] ,
       };
     }
 
     return null;
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      expand: false,
-      value: props.value || props.defaultValue || [],
-    };
-  }
+  state = {
+    expand: false,
+    value: ['student'],
+  };
 
   onChange = value => {
     const { onChange } = this.props;
-
     if (!('value' in this.props)) {
       this.setState({
         value,
@@ -61,44 +57,16 @@ class TagSelect extends Component {
     }
   };
 
-  onSelectAll = checked => {
-    let checkedTags = [];
-
-    if (checked) {
-      checkedTags = this.getAllTags();
-    }
-
-    this.onChange(checkedTags);
-  };
-
-  getAllTags() {
-    const { children } = this.props;
-    const childrenArray = React.Children.toArray(children);
-    const checkedTags = childrenArray
-      .filter(child => this.isTagSelectOption(child))
-      .map(child => child.props.value);
-    return checkedTags || [];
-  }
-
   handleTagChange = (value, checked) => {
     const { value: StateValue } = this.state;
     let checkedTags = [...StateValue];
     const index = checkedTags.indexOf(value);
     if (checked && index === -1) {
       checkedTags = [value];
-    } else if (!checked && index > -1) {
-      checkedTags = [];
     }
-
     this.onChange(checkedTags);
   };
 
-  handleExpand = () => {
-    const { expand } = this.state;
-    this.setState({
-      expand: !expand,
-    });
-  };
 
   isTagSelectOption = node =>
     node &&
@@ -108,19 +76,13 @@ class TagSelect extends Component {
   render() {
     const { value, expand } = this.state;
     const { children, hideCheckAll, className, style, expandable, actionsText = {} } = this.props;
-    const checkedAll = this.getAllTags().length === value.length;
-    const { expandText = '展开', collapseText = '收起', selectAllText = '全部' } = actionsText;
     const cls = classNames(styles.tagSelect, className, {
       [styles.hasExpandTag]: expandable,
       [styles.expanded]: expand,
     });
     return (
       <div className={cls} style={style}>
-        {hideCheckAll ? null : (
-          <CheckableTag checked={checkedAll} key="tag-select-__all__" onChange={this.onSelectAll}>
-            {selectAllText}
-          </CheckableTag>
-        )}
+        {console.log(this.state)}
         {value &&
           children &&
           React.Children.map(children, child => {
@@ -132,14 +94,9 @@ class TagSelect extends Component {
                 onChange: this.handleTagChange,
               });
             }
-
             return child;
           })}
-        {expandable && (
-          <a className={styles.trigger} onClick={this.handleExpand}>
-            {expand ? collapseText : expandText} <Icon type={expand ? 'up' : 'down'} />
-          </a>
-        )}
+
       </div>
     );
   }

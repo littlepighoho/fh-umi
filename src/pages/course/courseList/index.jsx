@@ -67,7 +67,7 @@ class CourseList extends Component {
               cover={<img alt={item.name} src="https://gw.alipayobjects.com/zos/rmsportal/uMfMFlvUuceEyPpotzlq.png" />}
             >
               <Card.Meta
-                title={<a>{item.name}</a>}
+                title={item.name}
                 description={
                   <Paragraph
                     className={styles.item}
