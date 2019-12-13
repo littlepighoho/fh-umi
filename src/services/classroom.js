@@ -116,7 +116,10 @@ export async function classroomUserAdd(payload) {
  */
 export async function classroomUserDelete(payload) {
   const pattern = PathToRegexp.compile(API.CLASSROOM.DELUSER);
-  return request(pattern({ sid: payload.schoolId, cid: payload.classroomId, uid: payload.userId }), {
+  return request(pattern({
+    sid: payload.schoolId,
+    cid: payload.classroomId,
+    uid: payload.userId }), {
     method: 'DELETE',
   })
 }
@@ -131,9 +134,8 @@ export async function classroomUserGetEntity(payload) {
   const pattern = PathToRegexp.compile(API.CLASSROOM.USER);
   return request(pattern({
     sid: payload.schoolId,
-    cid: payload.classroomId
+    cid: payload.classroomId,
   }), {
     method: 'GET',
   })
 }
-

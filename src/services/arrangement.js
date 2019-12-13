@@ -39,7 +39,11 @@ export async function arrangementFetchList(payload) {
  */
 export async function arrangementGetEntity(payload) {
   const pattern = PathToRegexp.compile(API.ARRANGEMENT.CURD);
-  return request(pattern({ sid: payload.schoolId, cid: payload.courseId, aid: payload.arrangementId }), {
+  return request(pattern({
+    sid: payload.schoolId,
+    cid: payload.courseId,
+    aid: payload.arrangementId,
+  }), {
     method: 'GET',
   })
 }
@@ -76,7 +80,11 @@ export async function arrangementAdd(payload) {
  */
 export async function arrangementEdit(payload) {
   const pattern = PathToRegexp.compile(API.ARRANGEMENT.CURD);
-  return request(pattern({ sid: payload.schoolId, cid: payload.courseId, aid: payload.arrangementId }), {
+  return request(pattern({
+    sid: payload.schoolId,
+    cid: payload.courseId,
+    aid: payload.arrangementId,
+  }), {
     method: 'PUT',
     data: {
       name: payload.name,
@@ -100,7 +108,11 @@ export async function arrangementEdit(payload) {
  */
 export async function arrangementDel(payload) {
   const pattern = PathToRegexp.compile(API.ARRANGEMENT.CURD);
-  return request(pattern({ sid: payload.schoolId, cid: payload.courseId, aid: payload.arrangementId }), {
+  return request(pattern({
+    sid: payload.schoolId,
+    cid: payload.courseId,
+    aid: payload.arrangementId,
+  }), {
     method: 'DELETE',
   })
 }
@@ -113,7 +125,11 @@ export async function arrangementDel(payload) {
  */
 export async function arrangementGetStudentList(payload) {
   const pattern = PathToRegexp.compile(API.ARRANGEMENT.STUDENT);
-  return request(pattern({ sid: payload.schoolId, cid: payload.courseId, aid: payload.arrangementId }), {
+  return request(pattern({
+    sid: payload.schoolId,
+    cid: payload.courseId,
+    aid: payload.arrangementId,
+  }), {
     method: 'GET',
   })
 }
@@ -126,7 +142,11 @@ export async function arrangementGetStudentList(payload) {
  */
 export async function arrangementDeleteStudent(payload) {
   const pattern = PathToRegexp.compile(API.ARRANGEMENT.STUDENT);
-  return request(pattern({ sid: payload.schoolId, cid: payload.courseId, aid: payload.arrangementId }), {
+  return request(pattern({
+    sid: payload.schoolId,
+    cid: payload.courseId,
+    aid: payload.arrangementId,
+  }), {
     method: 'DELETE',
     data: {
       ids: payload.ids,
@@ -142,11 +162,16 @@ export async function arrangementDeleteStudent(payload) {
  */
 export async function arrangementAddStudent(payload) {
   const pattern = PathToRegexp.compile(API.ARRANGEMENT.STUDENT);
-  return request(pattern({ sid: payload.schoolId, cid: payload.courseId, aid: payload.arrangementId }), {
+  return request(pattern({
+    sid: payload.schoolId,
+    cid: payload.courseId,
+    aid: payload.arrangementId,
+  }), {
     method: 'POST',
     data: {
       data: payload.data,
     },
   })
 }
+
 

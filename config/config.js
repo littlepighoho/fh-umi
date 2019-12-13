@@ -142,6 +142,11 @@ export default {
               authority: ['admin'],
               routes: [
                 {
+                  name: '排课详情',
+                  path: '/course/:sid/:cid/arrangement/:aid/',
+                  component: './course/arrangement',
+                },
+                {
                   path: '/course/',
                   component: './course/courseList',
                 },
@@ -166,7 +171,6 @@ export default {
               component: './account/accountList',
               authority: ['admin'],
             },
-
             {
               component: './404',
             },

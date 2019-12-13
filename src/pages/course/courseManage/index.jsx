@@ -19,11 +19,12 @@ import Link from 'umi/link';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect } from 'dva';
 import moment from 'moment';
+import get from 'lodash/get';
 import Radar from './components/Radar';
 import EditableLinkGroup from './components/EditableLinkGroup';
 import styles from './style.less';
 import { DVAKEYS } from '@/constant/dvaKeys';
-import get from 'lodash/get';
+import router from 'umi/router';
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -96,7 +97,6 @@ const ExtraContent = ({ arrangementEntities }) => {
   }),
 )
 class CourseManage extends Component {
-
   static fetchArrangementList = nextProps => {
     nextProps.dispatch({
       type: DVAKEYS.ARRANGEMENT.GET_ARRANGEMENT_LIST,
@@ -281,6 +281,11 @@ class CourseManage extends Component {
     })
   };
 
+  handleArrangementClick = (item) => {
+    const { match } = this.props;
+    router.push(`/course/${match.params.sid}/${item.course.id}/arrangement/${item.id}`)
+  }
+
   render() {
     const links = [
       {
@@ -448,7 +453,11 @@ class CourseManage extends Component {
               {arrangementEntities.map((item, index) => {
                 if (this.state.arrangementMode === 'hide') {
                   if (index <= 4) {
-                    return <Card.Grid className={styles.projectGrid} key={item.id}>
+                    return <Card.Grid
+                        className={styles.projectGrid}
+                        key={item.id}
+                        onClick={() => this.handleArrangementClick(item)}
+                    >
                       <Card
                         bodyStyle={{
                           padding: 0,
@@ -512,13 +521,13 @@ class CourseManage extends Component {
               title="动态"
               // loading={}
             >
-              {/*<List*/}
-                {/*loading={activitiesLoading}*/}
-                {/*renderItem={item => this.renderActivities(item)}*/}
-                {/*dataSource={activities}*/}
-                {/*className={styles.activitiesList}*/}
-                {/*size="large"*/}
-              {/*/>*/}
+              {/* <List */}
+                {/* loading={activitiesLoading} */}
+                {/* renderItem={item => this.renderActivities(item)} */}
+                {/* dataSource={activities} */}
+                {/* className={styles.activitiesList} */}
+                {/* size="large" */}
+              {/* /> */}
             </Card>
           </Col>
           <Col xl={8} lg={24} md={24} sm={24} xs={24}>
@@ -532,7 +541,7 @@ class CourseManage extends Component {
                 padding: 0,
               }}
             >
-              <EditableLinkGroup  links={links} linkElement={Link} />
+              <EditableLinkGroup links={links} linkElement={Link} />
             </Card>
             <Card
               style={{
@@ -543,9 +552,9 @@ class CourseManage extends Component {
               title="数据"
               // loading={radarData.length === 0}
             >
-              {/*<div className={styles.chart}>*/}
-                {/*<Radar hasLegend height={343} data={radarData} />*/}
-              {/*</div>*/}
+              {/* <div className={styles.chart}> */}
+                {/* <Radar hasLegend height={343} data={radarData} /> */}
+              {/* </div> */}
             </Card>
             <Card
               bodyStyle={{
