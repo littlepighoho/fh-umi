@@ -9,9 +9,9 @@ export default {
   fixSiderbar: false,
   colorWeak: false,
   menu: {
-    locale: true,
+    locale: false,
   },
-  title: 'Ant Design Pro',
+  title: '爱实践管理平台',
   pwa: false,
   iconfontUrl: '',
 };

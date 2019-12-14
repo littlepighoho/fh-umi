@@ -136,7 +136,7 @@ export default {
             },
             {
               name: '课程',
-              icon: 'smile',
+              icon: 'book',
               path: '/course/',
               hideChildrenInMenu: true,
               authority: ['admin'],
@@ -164,7 +164,7 @@ export default {
             },
             {
               name: '课室',
-              icon: 'smile',
+              icon: 'apartment',
               path: '/classroom/',
               authority: ['admin'],
               component: './classroom/classroomList',

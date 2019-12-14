@@ -1,17 +1,21 @@
-import { Button, Card, Col, Form, Icon, List, Rate, Select, Tag } from 'antd';
+import { Button, Card, Col, Form, Icon, List, Rate, Select, Tag, message } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import get from 'lodash/get';
+import { importStudentExcel } from '@/utils/xlsx_importer';
 import ArticleListContent from './components/ArticleListContent';
 import StandardFormRow from './components/StandardFormRow';
 import TagSelect from './components/TagSelect';
 import styles from './style.less';
 import { DVAKEYS } from '@/constant/dvaKeys';
-import get from 'lodash/get';
 
 const FormItem = Form.Item;
 
 class Evaluate extends Component {
+  state = {};
+
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -21,6 +25,59 @@ class Evaluate extends Component {
       },
     });
   }
+
+
+  // 导入学生
+  inputRef = null;
+
+  handleXlsxUpload = key => {
+    this.setState({
+      mode: key,
+    });
+    this.inputRef.click();
+  };
+
+  handleXlsxChange = e => {
+    const getResult = data => {
+      const { dispatch, match } = this.props;
+      if (this.state.mode === 'student') {
+        dispatch({
+          type: DVAKEYS.EVALUATE.ADD_EVALUATE_STUDENT,
+          payload: {
+            schoolId: match.params.sid,
+            courseId: match.params.cid,
+            data,
+          },
+        })
+      } else if ((this.state.mode === 'course')) {
+        dispatch({
+          type: DVAKEYS.EVALUATE.ADD_EVALUATE_COURSE,
+          payload: {
+            schoolId: match.params.sid,
+            courseId: match.params.cid,
+            data,
+          },
+        })
+      } else {
+        dispatch({
+          type: DVAKEYS.EVALUATE.ADD_EVALUATE_TEACHER,
+          payload: {
+            schoolId: match.params.sid,
+            courseId: match.params.cid,
+            data,
+          },
+        })
+      }
+    };
+
+    if (e.target.files.length > 0) {
+      importStudentExcel(e.target.files)
+        .then(data => getResult(data))
+        .catch(ex => {
+          message.error('解析Excel文件失败');
+        });
+    }
+  };
 
   render() {
     const {
@@ -58,7 +115,7 @@ class Evaluate extends Component {
             >
               <FormItem>
                 {getFieldDecorator('mode')(
-                  <TagSelect expandable hideCheckAll defaultValue={["student"]}>
+                  <TagSelect expandable hideCheckAll defaultValue={['student']}>
                     <TagSelect.Option value="student">学生对老师</TagSelect.Option>
                     <TagSelect.Option value="course">学生对课程</TagSelect.Option>
                     <TagSelect.Option value="teacher">老师对学生</TagSelect.Option>
@@ -66,7 +123,32 @@ class Evaluate extends Component {
                 )}
               </FormItem>
             </StandardFormRow>
-
+            <StandardFormRow
+              title="导入"
+            >
+              <FormItem>
+                <input
+                  type="file"
+                  name="excel-file"
+                  onChange={this.handleXlsxChange}
+                  style={{ display: 'none' }}
+                  ref={node => {
+                    this.inputRef = node;
+                  }}
+                />
+                <Button.Group>
+                  <Button onClick={() => this.handleXlsxUpload('student')}>
+                    学生对老师评价
+                  </Button>
+                  <Button onClick={() => this.handleXlsxUpload('course')}>
+                    学生对课程评价
+                  </Button>
+                  <Button onClick={() => this.handleXlsxUpload('teacher')}>
+                    老师对学生评价
+                  </Button>
+                </Button.Group>
+              </FormItem>
+            </StandardFormRow>
           </Form>
         </Card>
         <Card
@@ -87,7 +169,7 @@ class Evaluate extends Component {
             renderItem={item => (
               <List.Item
                 key={item.id}
-                extra={<div className={styles.listItemExtra} />}
+                extra={<div className={styles.listItemExtra}/>}
               >
                 <List.Item.Meta
                   title={
@@ -96,10 +178,10 @@ class Evaluate extends Component {
                     </a>
                   }
                   description={
-                    <Rate disabled defaultValue={item.star} />
+                    <Rate disabled defaultValue={item.star}/>
                   }
                 />
-                <ArticleListContent data={item} />
+                <ArticleListContent data={item}/>
               </List.Item>
             )}
           />
@@ -139,14 +221,6 @@ const WarpForm = Form.create({
         },
       })
     } else {
-      // dispatch({
-      //   type: DVAKEYS.EVALUATE.ADD_EVALUATE_STUDENT,
-      //   payload: {
-      //     schoolId: match.params.sid,
-      //     courseId: match.params.cid,
-      //     data: [{code: '1701030158', star: 2, message: '123123'}]
-      //   }
-      // })
       dispatch({
         type: DVAKEYS.EVALUATE.GET_EVALUATE_TEACHER_LIST,
         payload: {

@@ -121,19 +121,19 @@ class Login extends Component {
               }}
             />
           </Tab>
-          <div>
-            <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
-              <FormattedMessage id="user-login.login.remember-me" />
-            </Checkbox>
-            <a
-              style={{
-                float: 'right',
-              }}
-              href=""
-            >
-              <FormattedMessage id="user-login.login.forgot-password" />
-            </a>
-          </div>
+          {/*<div>*/}
+            {/*<Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>*/}
+              {/*<FormattedMessage id="user-login.login.remember-me" />*/}
+            {/*</Checkbox>*/}
+            {/*<a*/}
+              {/*style={{*/}
+                {/*float: 'right',*/}
+              {/*}}*/}
+              {/*href=""*/}
+            {/*>*/}
+              {/*<FormattedMessage id="user-login.login.forgot-password" />*/}
+            {/*</a>*/}
+          {/*</div>*/}
           <Submit loading={submitting}>
             <FormattedMessage id="user-login.login.login" />
           </Submit>
@@ -142,9 +142,9 @@ class Login extends Component {
             <Icon type="alipay-circle" className={styles.icon} theme="outlined" />
             <Icon type="taobao-circle" className={styles.icon} theme="outlined" />
             <Icon type="weibo-circle" className={styles.icon} theme="outlined" />
-            <Link className={styles.register} to="/user/register">
-              <FormattedMessage id="user-login.login.signup" />
-            </Link>
+            {/*<Link className={styles.register} to="/user/register">*/}
+              {/*<FormattedMessage id="user-login.login.signup" />*/}
+            {/*</Link>*/}
           </div>
         </LoginComponents>
       </div>
