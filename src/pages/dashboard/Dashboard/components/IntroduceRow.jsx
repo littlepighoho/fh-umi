@@ -23,12 +23,7 @@ const IntroduceRow = ({ loading, visitData }) => (
     <Col {...topColResponsiveProps}>
       <ChartCard
         bordered={false}
-        title={
-          <FormattedMessage
-            id="dashboardanddashboard.analysis.total-sales"
-            defaultMessage="Total Sales"
-          />
-        }
+        title="总用户量"
         action={
           <Tooltip
             title={
@@ -42,18 +37,7 @@ const IntroduceRow = ({ loading, visitData }) => (
           </Tooltip>
         }
         loading={loading}
-        total={() => <Yuan>126560</Yuan>}
-        footer={
-          <Field
-            label={
-              <FormattedMessage
-                id="dashboardanddashboard.analysis.day-sales"
-                defaultMessage="Daily Sales"
-              />
-            }
-            value={`￥${numeral(12423).format('0,0')}`}
-          />
-        }
+        total={() => <div>50</div>}
         contentHeight={46}
       >
         <Trend
@@ -114,55 +98,12 @@ const IntroduceRow = ({ loading, visitData }) => (
         <MiniArea color="#975FE4" data={visitData} />
       </ChartCard>
     </Col>
-    <Col {...topColResponsiveProps}>
-      <ChartCard
-        bordered={false}
-        loading={loading}
-        title={
-          <FormattedMessage
-            id="dashboardanddashboard.analysis.payments"
-            defaultMessage="Payments"
-          />
-        }
-        action={
-          <Tooltip
-            title={
-              <FormattedMessage
-                id="dashboardanddashboard.analysis.introduce"
-                defaultMessage="Introduce"
-              />
-            }
-          >
-            <Icon type="info-circle-o" />
-          </Tooltip>
-        }
-        total={numeral(6560).format('0,0')}
-        footer={
-          <Field
-            label={
-              <FormattedMessage
-                id="dashboardanddashboard.analysis.conversion-rate"
-                defaultMessage="Conversion Rate"
-              />
-            }
-            value="60%"
-          />
-        }
-        contentHeight={46}
-      >
-        <MiniBar data={visitData} />
-      </ChartCard>
-    </Col>
+
     <Col {...topColResponsiveProps}>
       <ChartCard
         loading={loading}
         bordered={false}
-        title={
-          <FormattedMessage
-            id="dashboardanddashboard.analysis.operational-effect"
-            defaultMessage="Operational Effect"
-          />
-        }
+        title="进行中课程比率"
         action={
           <Tooltip
             title={

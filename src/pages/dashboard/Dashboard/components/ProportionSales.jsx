@@ -25,44 +25,34 @@ const ProportionSales = ({
     style={{
       height: '100%',
     }}
-    extra={
-      <div className={styles.salesCardExtra}>
-        {dropdownGroup}
-        <div className={styles.salesTypeRadio}>
-          <Radio.Group value={salesType} onChange={handleChangeSalesType}>
-            <Radio.Button value="all">
-              <FormattedMessage id="dashboardanddashboard.channel.all" defaultMessage="ALL" />
-            </Radio.Button>
-            <Radio.Button value="online">
-              <FormattedMessage id="dashboardanddashboard.channel.online" defaultMessage="Online" />
-            </Radio.Button>
-            <Radio.Button value="stores">
-              <FormattedMessage id="dashboardanddashboard.channel.stores" defaultMessage="Stores" />
-            </Radio.Button>
-          </Radio.Group>
-        </div>
-      </div>
-    }
+    // extra={
+    //   <div className={styles.salesCardExtra}>
+    //     {dropdownGroup}
+    //     <div className={styles.salesTypeRadio}>
+    //       <Radio.Group value={salesType} onChange={handleChangeSalesType}>
+    //         <Radio.Button value="all">
+    //           <FormattedMessage id="dashboardanddashboard.channel.all" defaultMessage="ALL" />
+    //         </Radio.Button>
+    //         <Radio.Button value="online">
+    //           <FormattedMessage id="dashboardanddashboard.channel.online" defaultMessage="Online" />
+    //         </Radio.Button>
+    //         <Radio.Button value="stores">
+    //           <FormattedMessage id="dashboardanddashboard.channel.stores" defaultMessage="Stores" />
+    //         </Radio.Button>
+    //       </Radio.Group>
+    //     </div>
+    //   </div>
+    // }
   >
     <div>
-      <h4
-        style={{
-          marginTop: 8,
-          marginBottom: 32,
-        }}
-      >
-        <FormattedMessage id="dashboardanddashboard.analysis.sales" defaultMessage="Sales" />
-      </h4>
+
       <Pie
         hasLegend
-        subTitle={
-          <FormattedMessage id="dashboardanddashboard.analysis.sales" defaultMessage="Sales" />
-        }
-        total={() => <Yuan>{salesPieData.reduce((pre, now) => now.y + pre, 0)}</Yuan>}
-        data={salesPieData}
+        // data={salesPieData}
         valueFormat={value => <Yuan>{value}</Yuan>}
         height={248}
         lineWidth={4}
+
       />
     </div>
   </Card>

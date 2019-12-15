@@ -9,49 +9,15 @@ import styles from '../style.less';
 
 const columns = [
   {
-    title: <FormattedMessage id="dashboardanddashboard.table.rank" defaultMessage="Rank" />,
+    title: "学号",
     dataIndex: 'index',
     key: 'index',
   },
   {
-    title: (
-      <FormattedMessage
-        id="dashboardanddashboard.table.search-keyword"
-        defaultMessage="Search keyword"
-      />
-    ),
+    title: "姓名",
     dataIndex: 'keyword',
     key: 'keyword',
     render: text => <a href="/">{text}</a>,
-  },
-  {
-    title: <FormattedMessage id="dashboardanddashboard.table.users" defaultMessage="Users" />,
-    dataIndex: 'count',
-    key: 'count',
-    sorter: (a, b) => a.count - b.count,
-    className: styles.alignRight,
-  },
-  {
-    title: (
-      <FormattedMessage
-        id="dashboardanddashboard.table.weekly-range"
-        defaultMessage="Weekly Range"
-      />
-    ),
-    dataIndex: 'range',
-    key: 'range',
-    sorter: (a, b) => a.range - b.range,
-    render: (text, record) => (
-      <Trend flag={record.status === 1 ? 'down' : 'up'}>
-        <span
-          style={{
-            marginRight: 4,
-          }}
-        >
-          {text}%
-        </span>
-      </Trend>
-    ),
   },
 ];
 
@@ -109,50 +75,13 @@ const TopSearch = ({ loading, visitData2, searchData, dropdownGroup }) => (
         />
         <MiniArea line height={45} data={visitData2} />
       </Col>
-      <Col
-        sm={12}
-        xs={24}
-        style={{
-          marginBottom: 24,
-        }}
-      >
-        <NumberInfo
-          subTitle={
-            <span>
-              <FormattedMessage
-                id="dashboardanddashboard.analysis.per-capita-search"
-                defaultMessage="Per Capita Search"
-              />
-              <Tooltip
-                title={
-                  <FormattedMessage
-                    id="dashboardanddashboard.analysis.introduce"
-                    defaultMessage="introduce"
-                  />
-                }
-              >
-                <Icon
-                  style={{
-                    marginLeft: 8,
-                  }}
-                  type="info-circle-o"
-                />
-              </Tooltip>
-            </span>
-          }
-          total={2.7}
-          status="down"
-          subTotal={26.2}
-          gap={8}
-        />
-        <MiniArea line height={45} data={visitData2} />
-      </Col>
+
     </Row>
     <Table
       rowKey={record => record.index}
       size="small"
       columns={columns}
-      dataSource={searchData}
+      // dataSource={searchData}
       pagination={{
         style: {
           marginBottom: 0,
