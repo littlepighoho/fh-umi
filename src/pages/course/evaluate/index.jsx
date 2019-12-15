@@ -92,7 +92,8 @@ class Evaluate extends Component {
 
   handleDel = item => {
     const { dispatch, match } = this.props;
-    if (this.state.mode === 'student') {
+    const { getFieldsValue } = this.props.form;
+    if (getFieldsValue().mode[0] === 'student') {
       dispatch({
         type: DVAKEYS.EVALUATE.DELETE_EVALUATE_STUDENT,
         payload: {
@@ -113,7 +114,7 @@ class Evaluate extends Component {
           },
         });
       })
-    } else if (this.state.mode === 'course') {
+    } else if (getFieldsValue().mode[0] === 'course') {
       dispatch({
         type: DVAKEYS.EVALUATE.DELETE_EVALUATE_COURSE,
         payload: {
@@ -166,7 +167,7 @@ class Evaluate extends Component {
       evaluate,
       student,
     } = this.props;
-    const { getFieldDecorator } = form;
+    const { getFieldDecorator, getFieldValue } = form;
     const { studentEntities } = student;
     const { evaluateEntities } = evaluate;
     const data = evaluateEntities.map(item => {
