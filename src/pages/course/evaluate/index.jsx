@@ -91,9 +91,9 @@ class Evaluate extends Component {
   };
 
   handleDel = item => {
-    const { dispath, match } = this.props;
+    const { dispatch, match } = this.props;
     if (this.state.mode === 'student') {
-      dispath({
+      dispatch({
         type: DVAKEYS.EVALUATE.DELETE_EVALUATE_STUDENT,
         payload: {
           schoolId: match.params.sid,
@@ -101,10 +101,20 @@ class Evaluate extends Component {
           evaluateId: item.id,
         },
       }).then(() => {
-
+        dispatch({
+          type: DVAKEYS.EVALUATE.GET_EVALUATE_STUDENT_LIST,
+          payload: {
+            schoolId: match.params.sid,
+            courseId: match.params.cid,
+            params: {
+              page: 1,
+              limit: 100000,
+            },
+          },
+        });
       })
     } else if (this.state.mode === 'course') {
-      dispath({
+      dispatch({
         type: DVAKEYS.EVALUATE.DELETE_EVALUATE_STUDENT,
         payload: {
           schoolId: match.params.sid,
@@ -112,10 +122,20 @@ class Evaluate extends Component {
           evaluateId: item.id,
         },
       }).then(() => {
-
+        dispatch({
+          type: DVAKEYS.EVALUATE.GET_EVALUATE_COURSE_LIST,
+          payload: {
+            schoolId: match.params.sid,
+            courseId: match.params.cid,
+            params: {
+              page: 1,
+              limit: 100000,
+            },
+          },
+        });
       })
     } else {
-      dispath({
+      dispatch({
         type: DVAKEYS.EVALUATE.DELETE_EVALUATE_STUDENT,
         payload: {
           schoolId: match.params.sid,
@@ -123,7 +143,17 @@ class Evaluate extends Component {
           evaluateId: item.id,
         },
       }).then(() => {
-
+        dispatch({
+          type: DVAKEYS.EVALUATE.GET_EVALUATE_TEACHER_LIST,
+          payload: {
+            schoolId: match.params.sid,
+            courseId: match.params.cid,
+            params: {
+              page: 1,
+              limit: 100000,
+            },
+          },
+        });
       })
     }
   }
