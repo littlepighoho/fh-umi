@@ -218,18 +218,25 @@ class ClassroomList extends Component {
   handleUserSubmit = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
-    console.log(123)
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       dispatch({
         type: DVAKEYS.CLASSROOM.ADD_CLASSROOM_USER,
         payload: {
           schoolId: fieldsValue.course.school.id,
-          courseId: fieldsValue.course.id,
+          classroomId: this.state.currentDrawer.id,
           arrangement: fieldsValue.arrangement.id,
         },
       }).then(() => {
-
+        this.setState({
+          childrenDrawer: false,
+        })
+        dispatch({
+          type: DVAKEYS.CLASSROOM.GET_CLASSROOM_USER_ENTITY,
+          payload: {
+            schoolI
+          }
+        })
       })
     })
   };
@@ -337,7 +344,9 @@ class ClassroomList extends Component {
       </div>
     );
 
-    const getModalContent = () => <Form onSubmit={this.handleSubmit}>
+    const getModalContent = () => {
+      if (!this.state.visible) return null;
+      if (this.state.visible) { return <Form onSubmit={this.handleSubmit}>
         <FormItem label="课室名字" {...this.formLayout}>
           {getFieldDecorator('name', {
             rules: [
@@ -371,7 +380,8 @@ class ClassroomList extends Component {
             initialValue: 1,
           })(<InputNumber min={1} />)}
         </FormItem>}
-      </Form>;
+      </Form>;}
+    }
 
     return (
       <PageHeaderWrapper content={content} >
