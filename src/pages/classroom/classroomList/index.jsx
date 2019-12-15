@@ -8,6 +8,8 @@ import {
   Tooltip,
   InputNumber,
   Drawer,
+  Table,
+  Button, Select,
 } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
@@ -38,6 +40,8 @@ class ClassroomList extends Component {
   state = {
     current: undefined,
     visible: false,
+    childrenDrawer: false,
+    currentDrawer: undefined,
   };
 
   formLayout = {
@@ -48,6 +52,16 @@ class ClassroomList extends Component {
       span: 13,
     },
   };
+
+  columns = [{
+    key: 'name',
+    title: '排课名称',
+    dataIndex: 'name',
+  }, {
+    key: 'time',
+    title: '时间',
+    dataIndex: 'time',
+  }];
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -163,17 +177,62 @@ class ClassroomList extends Component {
         classroomId: item.id,
         schoolId: item.school.id,
       },
-    })
-    this.setState({
-      drawerVisible: true,
+    }).then(() => {
+      this.setState({
+        drawerVisible: true,
+        currentDrawer: item,
+      })
     })
   };
 
   handleDrawerClose = () => {
     this.setState({
       drawerVisible: false,
+      currentDrawer: undefined,
     })
   }
+
+  showChildrenDrawer = () => {
+    this.props.dispatch({
+      type: DVAKEYS.COURSE.GET_COURSE_LIST,
+      payload: {
+        schoolId: this.state.currentDrawer.school.id,
+        params: {
+          limit: 9999,
+          page: 1,
+        },
+      },
+    }).then(() => {
+      this.setState({
+        childrenDrawer: true,
+      })
+    })
+  };
+
+  closeChildrenDrawer = () => {
+    this.setState({
+      childrenDrawer: false,
+    })
+  };
+
+  handleUserSubmit = e => {
+    e.preventDefault();
+    const { dispatch, form } = this.props;
+    console.log(123)
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      dispatch({
+        type: DVAKEYS.CLASSROOM.ADD_CLASSROOM_USER,
+        payload: {
+          schoolId: fieldsValue.course.school.id,
+          courseId: fieldsValue.course.id,
+          arrangement: fieldsValue.arrangement.id,
+        },
+      }).then(() => {
+
+      })
+    })
+  };
 
   render() {
     const {
@@ -181,11 +240,15 @@ class ClassroomList extends Component {
       classroom,
       classroomLoading,
       form,
+      course,
+      arrangement,
     } = this.props;
     const { current, visible, drawerVisible } = this.state;
-    const { getFieldDecorator } = form;
+    const { getFieldDecorator, getFieldsValue} = form;
     const { schoolEntities } = school;
+    const { courseEntities } = course;
     const { chooseSchool, classroomEntities } = classroom;
+    const { arrangementEntities } = arrangement;
     const CardInfo = ({ activeUser }) => (
       <div className={styles.cardInfo}>
         <div>
@@ -328,7 +391,7 @@ class ClassroomList extends Component {
                       expandable
                       hideCheckAll
                     >
-                      {schoolEntities.map((item) => (
+                      {schoolEntities.map(item => (
                         <TagSelect.Option value={item.id}>{item.name}</TagSelect.Option>
                       ))}
                     </TagSelect>,
@@ -355,10 +418,87 @@ class ClassroomList extends Component {
           title="课室指派情况"
           placement="right"
           closable={false}
+          width={500}
           onClose={this.handleDrawerClose}
           visible={drawerVisible}
         >
-
+          <Form.Item>
+            <Button type="primary" onClick={this.showChildrenDrawer}>
+              添加指派
+            </Button>
+          </Form.Item>
+          <Table
+            columns={this.columns}
+            // dataSource={}
+            pagination={false}
+          />
+          <Drawer
+            title="添加指派"
+            width={320}
+            closable={false}
+            onClose={this.closeChildrenDrawer}
+            visible={this.state.childrenDrawer}
+          >
+            <Form onSubmit={this.handleUserSubmit}>
+              <FormItem label="课程" {...this.formLayout}>
+                {getFieldDecorator('course', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择课程',
+                    },
+                  ],
+                })(
+                  <Select placeholder="请选择">
+                    {courseEntities.map(item => (
+                        <Select.Option value={item}>{item.name}</Select.Option>
+                      ))}
+                  </Select>,
+                )}
+              </FormItem>
+              <FormItem label="排课" {...this.formLayout}>
+                {getFieldDecorator('arrangement', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择排课',
+                    },
+                  ],
+                })(
+                  <Select disabled={getFieldsValue(['course']).course === undefined} placeholder="请选择">
+                    {arrangementEntities.map(item => (
+                      <Select.Option value={item}>{item.name}</Select.Option>
+                    ))}
+                  </Select>,
+                )}
+              </FormItem>
+            </Form>
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                width: '100%',
+                borderTop: '1px solid #e8e8e8',
+                padding: '10px 16px',
+                textAlign: 'right',
+                left: 0,
+                background: '#fff',
+                borderRadius: '0 0 4px 4px',
+              }}
+            >
+              <Button
+                style={{
+                  marginRight: 8,
+                }}
+                onClick={this.closeChildrenDrawer}
+              >
+                取消
+              </Button>
+              <Button onClick={this.handleUserSubmit} type="primary">
+                确认
+              </Button>
+            </div>
+          </Drawer>
         </Drawer>
       </PageHeaderWrapper>
     );
@@ -387,12 +527,31 @@ const WarpForm = Form.create({
         })
       }
     }
+    if (get(value, 'course', null)) {
+      const { course } = value;
+      const item = course;
+      if (item) {
+        dispatch({
+          type: DVAKEYS.ARRANGEMENT.GET_ARRANGEMENT_LIST,
+          payload: {
+            schoolId: item.school.id,
+            courseId: item.id,
+            params: {
+              limit: 9999,
+              page: 1,
+            },
+          },
+        })
+      }
+    }
     // 表单项变化时请求数据
     // 模拟查询表单生效
   },
 })(ClassroomList);
-export default connect(({ school, classroom, loading }) => ({
+export default connect(({ school, classroom, course, arrangement, loading }) => ({
   school,
+  course,
+  arrangement,
   classroom,
   classroomLoading: loading.models.classroom,
 }))(WarpForm);
