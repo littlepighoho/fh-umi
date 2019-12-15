@@ -57,10 +57,12 @@ class ClassroomList extends Component {
     key: 'name',
     title: '排课名称',
     dataIndex: 'name',
+    render: (_, text) => <div>{text.arrangement.name}</div>
   }, {
-    key: 'time',
-    title: '时间',
+    key: 'action',
+    title: '操作',
     dataIndex: 'time',
+    render: (_, item) => <Icon onClick={() => this.handleDelUser(item)} type="delete" style={{ color: 'red', cursor: 'pointer'}}></Icon>
   }];
 
   componentDidMount() {
@@ -79,6 +81,25 @@ class ClassroomList extends Component {
     })
   }
 
+  handleDelUser = (item) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: DVAKEYS.CLASSROOM.DELETE_CLASSROOM_USER,
+      payload: {
+        schoolId: this.state.currentDrawer.school.id,
+        classroomId: item.classroom.id,
+        userId: item.id,
+      },
+    }).then(() => {
+      dispatch({
+        type: DVAKEYS.CLASSROOM.GET_CLASSROOM_USER_ENTITY,
+        payload: {
+          schoolId: this.state.currentDrawer.school.id,
+          classroomId: this.state.currentDrawer.id,
+        },
+      })
+    })
+  };
 
   showModal = () => {
     this.setState({
@@ -234,8 +255,9 @@ class ClassroomList extends Component {
         dispatch({
           type: DVAKEYS.CLASSROOM.GET_CLASSROOM_USER_ENTITY,
           payload: {
-            schoolI
-          }
+            schoolId: fieldsValue.course.school.id,
+            classroomId: this.state.currentDrawer.id,
+          },
         })
       })
     })
@@ -254,7 +276,7 @@ class ClassroomList extends Component {
     const { getFieldDecorator, getFieldsValue} = form;
     const { schoolEntities } = school;
     const { courseEntities } = course;
-    const { chooseSchool, classroomEntities } = classroom;
+    const { chooseSchool, classroomEntities, classroomUser } = classroom;
     const { arrangementEntities } = arrangement;
     const CardInfo = ({ activeUser }) => (
       <div className={styles.cardInfo}>
@@ -426,6 +448,7 @@ class ClassroomList extends Component {
         </Modal>
         <Drawer
           title="课室指派情况"
+          destroyOnClose
           placement="right"
           closable={false}
           width={500}
@@ -439,13 +462,14 @@ class ClassroomList extends Component {
           </Form.Item>
           <Table
             columns={this.columns}
-            // dataSource={}
+            dataSource={classroomUser}
             pagination={false}
           />
           <Drawer
             title="添加指派"
             width={320}
             closable={false}
+            destroyOnClose
             onClose={this.closeChildrenDrawer}
             visible={this.state.childrenDrawer}
           >

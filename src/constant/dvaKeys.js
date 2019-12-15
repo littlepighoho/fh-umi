@@ -75,6 +75,7 @@ const CLASSROOM = {
   GET_CLASSROOM_ENTITY: 'classroom/getClassroomEntity',
   GET_CLASSROOM_USER_ENTITY: 'classroom/getClassroomUserEntity',
   ADD_CLASSROOM_USER: 'classroom/addClassroomUser',
+  DELETE_CLASSROOM_USER: 'classroom/deleteClassroomUser',
   INIT_CLASSROOM_LIST: 'classroom/initClassroomList',
 };
 

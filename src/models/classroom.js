@@ -149,6 +149,20 @@ const Model = {
         message.error(e.toString())
       }
     },
+    // 删除课室指派
+    *deleteClassroomUser({ payload }, { call }) {
+      try {
+        const response = yield call(classroomUserDelete, payload);
+        const { data } = response;
+        if (get(data, 'id', null)) {
+          message.success('删除成功')
+        } else {
+          message.error('删除失败')
+        }
+      } catch (e) {
+        message.error(e.toString())
+      }
+    },
     // 获取课室指派的所有信息
     *getClassroomUserEntity({ payload }, { call, put }) {
       try {
