@@ -115,7 +115,7 @@ class Evaluate extends Component {
       })
     } else if (this.state.mode === 'course') {
       dispatch({
-        type: DVAKEYS.EVALUATE.DELETE_EVALUATE_STUDENT,
+        type: DVAKEYS.EVALUATE.DELETE_EVALUATE_COURSE,
         payload: {
           schoolId: match.params.sid,
           courseId: match.params.cid,
@@ -136,7 +136,7 @@ class Evaluate extends Component {
       })
     } else {
       dispatch({
-        type: DVAKEYS.EVALUATE.DELETE_EVALUATE_STUDENT,
+        type: DVAKEYS.EVALUATE.DELETE_EVALUATE_TEACHER,
         payload: {
           schoolId: match.params.sid,
           courseId: match.params.cid,
