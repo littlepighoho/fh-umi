@@ -58,19 +58,19 @@ const EVALUATE = {
     LIST: '/server/api/practice/schools/:sid/courses/:cid/evaluate/st/list',
     CURD: '/server/api/practice/schools/:sid/courses/:cid/evaluate/st/:eid',
     MGET: '/server/api/practice/schools/:sid/courses/:cid/evaluate/st/_mget',
-    ADD: '/server/api/practice/schools/:sid/courses/:cid/evaluate/st/?debug=1',
+    ADD: '/server/api/practice/schools/:sid/courses/:cid/evaluate/st?debug=1',
   },
   COURSE: {
     LIST: '/server/api/practice/schools/:sid/courses/:cid/evaluate/sc/list',
     CURD: '/server/api/practice/schools/:sid/courses/:cid/evaluate/sc/:eid',
     MGET: '/server/api/practice/schools/:sid/courses/:cid/evaluate/sc/_mget',
-    ADD: '/server/api/practice/schools/:sid/courses/:cid/evaluate/sc/?debug=1',
+    ADD: '/server/api/practice/schools/:sid/courses/:cid/evaluate/sc?debug=1',
   },
   TEACHER: {
     LIST: '/server/api/practice/schools/:sid/courses/:cid/evaluate/ts/list',
     CURD: '/server/api/practice/schools/:sid/courses/:cid/evaluate/ts/:eid',
     MGET: '/server/api/practice/schools/:sid/courses/:cid/evaluate/ts/_mget',
-    ADD: '/server/api/practice/schools/:sid/courses/:cid/evaluate/ts/?debug=1',
+    ADD: '/server/api/practice/schools/:sid/courses/:cid/evaluate/ts?debug=1',
   },
 };
 
