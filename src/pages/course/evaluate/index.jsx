@@ -17,11 +17,22 @@ class Evaluate extends Component {
 
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, match} = this.props;
     dispatch({
       type: 'courseAndevaluate/fetch',
       payload: {
         count: 5,
+      },
+    });
+    dispatch({
+      type: DVAKEYS.EVALUATE.GET_EVALUATE_STUDENT_LIST,
+      payload: {
+        schoolId: match.params.sid,
+        courseId: match.params.cid,
+        params: {
+          page: 1,
+          limit: 100000,
+        },
       },
     });
   }

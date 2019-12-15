@@ -1,4 +1,4 @@
-import { message } from 'antd';
+import { message, notification } from 'antd';
 import get from 'lodash/get';
 import {
   evaluateGetStudentList,
@@ -99,11 +99,33 @@ const Model = {
       try {
         const response = yield call(evaluateAddStudent, payload);
         const { data } = response;
-        // if (get(data, 'id', null)) {
-        //   message.success('导入成功')
-        // } else {
-        //   message.error('导入失败')
-        // }
+        const success = [];
+        const fail = [];
+        Object.keys(data.status).forEach((key) => {
+          if (data.status[key] === 1) {
+            success.push(key);
+          } else {
+            fail.push(key);
+          }
+        });
+        if (success.length !== 0) {
+          notification.open({
+            message: '导入成功名单',
+            duration: false,
+            description: <div>
+              {success.map((item) => <div>{item}</div>)}
+            </div>
+          });
+        }
+        if (fail.length !== 0) {
+          notification.open({
+            message: '导入失败名单',
+            duration: false,
+            description: <div>
+              {fail.map((item) => <div>{item}</div>)}
+            </div>
+          });
+        }
       } catch (e) {
         message.error(e.toString());
       }
@@ -190,11 +212,33 @@ const Model = {
       try {
         const response = yield call(evaluateAddCourse, payload);
         const { data } = response;
-        // if (get(data, 'id', null)) {
-        //   message.success('导入成功')
-        // } else {
-        //   message.error('导入失败')
-        // }
+        const success = [];
+        const fail = [];
+        Object.keys(data.status).forEach((key) => {
+          if (data.status[key] === 1) {
+            success.push(key);
+          } else {
+            fail.push(key);
+          }
+        });
+        if (success.length !== 0) {
+          notification.open({
+            message: '导入成功名单',
+            duration: false,
+            description: <div>
+              {success.map((item) => <div>{item}</div>)}
+            </div>
+          });
+        }
+        if (fail.length !== 0) {
+          notification.open({
+            message: '导入失败名单',
+            duration: false,
+            description: <div>
+              {fail.map((item) => <div>{item}</div>)}
+            </div>
+          });
+        }
       } catch (e) {
         message.error(e.toString());
       }
@@ -280,11 +324,33 @@ const Model = {
       try {
         const response = yield call(evaluateAddTeacher, payload);
         const { data } = response;
-        // if (get(data, 'id', null)) {
-        //   message.success('导入成功')
-        // } else {
-        //   message.error('导入失败')
-        // }
+        const success = [];
+        const fail = [];
+        Object.keys(data.status).forEach((key) => {
+          if (data.status[key] === 1) {
+            success.push(key);
+          } else {
+            fail.push(key);
+          }
+        });
+        if (success.length !== 0) {
+          notification.open({
+            message: '导入成功名单',
+            duration: false,
+            description: <div>
+              {success.map((item) => <div>{item}</div>)}
+            </div>
+          });
+        }
+        if (fail.length !== 0) {
+          notification.open({
+            message: '导入失败名单',
+            duration: false,
+            description: <div>
+              {fail.map((item) => <div>{item}</div>)}
+            </div>
+          });
+        }
       } catch (e) {
         message.error(e.toString());
       }
