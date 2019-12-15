@@ -113,6 +113,8 @@ export async function attendanceAdd(payload) {
     aid: payload.arrangementId,
   }), {
     method: 'POST',
-    data: payload.data,
+    data: {
+      data: payload.data,
+    },
   })
 }

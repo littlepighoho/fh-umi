@@ -17,7 +17,7 @@ class Evaluate extends Component {
 
 
   componentDidMount() {
-    const { dispatch, match} = this.props;
+    const { dispatch, match } = this.props;
     dispatch({
       type: 'courseAndevaluate/fetch',
       payload: {
@@ -89,6 +89,44 @@ class Evaluate extends Component {
         });
     }
   };
+
+  handleDel = item => {
+    const { dispath, match } = this.props;
+    if (this.state.mode === 'student') {
+      dispath({
+        type: DVAKEYS.EVALUATE.DELETE_EVALUATE_STUDENT,
+        payload: {
+          schoolId: match.params.sid,
+          courseId: match.params.cid,
+          evaluateId: item.id,
+        },
+      }).then(() => {
+
+      })
+    } else if (this.state.mode === 'course') {
+      dispath({
+        type: DVAKEYS.EVALUATE.DELETE_EVALUATE_STUDENT,
+        payload: {
+          schoolId: match.params.sid,
+          courseId: match.params.cid,
+          evaluateId: item.id,
+        },
+      }).then(() => {
+
+      })
+    } else {
+      dispath({
+        type: DVAKEYS.EVALUATE.DELETE_EVALUATE_STUDENT,
+        payload: {
+          schoolId: match.params.sid,
+          courseId: match.params.cid,
+          evaluateId: item.id,
+        },
+      }).then(() => {
+
+      })
+    }
+  }
 
   render() {
     const {
@@ -180,7 +218,7 @@ class Evaluate extends Component {
             renderItem={item => (
               <List.Item
                 key={item.id}
-                extra={<div className={styles.listItemExtra}/>}
+                extra={<div className={styles.listItemExtra}><Icon type="delete" onClick={() => this.handleDel(item)}/></div>}
               >
                 <List.Item.Meta
                   title={

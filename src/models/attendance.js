@@ -91,11 +91,6 @@ const Model = {
       try {
         const response = yield call(attendanceAdd, payload);
         const { data } = response;
-        if (get(data, 'id', null)) {
-          message.success('创建成功')
-        } else {
-          message.error('创建失败')
-        }
       } catch (e) {
         message.error(e.toString());
       }

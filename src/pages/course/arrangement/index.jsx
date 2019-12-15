@@ -9,6 +9,7 @@ import {
   Menu,
   Table,
   Tag,
+  message,
   Modal,
 } from 'antd';
 import { GridContent, PageHeaderWrapper, RouteContext } from '@ant-design/pro-layout';
@@ -20,6 +21,7 @@ import moment from 'moment';
 import styles from './style.less';
 import { DVAKEYS } from '@/constant/dvaKeys';
 import router from 'umi/router';
+import { importAttendanceExcel } from '@/utils/xlsx_importer';
 
 const { confirm } = Modal;
 
@@ -48,6 +50,7 @@ class Arrangement extends Component {
   state = {
 
   };
+  inputRef = null;
 
   columns = [
     {
@@ -148,7 +151,45 @@ class Arrangement extends Component {
       });
     })
   };
+  handleXlsxUpload = () => {
+    this.inputRef.click();
+  };
 
+  handleXlsxChange = e => {
+    const getResult = data => {
+      const { dispatch, match } = this.props;
+      dispatch({
+        type: DVAKEYS.ATTENDANCE.ADD_ATTENDANCE,
+        payload: {
+          schoolId: match.params.sid,
+          courseId: match.params.cid,
+          arrangementId: match.params.aid,
+          data,
+        },
+      }).then(() => {
+        dispatch({
+          type: DVAKEYS.ATTENDANCE.GET_ATTENDANCE_LIST,
+          payload: {
+            schoolId: match.params.sid,
+            courseId: match.params.cid,
+            arrangementId: match.params.aid,
+            params: {
+              limit: 9999,
+              page: 1,
+            },
+          },
+        });
+      })
+    };
+
+    if (e.target.files.length > 0) {
+      importAttendanceExcel(e.target.files)
+        .then(data => getResult(data))
+        .catch(ex => {
+          message.error('解析Excel文件失败');
+        });
+    }
+  };
   handleAttendanceClick = (key, item) => {
     const { dispatch, match } = this.props;
     dispatch({
@@ -278,7 +319,17 @@ class Arrangement extends Component {
               className={styles.tabsCard}
               bordered={false}
               title="考勤"
+              extra={<Button onClick={this.handleXlsxUpload}>导入</Button>}
             >
+              <input
+                type="file"
+                name="excel-file"
+                onChange={this.handleXlsxChange}
+                style={{ display: 'none' }}
+                ref={node => {
+                  this.inputRef = node;
+                }}
+              />
               <Table
                 pagination={false}
                 loading={attendanceLoading && studentLoading}
