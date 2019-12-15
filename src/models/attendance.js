@@ -1,4 +1,4 @@
-import { message } from 'antd';
+import { message, notification} from 'antd';
 import get from 'lodash/get';
 import {
   attendanceGetList,
@@ -91,6 +91,33 @@ const Model = {
       try {
         const response = yield call(attendanceAdd, payload);
         const { data } = response;
+        const success = [];
+        const fail = [];
+        Object.keys(data).forEach((key) => {
+          if (data[key]) {
+            success.push(key);
+          } else {
+            fail.push(key);
+          }
+        })
+        if(success.length !== 0) {
+          notification.open({
+            message: '导入成功名单',
+            duration: false,
+            description: <div>
+              {success.map((item) => <div>{item}</div>)}
+            </div>
+          });
+        }
+        if(fail.length !== 0) {
+          notification.open({
+            message: '导入失败名单',
+            duration: false,
+            description: <div>
+              {fail.map((item) => <div>{item}</div>)}
+            </div>
+          });
+        }
       } catch (e) {
         message.error(e.toString());
       }

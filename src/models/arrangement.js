@@ -24,6 +24,7 @@ const Model = {
     },
     arrangementEntities: [],
     arrangementEntity: {},
+    studentEntities: [],
   },
   effects: {
     // 获取课程排课列表
@@ -121,6 +122,42 @@ const Model = {
         message.error(e.toString())
       }
     },
+    // 导入学生
+    *addArrangementStudent({ payload }, { call }) {
+      try {
+        const response = yield call(arrangementAddStudent, payload);
+        const { data } = response;
+      } catch (e) {
+        message.error(e.toString())
+      }
+    },
+    // 批量获取学生信息
+    *getArrangementStudentList({ payload }, { call, put }) {
+      try {
+        const response = yield call(arrangementGetStudentList, payload);
+        const { data } = response;
+        yield put({
+          type: 'saveStudentEntities',
+          payload: data,
+        })
+      } catch (e) {
+        message.error(e.toString())
+      }
+    },
+    // 删除学生信息
+    *deleteArrangementStudent({ payload }, { call }) {
+      try {
+        const response = yield call(arrangementDeleteStudent, payload);
+        const { data } = response;
+        if (get(data, 'id', null)) {
+          message.success('删除成功')
+        } else {
+          message.error('删除失败')
+        }
+      } catch (e) {
+        message.error(e.toString())
+      }
+    },
   },
   reducers: {
     saveArrangementList(state, { payload }) {
@@ -139,6 +176,12 @@ const Model = {
       return {
         ...state,
         arrangementEntity: payload,
+      }
+    },
+    saveStudentEntities(state, { payload }) {
+      return {
+        ...state,
+        studentEntities: payload,
       }
     },
   },

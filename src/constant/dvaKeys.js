@@ -49,6 +49,10 @@ const ARRANGEMENT = {
   DELETE_ARRANGEMENT: 'arrangement/deleteArrangement',
   EDIT_ARRANGEMENT: 'arrangement/editArrangement',
   GET_ARRANGEMENT_ENTITY: 'arrangement/getArrangementEntity',
+  GET_ARRANGEMENT_STUDENT_LIST: 'arrangement/getArrangementStudentList',
+  DELETE_ARRANGEMENT_STUDENT: 'arrangement/deleteArrangementStudent',
+  ADD_ARRANGEMENT_STUDENT: 'arrangement/addArrangementStudent',
+
 };
 
 const ATTENDANCE = {

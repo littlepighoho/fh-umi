@@ -18,10 +18,10 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import get from 'lodash/get';
 import moment from 'moment';
+import router from 'umi/router';
 import styles from './style.less';
 import { DVAKEYS } from '@/constant/dvaKeys';
-import router from 'umi/router';
-import { importAttendanceExcel } from '@/utils/xlsx_importer';
+import { importAttendanceExcel, importExcel } from '@/utils/xlsx_importer';
 
 const { confirm } = Modal;
 
@@ -48,9 +48,35 @@ const mobileMenu = (
 
 class Arrangement extends Component {
   state = {
-
+    mode: '',
   };
+
   inputRef = null;
+  inputStudentRef = null;
+  studentColumns = [
+    {
+      title: '学号',
+      dataIndex: 'code',
+      key: 'code',
+    },
+    {
+      title: '姓名',
+      dataIndex: 'realname',
+      key: 'realname',
+    },
+    {
+      title: '操作',
+      dataIndex: 'action',
+      key: 'action',
+      render: (_, item) => (
+        <div>
+          <span>
+            <Icon type="delete" style={{ color: 'red', cursor: 'pointer' }} onClick={() => this.handleStudentDelClick(item)}/>
+          </span>
+        </div>
+      ),
+    },
+  ];
 
   columns = [
     {
@@ -117,6 +143,14 @@ class Arrangement extends Component {
       },
     });
     dispatch({
+      type: DVAKEYS.ARRANGEMENT.GET_ARRANGEMENT_STUDENT_LIST,
+      payload: {
+        schoolId: match.params.sid,
+        courseId: match.params.cid,
+        arrangementId: match.params.aid,
+      },
+    });
+    dispatch({
       type: DVAKEYS.ARRANGEMENT.GET_ARRANGEMENT_ENTITY,
       payload: {
         schoolId: match.params.sid,
@@ -125,6 +159,28 @@ class Arrangement extends Component {
       },
     });
   }
+
+  handleStudentDelClick = item => {
+    const { dispatch, match } = this.props;
+    dispatch({
+      type: DVAKEYS.ARRANGEMENT.DELETE_ARRANGEMENT_STUDENT,
+      payload: {
+        schoolId: match.params.sid,
+        courseId: match.params.cid,
+        arrangementId: match.params.aid,
+        ids: [item.id],
+      },
+    }).then(() => {
+      dispatch({
+        type: DVAKEYS.ARRANGEMENT.GET_ARRANGEMENT_STUDENT_LIST,
+        payload: {
+          schoolId: match.params.sid,
+          courseId: match.params.cid,
+          arrangementId: match.params.aid,
+        },
+      })
+    })
+  };
 
   handleAttendanceDelClick = item => {
     const { dispatch, match } = this.props;
@@ -151,45 +207,85 @@ class Arrangement extends Component {
       });
     })
   };
+
   handleXlsxUpload = () => {
     this.inputRef.click();
+    this.setState({
+      mode: 'attendance',
+    })
   };
+  handleStudentXlsxUpload = () => {
+    this.inputStudentRef.click();
+    this.setState({
+      mode: 'student',
+    })
+  }
 
   handleXlsxChange = e => {
     const getResult = data => {
       const { dispatch, match } = this.props;
-      dispatch({
-        type: DVAKEYS.ATTENDANCE.ADD_ATTENDANCE,
-        payload: {
-          schoolId: match.params.sid,
-          courseId: match.params.cid,
-          arrangementId: match.params.aid,
-          data,
-        },
-      }).then(() => {
+      if (this.state.mode === 'student') {
+          dispatch({
+            type: DVAKEYS.ARRANGEMENT.ADD_ARRANGEMENT_STUDENT,
+            payload: {
+              schoolId: match.params.sid,
+              courseId: match.params.cid,
+              arrangementId: match.params.aid,
+              data,
+            },
+          }).then(() => {
+            dispatch({
+              type: DVAKEYS.ARRANGEMENT.GET_ARRANGEMENT_STUDENT_LIST,
+              payload: {
+                schoolId: match.params.sid,
+                courseId: match.params.cid,
+                arrangementId: match.params.aid,
+              },
+            })
+          })
+      } else {
         dispatch({
-          type: DVAKEYS.ATTENDANCE.GET_ATTENDANCE_LIST,
+          type: DVAKEYS.ATTENDANCE.ADD_ATTENDANCE,
           payload: {
             schoolId: match.params.sid,
             courseId: match.params.cid,
             arrangementId: match.params.aid,
-            params: {
-              limit: 9999,
-              page: 1,
-            },
+            data,
           },
-        });
-      })
+        }).then(() => {
+          dispatch({
+            type: DVAKEYS.ATTENDANCE.GET_ATTENDANCE_LIST,
+            payload: {
+              schoolId: match.params.sid,
+              courseId: match.params.cid,
+              arrangementId: match.params.aid,
+              params: {
+                limit: 9999,
+                page: 1,
+              },
+            },
+          });
+        })
+      }
     };
 
     if (e.target.files.length > 0) {
-      importAttendanceExcel(e.target.files)
-        .then(data => getResult(data))
-        .catch(ex => {
-          message.error('解析Excel文件失败');
-        });
+      if (this.state.mode === 'attendance') {
+        importAttendanceExcel(e.target.files)
+          .then(data => getResult(data))
+          .catch(ex => {
+            message.error('解析Excel文件失败');
+          });
+      } else {
+        importExcel(e.target.files)
+          .then(data => getResult(data))
+          .catch(ex => {
+            message.error('解析Excel文件失败');
+          });
+      }
     }
   };
+
   handleAttendanceClick = (key, item) => {
     const { dispatch, match } = this.props;
     dispatch({
@@ -236,16 +332,17 @@ class Arrangement extends Component {
         }).then(() => {
           router.push(`/course/${match.params.sid}/${match.params.cid}`);
         })
-      }
+      },
     })
   };
 
   render() {
-    const { studentLoading, attendanceLoading, course, attendance, arrangement, student } = this.props;
+    const { studentLoading, arrangementLoading, attendanceLoading, course, attendance, arrangement, student } = this.props;
     const { arrangementEntity } = arrangement;
     const { courseEntity } = course;
     const { studentEntities } = student;
     const { attendanceEntities } = attendance;
+    const arrangementStudentEntities = arrangement.studentEntities;
     let leaverNumber = 0;
     let absentNumber = 0;
     const data = attendanceEntities.map(item => {
@@ -315,6 +412,28 @@ class Arrangement extends Component {
       >
         <div className={styles.main}>
           <GridContent>
+            <Card
+              className={styles.tabsCard}
+              bordered={false}
+              title="学生"
+              extra={<Button onClick={this.handleStudentXlsxUpload} >导入</Button>}
+            >
+              <input
+                type="file"
+                name="excel-file"
+                onChange={this.handleXlsxChange}
+                style={{ display: 'none' }}
+                ref={node => {
+                  this.inputStudentRef = node;
+                }}
+              />
+              <Table
+                pagination={false}
+                loading={arrangementLoading}
+                dataSource={arrangementStudentEntities}
+                columns={this.studentColumns}
+              />
+            </Card>
             <Card
               className={styles.tabsCard}
               bordered={false}
