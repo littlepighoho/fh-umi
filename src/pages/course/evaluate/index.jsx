@@ -1,4 +1,4 @@
-import { Button, Card, Col, Form, Icon, List, Rate, Select, Tag, message } from 'antd';
+import { Button, Card, Col, Form, Icon, List, Rate, Select, Tag, Input, message } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -12,8 +12,12 @@ import { DVAKEYS } from '@/constant/dvaKeys';
 
 const FormItem = Form.Item;
 
+const { Option } = Select;
+
 class Evaluate extends Component {
-  state = {};
+  state = {
+
+  };
 
 
   componentDidMount() {
@@ -59,6 +63,18 @@ class Evaluate extends Component {
             courseId: match.params.cid,
             data,
           },
+        }).then(() => {
+          dispatch({
+            type: DVAKEYS.EVALUATE.GET_EVALUATE_STUDENT_LIST,
+            payload: {
+              schoolId: match.params.sid,
+              courseId: match.params.cid,
+              params: {
+                page: 1,
+                limit: 100000,
+              },
+            },
+          });
         })
       } else if ((this.state.mode === 'course')) {
         dispatch({
@@ -68,6 +84,18 @@ class Evaluate extends Component {
             courseId: match.params.cid,
             data,
           },
+        }).then(() => {
+          dispatch({
+            type: DVAKEYS.EVALUATE.GET_EVALUATE_COURSE_LIST,
+            payload: {
+              schoolId: match.params.sid,
+              courseId: match.params.cid,
+              params: {
+                page: 1,
+                limit: 100000,
+              },
+            },
+          });
         })
       } else {
         dispatch({
@@ -77,6 +105,18 @@ class Evaluate extends Component {
             courseId: match.params.cid,
             data,
           },
+        }).then(() => {
+          dispatch({
+            type: DVAKEYS.EVALUATE.GET_EVALUATE_TEACHER_LIST,
+            payload: {
+              schoolId: match.params.sid,
+              courseId: match.params.cid,
+              params: {
+                page: 1,
+                limit: 100000,
+              },
+            },
+          });
         })
       }
     };
@@ -159,6 +199,110 @@ class Evaluate extends Component {
     }
   }
 
+  handleSearchChange = ({ target }) => {
+    this.setState({
+      key: target.value,
+    })
+  };
+
+  handleSearch = value => {
+    const { dispatch, match } = this.props;
+    if (this.state.type === 'course') {
+      dispatch({
+        type: DVAKEYS.EVALUATE.GET_EVALUATE_COURSE_LIST,
+        payload: {
+          schoolId: match.params.sid,
+          courseId: match.params.cid,
+          params: {
+            page: 1,
+            limit: 100000,
+            star: this.state.star === 0 ? '' : this.state.star,
+            key: this.state.key === '' ? '' : this.state.key,
+          }
+        },
+      });
+    } else if (this.state.type === 'student') {
+      dispatch({
+        type: DVAKEYS.EVALUATE.GET_EVALUATE_STUDENT_LIST,
+        payload: {
+          schoolId: match.params.sid,
+          courseId: match.params.cid,
+          params: {
+            page: 1,
+            limit: 100000,
+            star: this.state.star === 0 ? '' : this.state.star,
+            key: this.state.key === '' ? '' : this.state.key,
+          }
+        },
+      });
+    } else if (this.state.type === 'teacher') {
+      dispatch({
+        type: DVAKEYS.EVALUATE.GET_EVALUATE_TEACHER_LIST,
+        payload: {
+          schoolId: match.params.sid,
+          courseId: match.params.cid,
+          params: {
+            page: 1,
+            limit: 100000,
+            star: this.state.star === 0 ? '' : this.state.star,
+            key: this.state.key === '' ? '' : this.state.key,
+          }
+        },
+      });
+    }
+  };
+
+  handleFilterChange = value => {
+    this.setState({
+      star: value,
+    }, () => {
+      const { dispatch, match } = this.props;
+      if (this.state.type === 'course') {
+        dispatch({
+          type: DVAKEYS.EVALUATE.GET_EVALUATE_COURSE_LIST,
+          payload: {
+            schoolId: match.params.sid,
+            courseId: match.params.cid,
+            params: {
+              page: 1,
+              limit: 100000,
+              star: this.state.star === 0 ? '' : this.state.star,
+              key: this.state.key === '' ? '' : this.state.key,
+            }
+          },
+        });
+      } else if (this.state.type === 'student') {
+        dispatch({
+          type: DVAKEYS.EVALUATE.GET_EVALUATE_STUDENT_LIST,
+          payload: {
+            schoolId: match.params.sid,
+            courseId: match.params.cid,
+            params: {
+              page: 1,
+              limit: 100000,
+              star: this.state.star === 0 ? '' : this.state.star,
+              key: this.state.key === '' ? '' : this.state.key,
+            }
+          },
+        });
+      } else if (this.state.type === 'teacher') {
+        dispatch({
+          type: DVAKEYS.EVALUATE.GET_EVALUATE_TEACHER_LIST,
+          payload: {
+            schoolId: match.params.sid,
+            courseId: match.params.cid,
+            params:{
+              page: 1,
+              limit: 100000,
+              star: this.state.star === 0 ? '' : this.state.star,
+              key: this.state.key === '' ? '' : this.state.key,
+            }
+          },
+        });
+      }
+    })
+  };
+
   render() {
     const {
       form,
@@ -195,7 +339,7 @@ class Evaluate extends Component {
             >
               <FormItem>
                 {getFieldDecorator('mode')(
-                  <TagSelect expandable hideCheckAll defaultValue={['student']}>
+                  <TagSelect expandable hideCheckAll defaultValue={['student']} onChange={e => { this.setState({ type: e[0] }) }}>
                     <TagSelect.Option value="student">学生对老师</TagSelect.Option>
                     <TagSelect.Option value="course">学生对课程</TagSelect.Option>
                     <TagSelect.Option value="teacher">老师对学生</TagSelect.Option>
@@ -227,6 +371,20 @@ class Evaluate extends Component {
                     老师对学生评价
                   </Button>
                 </Button.Group>
+              </FormItem>
+            </StandardFormRow>
+            <StandardFormRow
+              title="星级搜索"
+            >
+              <FormItem>
+                <Rate value={ this.state.star } onChange={this.handleFilterChange}/>
+              </FormItem>
+            </StandardFormRow>
+            <StandardFormRow
+              title="关键字搜索"
+            >
+              <FormItem>
+                <Input.Search onSearch={this.handleSearch} value={this.state.key} onChange={this.handleSearchChange} />
               </FormItem>
             </StandardFormRow>
           </Form>
