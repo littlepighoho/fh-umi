@@ -473,7 +473,7 @@ class ClassroomList extends Component {
             onClose={this.closeChildrenDrawer}
             visible={this.state.childrenDrawer}
           >
-            <Form onSubmit={this.handleUserSubmit}>
+            {this.state.childrenDrawer && <Form onSubmit={this.handleUserSubmit}>
               <FormItem label="课程" {...this.formLayout}>
                 {getFieldDecorator('course', {
                   rules: [
@@ -485,8 +485,8 @@ class ClassroomList extends Component {
                 })(
                   <Select placeholder="请选择">
                     {courseEntities.map(item => (
-                        <Select.Option value={item}>{item.name}</Select.Option>
-                      ))}
+                      <Select.Option value={item}>{item.name}</Select.Option>
+                    ))}
                   </Select>,
                 )}
               </FormItem>
@@ -506,7 +506,7 @@ class ClassroomList extends Component {
                   </Select>,
                 )}
               </FormItem>
-            </Form>
+            </Form>}
             <div
               style={{
                 position: 'absolute',

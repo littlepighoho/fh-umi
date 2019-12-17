@@ -1,14 +1,12 @@
 import { Card, Form, List, Typography, Empty } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import moment from 'moment';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import AvatarList from './components/AvatarList';
+import router from 'umi/router';
 import StandardFormRow from './components/StandardFormRow';
 import TagSelect from './components/TagSelect';
 import styles from './style.less';
 import { DVAKEYS } from '@/constant/dvaKeys';
-import router from 'umi/router';
 
 const FormItem = Form.Item;
 const { Paragraph } = Typography;
@@ -31,7 +29,7 @@ class CourseList extends Component {
     })
   }
 
-  handleCourseClick = (item) => {
+  handleCourseClick = item => {
     router.push(`/course/${item.school.id}/${item.id}`)
   };
 
@@ -80,7 +78,6 @@ class CourseList extends Component {
                 }
               />
               <div className={styles.cardItemContent}>
-                {/*<span>{moment(item.start_time).format}</span>*/}
                 <div className={styles.avatarList}>
                 </div>
               </div>
@@ -116,7 +113,7 @@ class CourseList extends Component {
                       expandable
                       hideCheckAll
                     >
-                      {schoolEntities.map((item) => (
+                      {schoolEntities.map(item => (
                           <TagSelect.Option value={item.id}>{item.name}</TagSelect.Option>
                         ))}
                     </TagSelect>,
